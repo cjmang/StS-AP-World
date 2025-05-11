@@ -92,8 +92,12 @@ class SpireWorld(World):
         create_regions(self, self.player)
 
     def fill_slot_data(self) -> dict:
+        character_offset = self.options.character.value
+        if type(character_offset) is str:
+            character_offset = 12
         slot_data = {
-            'seed': "".join(self.random.choice(string.ascii_letters) for i in range(16))
+            'seed': "".join(self.random.choice(string.ascii_letters) for i in range(16)),
+            'character_offset': character_offset,
         }
         slot_data.update(self.options.as_dict("character", "ascension", "final_act", "downfall", "death_link"))
         return slot_data
