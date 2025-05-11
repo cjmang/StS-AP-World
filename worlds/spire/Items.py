@@ -82,7 +82,7 @@ def create_item_tables(vanilla_chars: typing.List[str], extras: int) -> typing.T
             newkey = f"Custom Character {i+1} {key}"
             newval = ItemData.increment(data, char_num * CHAR_OFFSET)
             item_name_to_data[newkey] = newval
-            characters_to_items[i][newkey] = newval
+            characters_to_items[i+1][newkey] = newval
         for key, val in base_event_item_pairs.items():
             event_item_pairs[f"Custom Character {i+1} {key}"] = f"Custom Character {i+1} {val}"
         char_num += 1

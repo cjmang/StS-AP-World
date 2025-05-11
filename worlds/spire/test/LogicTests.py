@@ -180,3 +180,9 @@ class LogicTests(LogicTestBase):
         for key, value in self.power_map.items():
             self._test_inaccessible(key, value)
 
+class CustomCharTest(LogicTests):
+    prefix = "Custom Character 1"
+    options = {
+        'character': 'foobar',
+        'final_act': 1
+    }

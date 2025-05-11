@@ -58,15 +58,15 @@ def create_location_tables(vanilla_chars: List[str], extras: int) -> Tuple[dict[
             newval = data + char_num*CHAR_OFFSET if data is not None else data
             loc_name_to_data[newkey] = newval
             characters_to_locs[char][newkey] = newval
-            char_num += 1
+        char_num += 1
 
     for i in range(extras):
         for key, data in base_location_table.items():
             newkey = f"Custom Character {i+1} {key}"
             newval = data + char_num * CHAR_OFFSET if data is not None else data
             loc_name_to_data[newkey] = newval
-            characters_to_locs[i][newkey] = newval
-            char_num += 1
+            characters_to_locs[i+1][newkey] = newval
+        char_num += 1
 
     return loc_name_to_data, characters_to_locs
 
