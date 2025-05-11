@@ -1,40 +1,93 @@
 import typing
+from collections import defaultdict
+from enum import auto, Enum
 
-from BaseClasses import Item, ItemClassification
+from BaseClasses import ItemClassification
 from typing import Dict
+
+from worlds.spire.Characters import character_list, NUM_CUSTOM
+
+CHAR_OFFSET = 20
+
+class ItemType(Enum):
+    DRAW = auto()
+    RARE_DRAW = auto()
+    RELIC = auto()
+    BOSS_RELIC = auto()
+    GOLD = auto()
+    EVENT = auto()
 
 
 class ItemData(typing.NamedTuple):
     code: typing.Optional[int]
+    type: ItemType
     classification: ItemClassification = ItemClassification.progression
     event: bool = False
+    is_victory: bool = False
 
-item_table: Dict[str, ItemData] = {
-    'Card Draw': ItemData(8000),
-    'Rare Card Draw': ItemData(8001),
-    'Relic': ItemData(8002),
-    'Boss Relic': ItemData(8003),
-    'One Gold': ItemData(8004, ItemClassification.filler),
-    'Five Gold': ItemData(8005, ItemClassification.filler),
+    @staticmethod
+    def increment(base: 'ItemData', char_offset: int) -> 'ItemData':
+        newcode = base.code + char_offset if base.code is not None else base.code
+        return ItemData(newcode, base.type, base.classification, base.event, base.is_victory)
+
+base_item_table: Dict[str, ItemData] = {
+    'Card Draw': ItemData(1, ItemType.DRAW),
+    'Rare Card Draw': ItemData(2, ItemType.RARE_DRAW),
+    'Relic': ItemData(3, ItemType.RELIC),
+    'Boss Relic': ItemData(4, ItemType.BOSS_RELIC),
+    'One Gold': ItemData(5, ItemType.GOLD, ItemClassification.filler),
+    'Five Gold': ItemData(6, ItemType.GOLD, ItemClassification.filler),
 
     # Event Items
-    'Victory': ItemData(None, ItemClassification.progression, True),
-    'Beat Act 1 Boss': ItemData(None, ItemClassification.progression, True),
-    'Beat Act 2 Boss': ItemData(None, ItemClassification.progression, True),
-    'Beat Act 3 Boss': ItemData(None, ItemClassification.progression, True),
+    'Victory': ItemData(None, None, ItemClassification.progression, True, True),
+    'Beat Act 1 Boss': ItemData(None, None, ItemClassification.progression, True),
+    'Beat Act 2 Boss': ItemData(None, None, ItemClassification.progression, True),
+    'Beat Act 3 Boss': ItemData(None, None, ItemClassification.progression, True),
 
 }
 
-item_pool: Dict[str, int] = {
-    'Card Draw': 15,
-    'Rare Card Draw': 2,
-    'Relic': 10,
-    'Boss Relic': 2
-}
+# item_pool: Dict[str, int] = {
+#     'Card Draw': 15,
+#     'Rare Card Draw': 2,
+#     'Relic': 10,
+#     'Boss Relic': 2
+# }
 
-event_item_pairs: Dict[str, str] = {
+base_event_item_pairs: Dict[str, str] = {
     "Heart Room": "Victory",
     "Act 1 Boss": "Beat Act 1 Boss",
     "Act 2 Boss": "Beat Act 2 Boss",
     "Act 3 Boss": "Beat Act 3 Boss"
 }
+
+def create_item_tables(vanilla_chars: typing.List[str], extras: int) -> typing.Tuple[dict[str, ItemData], dict[
+    typing.Union[str, int],dict[str,ItemData]], dict[str,str]]:
+    item_name_to_data = dict()
+    characters_to_items: dict[typing.Union[str, int],dict[str, ItemData]] = defaultdict(lambda: dict())
+    event_item_pairs: dict[str, str] = dict()
+    char_num = 0
+
+    for char in vanilla_chars:
+        for key, data in base_item_table.items():
+            newkey = f"{char} {key}"
+            newval = ItemData.increment(data, char_num*CHAR_OFFSET)
+            item_name_to_data[newkey] = newval
+            characters_to_items[char][newkey] = newval
+        for key, val in base_event_item_pairs.items():
+            event_item_pairs[f"{char} {key}"] = f"{char} {val}"
+        char_num += 1
+
+    for i in range(extras):
+        for key, data in base_item_table.items():
+            newkey = f"Custom Character {i+1} {key}"
+            newval = ItemData.increment(data, char_num * CHAR_OFFSET)
+            item_name_to_data[newkey] = newval
+            characters_to_items[i][newkey] = newval
+        for key, val in base_event_item_pairs.items():
+            event_item_pairs[f"Custom Character {i+1} {key}"] = f"Custom Character {i+1} {val}"
+        char_num += 1
+
+
+    return item_name_to_data, characters_to_items, event_item_pairs
+
+item_table, chars_to_items, event_item_pairs = create_item_tables(character_list, NUM_CUSTOM)
