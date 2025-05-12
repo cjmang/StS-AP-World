@@ -1,7 +1,8 @@
-import typing
 from dataclasses import dataclass
 
-from Options import TextChoice, Range, Toggle, PerGameCommonOptions
+from schema import Schema, Optional, And
+
+from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict
 
 
 class Character(TextChoice):
@@ -30,7 +31,8 @@ class Character(TextChoice):
     option_The_Gremlins = 9
     option_The_Automaton = 10
     option_The_Snecko = 11
-    option_spire_take_the_wheel = 12
+    # TODO: Spire Takes the wheel doesn't work with the current setup
+    # option_spire_take_the_wheel = 12
 
 
 class Ascension(Range):
@@ -64,6 +66,34 @@ class DeathLink(Range):
     range_end = 100
     default = 0
 
+class MultiChar(Toggle):
+    """Whether to enable a multi character run. "Spire Take the Wheel" does not work with this feature,
+    and the normal options for character, ascension, etc. are ignored. See the "characters" option."""
+    visibility = Visibility.template
+    display_name = "Multiple Character Run"
+    option_true = 1
+    option_false = 0
+    default = 0
+
+class CharacterOptions(OptionDict):
+    """The configuration for multicharacter.  Each character's options can be configured
+    independently of each other.  No validation is done on the character name, so use carefully.
+    """
+    visibility = Visibility.template
+    default = {
+        "the_ironclad": {
+            "ascension": 0,
+            "final_act": False,
+            "downfall": False,
+        }
+    }
+    schema = Schema({
+        str: {
+            Optional("ascension", default=0): And(int,lambda n: 0 <= n <= 20),
+            Optional("final_act", default=False): bool,
+            Optional("downfall", default=False): bool,
+        }
+    })
 
 @dataclass
 class SpireOptions(PerGameCommonOptions):
@@ -72,3 +102,5 @@ class SpireOptions(PerGameCommonOptions):
     final_act: FinalAct
     downfall: Downfall
     death_link: DeathLink
+    multi_char: MultiChar
+    characters: CharacterOptions

@@ -7,6 +7,7 @@ from typing import Dict
 
 from worlds.spire.Characters import character_list, NUM_CUSTOM
 
+
 CHAR_OFFSET = 20
 
 class ItemType(Enum):

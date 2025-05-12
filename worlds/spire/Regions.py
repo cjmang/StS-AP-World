@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, List, Union
 from BaseClasses import Region
 
 if TYPE_CHECKING:
-    from . import SpireWorld
+    from . import SpireWorld, CharacterConfig
 
 
 def create_regions(world: 'SpireWorld', player: int):
@@ -17,7 +17,8 @@ def create_regions(world: 'SpireWorld', player: int):
     multiworld.regions.append(neow)
     menu.connect(neow)
     # multiworld.regions.append(create_region(multiworld, player, "Neow's Room", None, ["Early Act 1"]))
-    _create_regions(world, player, world.options.character.value, neow)
+    for config in world.characters:
+        _create_regions(world, player, config, neow)
 
     # link up our region with the entrance we just made
     # multiworld.get_entrance("Neow's Room", player).connect(multiworld.get_region('Early Act 1', player))
@@ -28,12 +29,11 @@ def create_regions(world: 'SpireWorld', player: int):
         entrance.connect(region)
 
 
-def _create_regions(world: 'SpireWorld', player: int, character: Union[str,int], neow: Region):
-    from . import create_region, character_list
-    # TODO: prefix here needs to include index of custom character
-    prefix = character_list[character] if type(character) == int else "Custom Character 1"
+def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig', neow: Region):
+    from . import create_region
+    prefix = config.name
     multiworld = world.multiworld
-    first_char_region  =create_region(multiworld, player, prefix, 'Early Act 1',
+    first_char_region = create_region(multiworld, player, prefix, 'Early Act 1',
                                             [
                                                 "Card Draw 1",
                                                 "Card Draw 2",

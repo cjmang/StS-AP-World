@@ -1,9 +1,11 @@
+import logging
 import string
+from logging import Logger
 from typing import Optional, List
 
 from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
-from .Characters import character_list
-from .Items import event_item_pairs, item_table, ItemType, chars_to_items
+from .Characters import character_list, CharacterConfig, character_option_map, character_offset_map, NUM_CUSTOM
+from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs
 from .Locations import location_table
 from .Options import SpireOptions
 from .Regions import create_regions
@@ -22,7 +24,6 @@ class SpireWeb(WebWorld):
         ["Phar"]
     )]
 
-
 class SpireWorld(World):
     """
     A deck-building roguelike where you must craft a unique deck, encounter bizarre creatures, discover relics of
@@ -38,49 +39,104 @@ class SpireWorld(World):
 
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = location_table
+    logger = logging.getLogger("SlaytheSpire")
+
+    def __init__(self, mw: MultiWorld, player: int):
+        super().__init__(mw, player)
+        self.characters: List[CharacterConfig] = []
+        self.modded_num = 0
+        self.modded_chars: List[CharacterConfig] = []
+
+    def generate_early(self):
+        if self.options.multi_char.value == 0:
+            char_val = self.options.character.value
+            if type(char_val) is int:
+                name = character_list[char_val]
+                option_name = character_option_map[char_val]
+                mod_num = 0
+                char_offset = char_val
+            else:
+                option_name = char_val
+                self.modded_num += 1
+                mod_num = self.modded_num
+                name = f"Custom Character {mod_num}"
+                char_offset = len(character_list) + mod_num
+
+            config = CharacterConfig(name,
+                                     option_name,
+                                     char_offset,
+                                     mod_num,
+                                     ascension=self.options.ascension.value,
+                                     final_act=self.options.final_act.value==1,
+                                     downfall=self.options.downfall.value==1)
+            self.characters.append(config)
+            if config.mod_num > 0:
+                self.modded_chars.append(config)
+        else:
+            for option_name, options in self.options.characters.value.items():
+                mod_num = 0
+                char_offset = character_offset_map.get(option_name, None)
+                if char_offset is None:
+                    self.modded_num += 1
+                    mod_num = self.modded_num
+                    char_offset = mod_num + len(character_list) - 1
+                    name = f"Custom Character {mod_num}"
+                else:
+                    name = character_list[char_offset]
+                config = CharacterConfig(name,
+                                         option_name,
+                                         char_offset,
+                                         mod_num,
+                                         **options)
+                self.characters.append(config)
+                if config.mod_num > 0:
+                    self.modded_chars.append(config)
+        for config in self.characters:
+            self.logger.info("StS: Got character configuration" + str(config))
+        if len(self.modded_chars) > NUM_CUSTOM:
+            raise Exception(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
+
 
     def create_items(self):
-        char_val = self.options.character.value
-        if type(char_val) is int:
-            character = character_list[char_val]
-        else:
-            # TODO: update to be offset
-            character = 1 #character_list[1]
+        # char_val = self.options.character.value
+        # if type(char_val) is int:
+        #     character = character_list[char_val]
+        # else:
+        #     # TODO: update to be offset
+        #     character = 1 #character_list[1]
         # Fill out our pool with our items from item_pool, assuming 1 item if not present in item_pool
         pool = []
-        for name, data in chars_to_items[character].items():
-            amount = 0
-            if ItemType.DRAW == data.type:
-                amount = 15
-            elif ItemType.RARE_DRAW == data.type or ItemType.BOSS_RELIC == data.type:
-                amount = 2
-            elif ItemType.RELIC == data.type:
-                amount = 10
-            for _ in range(amount):
+        for config in self.characters:
+            char_lookup = config.name if config.mod_num == 0 else config.mod_num
+            for name, data in chars_to_items[char_lookup].items():
+                amount = 0
+                if ItemType.DRAW == data.type:
+                    amount = 15
+                elif ItemType.RARE_DRAW == data.type or ItemType.BOSS_RELIC == data.type:
+                    amount = 2
+                elif ItemType.RELIC == data.type:
+                    amount = 10
+                for _ in range(amount):
+                    pool.append(SpireItem(name, self.player))
+
+
+            remaining_checks = 51
+
+            if config.final_act:
+                remaining_checks += 4
+            if config.ascension >= 20:
+                remaining_checks += 1
+            for name in self.random.choices([key for key, val in chars_to_items[char_lookup].items()
+                                             if ItemType.GOLD == val.type and ItemClassification.filler == val.classification], weights=[40,60],k=remaining_checks):
                 pool.append(SpireItem(name, self.player))
-
-
-        remaining_checks = 51
-
-        if self.options.final_act:
-            remaining_checks += 4
-        if self.options.ascension >= 20:
-            remaining_checks += 1
-
-        for name in self.random.choices([key for key, val in chars_to_items[character].items()
-                                         if ItemType.GOLD == val.type and ItemClassification.filler == val.classification], weights=[40,60],k=remaining_checks):
-            pool.append(SpireItem(name, self.player))
+            # Pair up our event locations with our event items
+            for base_event, base_item in base_event_item_pairs.items():
+                event = f"{config.name} {base_event}"
+                item = f"{config.name} {base_item}"
+                event_item = SpireItem(item, self.player)
+                self.multiworld.get_location(event, self.player).place_locked_item(event_item)
 
         self.multiworld.itempool += pool
-        # Pair up our event locations with our event items
-        for event, item in event_item_pairs.items():
-            event_item = SpireItem(item, self.player)
-            try:
-                # TODO: UGLY
-                self.multiworld.get_location(event, self.player).place_locked_item(event_item)
-            except:
-                # Expected since no one's running a full squad
-                continue
 
     def set_rules(self):
         set_rules(self, self.player)
@@ -97,13 +153,17 @@ class SpireWorld(World):
             character_offset = 12
         slot_data = {
             'seed': "".join(self.random.choice(string.ascii_letters) for i in range(16)),
-            'character_offset': character_offset,
+            'characters': [
+                c.to_dict() for c in self.characters
+            ]
         }
         slot_data.update(self.options.as_dict("character", "ascension", "final_act", "downfall", "death_link"))
+        print(slot_data)
         return slot_data
 
     def get_filler_item_name(self) -> str:
-        return self.random.choice(['One Gold', 'Five Gold'])
+        config = self.characters[0]
+        return self.random.choice([f"{config.name} One Gold", f"{config.name} Five Gold"])
 
 
 def create_region(world: MultiWorld, player: int, prefix: Optional[str], name: str, locations: List[str] = None, exits: List[str] =None):

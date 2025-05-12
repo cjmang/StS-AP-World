@@ -7,10 +7,11 @@ from worlds.spire import SpireWorld
 class SpireTestBase(WorldTestBase):
     game = 'Slay the Spire'
     world = SpireWorld
-    prefix: typing.ClassVar[str] = "Ironclad"
+    prefix: typing.ClassVar[str] = "Silent"
 
     options = {
-        'character': 0,
+
+        'character': 1,
         'final_act': 1
     }
 
