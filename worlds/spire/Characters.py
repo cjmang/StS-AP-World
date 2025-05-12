@@ -54,7 +54,7 @@ class CharacterConfig:
     # final_act: bool
     # downfall: bool
 
-    def __init__(self, name: str, option_name: str, char_offset: int, mod_num: int, **kwargs):
+    def __init__(self, name: str, option_name: str, char_offset: int, mod_num: int, seed, **kwargs):
         self.name: str = name
         self.option_name: str = option_name
         self.char_offset: int = char_offset
@@ -63,6 +63,7 @@ class CharacterConfig:
             self.official_name: str = self.option_name
         else:
             self.official_name: str = official_names[char_offset]
+        self.seed = seed
         self.ascension: int = kwargs['ascension']
         self.final_act: bool = kwargs['final_act']
         self.downfall: bool = kwargs['downfall']
@@ -73,6 +74,7 @@ class CharacterConfig:
             'option_name': self.option_name,
             'char_offset': self.char_offset,
             'official_name': self.official_name,
+            'seed': self.seed,
             'mod_num': self.mod_num,
             'ascension': self.ascension,
             'final_act': self.final_act,

@@ -62,10 +62,12 @@ class SpireWorld(World):
                 name = f"Custom Character {mod_num}"
                 char_offset = len(character_list) + mod_num
 
+            seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
             config = CharacterConfig(name,
                                      option_name,
                                      char_offset,
                                      mod_num,
+                                     seed,
                                      ascension=self.options.ascension.value,
                                      final_act=self.options.final_act.value==1,
                                      downfall=self.options.downfall.value==1)
@@ -83,10 +85,12 @@ class SpireWorld(World):
                     name = f"Custom Character {mod_num}"
                 else:
                     name = character_list[char_offset]
+                seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
                 config = CharacterConfig(name,
                                          option_name,
                                          char_offset,
                                          mod_num,
+                                         seed,
                                          **options)
                 self.characters.append(config)
                 if config.mod_num > 0:
@@ -148,17 +152,12 @@ class SpireWorld(World):
         create_regions(self, self.player)
 
     def fill_slot_data(self) -> dict:
-        character_offset = self.options.character.value
-        if type(character_offset) is str:
-            character_offset = 12
         slot_data = {
-            'seed': "".join(self.random.choice(string.ascii_letters) for i in range(16)),
             'characters': [
                 c.to_dict() for c in self.characters
             ]
         }
         slot_data.update(self.options.as_dict("character", "ascension", "final_act", "downfall", "death_link"))
-        print(slot_data)
         return slot_data
 
     def get_filler_item_name(self) -> str:
