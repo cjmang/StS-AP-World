@@ -102,12 +102,6 @@ class SpireWorld(World):
 
 
     def create_items(self):
-        # char_val = self.options.character.value
-        # if type(char_val) is int:
-        #     character = character_list[char_val]
-        # else:
-        #     # TODO: update to be offset
-        #     character = 1 #character_list[1]
         # Fill out our pool with our items from item_pool, assuming 1 item if not present in item_pool
         pool = []
         for config in self.characters:
@@ -123,16 +117,16 @@ class SpireWorld(World):
                 for _ in range(amount):
                     pool.append(SpireItem(name, self.player))
 
+            if self.options.include_floor_checks.value:
+                remaining_checks = 51
 
-            remaining_checks = 51
-
-            if config.final_act:
-                remaining_checks += 4
-            if config.ascension >= 20:
-                remaining_checks += 1
-            for name in self.random.choices([key for key, val in chars_to_items[char_lookup].items()
-                                             if ItemType.GOLD == val.type and ItemClassification.filler == val.classification], weights=[40,60],k=remaining_checks):
-                pool.append(SpireItem(name, self.player))
+                if config.final_act:
+                    remaining_checks += 4
+                if config.ascension >= 20:
+                    remaining_checks += 1
+                for name in self.random.choices([key for key, val in chars_to_items[char_lookup].items()
+                                                 if ItemType.GOLD == val.type and ItemClassification.filler == val.classification], weights=[40,60],k=remaining_checks):
+                    pool.append(SpireItem(name, self.player))
             # Pair up our event locations with our event items
             for base_event, base_item in base_event_item_pairs.items():
                 event = f"{config.name} {base_event}"
@@ -157,7 +151,14 @@ class SpireWorld(World):
                 c.to_dict() for c in self.characters
             ]
         }
-        slot_data.update(self.options.as_dict("character", "ascension", "final_act", "downfall", "death_link"))
+        slot_data.update(self.options.as_dict(
+            "character",
+            "ascension",
+            "final_act",
+            "downfall",
+            "death_link",
+            "include_floor_checks"
+        ))
         return slot_data
 
     def get_filler_item_name(self) -> str:

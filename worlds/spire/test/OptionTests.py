@@ -12,6 +12,7 @@ class TestDefault(SpireTestBase):
 class TestMultiCharsValid(SpireTestBase):
 
     options = {
+        "multi_char": 1,
         "characters": {
             "the_ironclad": {
                 "ascension": 1
@@ -24,3 +25,13 @@ class TestMultiCharsValid(SpireTestBase):
 
     def test_valid(self):
         CharacterOptions.schema.validate(self.world.options.characters.value)
+
+class TestNoFloorChecks(SpireTestBase):
+
+    options = {
+        "include_floor_checks": 0
+    }
+
+    def test_no_floors(self):
+        for loc in self.world.get_locations():
+            self.assertFalse("Reached" in loc.name, loc.name)

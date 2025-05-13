@@ -66,6 +66,13 @@ class DeathLink(Range):
     range_end = 100
     default = 0
 
+class IncludeFloorChecks(Toggle):
+    """Whether to include reaching new floors as a location.  Adds small amounts of gold as items."""
+    display_name = "Include Floor Checks"
+    option_true = 1
+    option_false = 0
+    default = 1
+
 class MultiChar(Toggle):
     """Whether to enable a multi character run. "Spire Take the Wheel" does not work with this feature,
     and the normal options for character, ascension, etc. are ignored. See the "characters" option."""
@@ -102,5 +109,6 @@ class SpireOptions(PerGameCommonOptions):
     final_act: FinalAct
     downfall: Downfall
     death_link: DeathLink
+    include_floor_checks: IncludeFloorChecks
     multi_char: MultiChar
     characters: CharacterOptions
