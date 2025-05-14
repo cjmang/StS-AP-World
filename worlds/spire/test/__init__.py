@@ -10,7 +10,6 @@ class SpireTestBase(WorldTestBase):
     prefix: typing.ClassVar[str] = "Silent"
 
     options = {
-
         'character': 1,
         'final_act': 1
     }

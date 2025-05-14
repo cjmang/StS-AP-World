@@ -9,6 +9,8 @@ class PowerLevel(NamedTuple):
     draw: int = 0
     relic: int = 0
     boss_relic: int = 0
+    rest: int = 0
+    smith: int = 0
 
 def _create_floor_check(start: int, end: int) -> List[str]:
     return [f"Reached Floor {i}" for i in range(start, end + 1)]
@@ -18,21 +20,23 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Card Draw 1",
         "Card Draw 2",
         "Card Draw 3",
+        "Act 1 Campfire 1",
+        "Act 1 Campfire 2",
         *_create_floor_check(1,10)
     ],
     PowerLevel(1): [
         "Relic 1",
     ],
-    PowerLevel(0,1): [
+    PowerLevel(draw=0,relic=1, rest=1): [
         "Card Draw 4",
         "Card Draw 5",
     ],
-    PowerLevel(2): [
+    PowerLevel(draw=2,rest=1): [
         "Relic 2",
         "Relic 3",
         *_create_floor_check(11, 15)
     ],
-    PowerLevel(3,2): [
+    PowerLevel(draw=3,relic=2, rest=1, smith=1): [
         "Act 1 Boss",
         "Rare Card Draw 1",
         "Boss Relic 1",
@@ -40,44 +44,51 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Card Draw 7",
         *_create_floor_check(16, 22)
     ],
-    PowerLevel(6,2): [
+    PowerLevel(draw=6,relic=2, rest=2,smith=1): [
+        "Act 2 Campfire 1",
+        "Act 2 Campfire 2",
         *_create_floor_check(23, 27)
     ],
-    PowerLevel(6, 3): [
+    PowerLevel(draw=6, relic=3, rest=2, smith=1): [
         "Card Draw 8",
         *_create_floor_check(28, 32)
     ],
-    PowerLevel(6, 4): [
+    PowerLevel(draw=6, relic=4, rest=2, smith=1): [
         "Card Draw 9",
     ],
-    PowerLevel(7, 2): [
+    PowerLevel(draw=7, relic=2, rest=2,smith=1): [
         "Relic 4",
         "Relic 5",
     ],
-    PowerLevel(7, 3): [
+    PowerLevel(draw=7, relic=3, rest=2,smith=1): [
         "Relic 6",
     ],
-    PowerLevel(7, 4): [
+    PowerLevel(draw=7, relic=4, rest=2, smith=1): [
         "Card Draw 10",
     ],
-    PowerLevel(7, 3, 1): [
+    PowerLevel(draw=7, relic=3, boss_relic=1, rest=2, smith=2): [
         "Act 2 Boss",
         "Rare Card Draw 2",
         "Boss Relic 2",
         "Card Draw 11",
         "Card Draw 12",
+        *_create_floor_check(33, 39)
+    ],
+    PowerLevel(draw=7,relic=3,boss_relic=1, rest=3,smith=2): [
         "Card Draw 13",
         "Card Draw 14",
         "Card Draw 15",
         "Relic 7",
-        *_create_floor_check(33, 49)
+        "Act 3 Campfire 1",
+        "Act 3 Campfire 2",
+        *_create_floor_check(40, 49)
     ],
-    PowerLevel(7,4,1): [
+    PowerLevel(draw=7,relic=4,boss_relic=1, rest=3,smith=2): [
         "Relic 8",
         "Relic 9",
         "Relic 10",
     ],
-    PowerLevel(7,5,2): [
+    PowerLevel(draw=7,relic=5,boss_relic=2,rest=3,smith=3): [
         "Act 3 Boss",
         "Heart Room",
         * _create_floor_check(50, 55)
@@ -88,6 +99,12 @@ def setup_power_map(map: dict[PowerLevel, List[str]], prefix: str) -> dict[Power
     return {key: [f"{prefix} {x}" for x in val] for key, val in map.items()}
 
 class LogicTestBase(SpireTestBase):
+
+    options = {
+        'character': 1,
+        'final_act': 1,
+        'campfire_sanity':1,
+    }
 
     def _setup_state_accessible(self, original_state: CollectionState, power: PowerLevel) -> CollectionState:
 
@@ -105,6 +122,14 @@ class LogicTestBase(SpireTestBase):
         for _ in range(power.boss_relic):
             state.collect(boss_relic)
 
+        rest = self.get_item_by_name(f"{self.prefix} Progressive Rest")
+        for _ in range(power.rest):
+            state.collect(rest)
+
+        smith = self.get_item_by_name(f"{self.prefix} Progressive Smith")
+        for _ in range(power.smith):
+            state.collect(smith)
+
         return state
 
     def _setup_state_inaccessible(self, original_state: CollectionState, power: PowerLevel, type: str):
@@ -112,38 +137,39 @@ class LogicTestBase(SpireTestBase):
         state = original_state.copy()
 
         draw = self.get_item_by_name(f"{self.prefix} Card Draw")
-        for _ in range(power.draw - 1):
-            state.collect(draw)
+        draws = [draw for _ in range(power.draw)]
 
         relic = self.get_item_by_name(f"{self.prefix} Relic")
-        for _ in range(power.relic - 1):
-            state.collect(relic)
+        relics = [relic for _ in range(power.relic)]
 
         boss_relic = self.get_item_by_name(f"{self.prefix} Boss Relic")
-        for _ in range(power.boss_relic - 1):
-            state.collect(boss_relic)
+        boss_relics = [boss_relic for _ in range(power.boss_relic)]
 
+        rest = self.get_item_by_name(f"{self.prefix} Progressive Rest")
+        rests = [rest for _ in range(power.rest)]
+
+        smith = self.get_item_by_name(f"{self.prefix} Progressive Smith")
+        smiths = [smith for _ in range(power.smith)]
         if type == "Card Draw":
-            if power.relic > 0:
-                state.collect(relic)
-            if power.boss_relic > 0:
-                state.collect(boss_relic)
+            draws.pop()
         elif type == "Relic":
-            if power.draw > 0:
-                state.collect(draw)
-            if power.boss_relic > 0:
-                state.collect(boss_relic)
+            relics.pop()
         elif type == "Boss Relic":
-            if power.draw > 0:
-                state.collect(draw)
-            if power.relic > 0:
-                state.collect(relic)
+            boss_relics.pop()
+        elif type == "Progressive Rest":
+            rests.pop()
+        elif type == "Progressive Smith":
+            smiths.pop()
+
+        for list in [draws, relics, boss_relics, rests, smiths]:
+            for item in list:
+                state.collect(item)
 
         return state
 
     def _test_inaccessible(self, power: PowerLevel, locations: Iterable[str]):
 
-        for i, type in enumerate([ f"{self.prefix} {x}" for x in ['Card Draw', 'Relic', 'Boss Relic']]):
+        for i, type in enumerate([ x for x in ['Card Draw', 'Relic', 'Boss Relic', 'Progressive Rest', 'Progressive Smith']]):
             if power[i] == 0:
                 continue
             state = self._setup_state_inaccessible(self.multiworld.state, power, type)

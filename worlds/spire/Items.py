@@ -17,6 +17,7 @@ class ItemType(Enum):
     BOSS_RELIC = auto()
     GOLD = auto()
     EVENT = auto()
+    CAMPFIRE = auto()
 
 
 class ItemData(typing.NamedTuple):
@@ -38,6 +39,8 @@ base_item_table: Dict[str, ItemData] = {
     'Boss Relic': ItemData(4, ItemType.BOSS_RELIC),
     'One Gold': ItemData(5, ItemType.GOLD, ItemClassification.filler),
     'Five Gold': ItemData(6, ItemType.GOLD, ItemClassification.filler),
+    'Progressive Rest': ItemData(7, ItemType.CAMPFIRE),
+    'Progressive Smith': ItemData(8, ItemType.CAMPFIRE),
 
     # Event Items
     'Victory': ItemData(None, None, ItemClassification.progression, True, True),

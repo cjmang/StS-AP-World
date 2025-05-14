@@ -35,3 +35,41 @@ class TestNoFloorChecks(SpireTestBase):
     def test_no_floors(self):
         for loc in self.world.get_locations():
             self.assertFalse("Reached" in loc.name, loc.name)
+
+class TestCampfireSanity(SpireTestBase):
+
+    options = {
+        "campfire_sanity": 1
+    }
+
+    def test_locs(self):
+        count = 0
+        for loc in self.world.get_locations():
+            if "Campfire" in loc.name:
+                count += 1
+        self.assertEquals(6, count)
+
+    def test_no_rest(self):
+        count = 0
+        for item in self.world.multiworld.get_items():
+            if "Rest" in item.name:
+                    count += 1
+        self.assertEquals(3, count)
+
+    def test_no_smith(self):
+        count = 0
+        for item in self.world.multiworld.get_items():
+            if "Smith" in item.name:
+                count += 1
+        self.assertEquals(3, count)
+
+class TestNoCampfireSanity(SpireTestBase):
+
+    def no_items(self):
+        for item in self.world.multiworld.get_items():
+            self.assertFalse("Campfire" in item.name)
+
+    def no_locations(self):
+        for loc in self.world.get_locations():
+            self.assertFalse("Rest" in loc.name)
+            self.assertFalse("Smith" in loc.name)

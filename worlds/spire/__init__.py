@@ -114,6 +114,8 @@ class SpireWorld(World):
                     amount = 2
                 elif ItemType.RELIC == data.type:
                     amount = 10
+                elif ItemType.CAMPFIRE == data.type and self.options.campfire_sanity:
+                    amount = 3
                 for _ in range(amount):
                     pool.append(SpireItem(name, self.player))
 
@@ -157,7 +159,8 @@ class SpireWorld(World):
             "final_act",
             "downfall",
             "death_link",
-            "include_floor_checks"
+            "include_floor_checks",
+            "campfire_sanity"
         ))
         return slot_data
 

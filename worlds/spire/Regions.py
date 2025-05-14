@@ -50,6 +50,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Card Draw 5',
                                                 'Relic 1',
                                                 'Relic 2',
+                                                *_create_campfire_check(world, 1),
                                                 *_create_floor_check(6, 10, world)
                                             ],["Late Act 1"]))
 
@@ -79,6 +80,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Card Draw 8',
                                                 'Relic 4',
                                                 'Relic 5',
+                                                *_create_campfire_check(world, 2),
                                                 * _create_floor_check(23, 27, world)
                                             ], ["Late Act 2"]))
 
@@ -110,6 +112,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 13",
                                                 "Relic 7",
                                                 "Relic 8",
+                                                *_create_campfire_check(world, 3),
                                                 *_create_floor_check(40, 44, world),
                                             ], ["Late Act 3"]))
 
@@ -140,5 +143,11 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
 def _create_floor_check(start: int, end: int, world: 'SpireWorld') -> List[str]:
     if world.options.include_floor_checks.value:
         return [f"Reached Floor {i}" for i in range(start, end + 1)]
+    else:
+        return []
+
+def _create_campfire_check(world: 'SpireWorld', act: int) -> List[str]:
+    if world.options.campfire_sanity.value:
+        return [f"Act {act} Campfire 1", f"Act {act} Campfire 2"]
     else:
         return []

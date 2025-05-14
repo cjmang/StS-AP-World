@@ -73,6 +73,14 @@ class IncludeFloorChecks(Toggle):
     option_false = 0
     default = 1
 
+class CampfireSanity(Toggle):
+    """Whether to shuffle being able to rest and smith at each campsite per act.  Also adds
+    new locations at campsites per act."""
+    display_name = "Campfire Sanity"
+    option_true = 1
+    option_false = 0
+    default = 0
+
 class MultiChar(Toggle):
     """Whether to enable a multi character run. "Spire Take the Wheel" does not work with this feature,
     and the normal options for character, ascension, etc. are ignored. See the "characters" option."""
@@ -112,3 +120,4 @@ class SpireOptions(PerGameCommonOptions):
     include_floor_checks: IncludeFloorChecks
     multi_char: MultiChar
     characters: CharacterOptions
+    campfire_sanity: CampfireSanity

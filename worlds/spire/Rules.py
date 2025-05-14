@@ -17,6 +17,18 @@ class SpireLogic(LogicMixin):
         count = self.count(f"{prefix} Card Draw", player) + self.count(f"{prefix} Rare Card Draw", player)
         return count >= amount
 
+    def _spire_has_rests(self, player: int, prefix: str, amount: int, campsanity: int) -> bool:
+        if campsanity:
+            return self.count(f"{prefix} Progressive Rest", player) >= amount
+        else:
+            return True
+
+    def _spire_has_smiths(self, player: int, prefix: str, amount: int, campsanity: int) -> bool:
+        if campsanity:
+            return self.count(f"{prefix} Progressive Smith", player) >= amount
+        else:
+            return True
+
     def _spire_has_victories(self, player: int, configs: List['CharacterConfig']):
         for config in configs:
             if not self.has(f"{config.name} Victory", player):
@@ -39,19 +51,26 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
     set_rule(multiworld.get_location(f"{prefix} Card Draw 1", player), lambda state: True)
     set_rule(multiworld.get_location(f"{prefix} Card Draw 2", player), lambda state: True)
     set_rule(multiworld.get_location(f"{prefix} Card Draw 3", player), lambda state: True)
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player), lambda state: state._spire_has_relics(player, prefix, 1))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 5", player), lambda state: state._spire_has_relics(player, prefix, 1))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player), lambda state: state._spire_has_relics(player, prefix, 1)
+             and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
+
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 5", player), lambda state: state._spire_has_relics(player, prefix, 1)
+            and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
 
     # Act 1 Relics
     set_rule(multiworld.get_location(f"{prefix} Relic 1", player), lambda state: state._spire_has_cards(player, prefix, 1))
-    set_rule(multiworld.get_location(f"{prefix} Relic 2", player), lambda state: state._spire_has_cards(player, prefix, 2))
-    set_rule(multiworld.get_location(f"{prefix} Relic 3", player), lambda state: state._spire_has_cards(player, prefix, 2))
+    set_rule(multiworld.get_location(f"{prefix} Relic 2", player), lambda state: state._spire_has_cards(player, prefix, 2)
+            and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
+    set_rule(multiworld.get_location(f"{prefix} Relic 3", player), lambda state: state._spire_has_cards(player, prefix, 2)
+            and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
 
-    set_rule(multiworld.get_entrance(f"{prefix} Late Act 1", player), lambda state: state._spire_has_cards(player, prefix, 2))
+    set_rule(multiworld.get_entrance(f"{prefix} Late Act 1", player), lambda state: state._spire_has_cards(player, prefix, 2)
+            and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
 
     # Act 1 Boss Event
     set_rule(multiworld.get_entrance(f"{prefix} Act 1 Boss Arena", player),lambda state: state._spire_has_cards(player, prefix, 3) and
-                                                                                         state._spire_has_relics(player, prefix, 2))
+                                                                                         state._spire_has_relics(player, prefix, 2) and
+                                                                                        state._spire_has_smiths(player, prefix, 1, world.options.campfire_sanity))
 
     # Act 1 Boss Rewards
     set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 1", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
@@ -78,13 +97,18 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
                                                                                  state._spire_has_cards(player, prefix, 7) and state._spire_has_relics(player, prefix, 3))
 
     set_rule(multiworld.get_entrance(f"{prefix} Mid Act 2", player), lambda state: state._spire_has_cards(player, prefix, 6) and
-                                                                                   state._spire_has_relics(player, prefix, 2))
+                                                                                   state._spire_has_relics(player, prefix, 2) and
+                                                                                   state._spire_has_rests(player, prefix, 2, world.options.campfire_sanity))
 
     set_rule(multiworld.get_entrance(f"{prefix} Late Act 2", player), lambda state: state._spire_has_cards(player, prefix, 6) and
                                                                                     state._spire_has_relics(player, prefix, 3))
 
     # Act 2 Boss Event
-    set_rule(multiworld.get_entrance(f"{prefix} Act 2 Boss Arena", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and state._spire_has_cards(player, prefix, 7) and state._spire_has_relics(player, prefix, 4) and state.has(f"{prefix} Boss Relic", player))
+    set_rule(multiworld.get_entrance(f"{prefix} Act 2 Boss Arena", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and
+                                                                                          state._spire_has_cards(player, prefix, 7) and
+                                                                                          state._spire_has_relics(player, prefix, 4) and
+                                                                                          state.has(f"{prefix} Boss Relic", player) and
+                                                                                          state._spire_has_smiths(player, prefix, 2, world.options.campfire_sanity))
 
     # Act 2 Boss Rewards
     set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 2", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
@@ -105,9 +129,13 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
     set_rule(multiworld.get_location(f"{prefix} Relic 9", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 5))
     set_rule(multiworld.get_location(f"{prefix} Relic 10", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 5))
 
-    set_rule(multiworld.get_entrance(f"{prefix} Mid Act 3", player), lambda state: state._spire_has_relics(player, prefix, 4))
+    set_rule(multiworld.get_entrance(f"{prefix} Mid Act 3", player), lambda state: state._spire_has_relics(player, prefix, 4) and
+                                                                                                state._spire_has_rests(player, prefix, 3, world.options.campfire_sanity))
 
     # Act 3 Boss Event
-    set_rule(multiworld.get_entrance(f"{prefix} Act 3 Boss Arena", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 7) and state.has(f"{prefix} Boss Relic", player, 2))
+    set_rule(multiworld.get_entrance(f"{prefix} Act 3 Boss Arena", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and
+                                                                                          state._spire_has_relics(player, prefix, 7) and
+                                                                                          state.has(f"{prefix} Boss Relic", player, 2) and
+                                                                                          state._spire_has_smiths(player, prefix, 3, world.options.campfire_sanity))
 
     set_rule(multiworld.get_entrance(f"{prefix} Act 4", player), lambda state: state.has(f"{prefix} Beat Act 3 Boss", player))
