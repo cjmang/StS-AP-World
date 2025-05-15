@@ -210,5 +210,6 @@ class CustomCharTest(LogicTests):
     prefix = "Custom Character 1"
     options = {
         'character': 'foobar',
-        'final_act': 1
+        'final_act': 1,
+        'campfire_sanity': 1,
     }

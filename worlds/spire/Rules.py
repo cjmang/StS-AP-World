@@ -1,5 +1,6 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, NamedTuple, Union
 
+from BaseClasses import CollectionState
 from ..AutoWorld import LogicMixin
 from ..generic.Rules import set_rule
 
@@ -7,36 +8,58 @@ if TYPE_CHECKING:
     from . import SpireWorld, CharacterConfig
 
 
+class PowerLevel(NamedTuple):
+    draw: int = 0
+    relic: int = 0
+    boss_relic: int = 0
+    rest: int = 0
+    smith: int = 0
+
 class SpireLogic(LogicMixin):
-    def _spire_has_relics(self, player: int, prefix, amount: int) -> bool:
+    def _spire_has_relics(self: CollectionState, player: int, prefix, amount: int) -> bool:
         count: int = self.count(f"{prefix} Relic", player) + self.count(f"{prefix} Boss Relic", player)
         return count >= amount
 
-    def _spire_has_cards(self, player: int, prefix, amount: int) -> bool:
+    def _spire_has_cards(self: CollectionState, player: int, prefix, amount: int) -> bool:
         count = self.count(f"{prefix} Card Draw", player) + self.count(f"{prefix} Rare Card Draw", player)
         return count >= amount
 
-    def _spire_has_rests(self, player: int, prefix: str, amount: int, campsanity: int) -> bool:
+    def _spire_has_rests(self: CollectionState, player: int, prefix: str, amount: int, campsanity: int) -> bool:
         if campsanity:
             return self.count(f"{prefix} Progressive Rest", player) >= amount
         else:
             return True
 
-    def _spire_has_smiths(self, player: int, prefix: str, amount: int, campsanity: int) -> bool:
+    def _spire_has_smiths(self: CollectionState, player: int, prefix: str, amount: int, campsanity: int) -> bool:
         if campsanity:
             return self.count(f"{prefix} Progressive Smith", player) >= amount
         else:
             return True
 
-    def _spire_has_victories(self, player: int, configs: List['CharacterConfig']):
+    def _spire_has_victories(self: CollectionState, player: int, configs: List['CharacterConfig']):
         for config in configs:
             if not self.has(f"{config.name} Victory", player):
                 return False
         return True
 
+    def _spire_has_power(self: Union[CollectionState, 'SpireLogic'], world: 'SpireWorld', prefix: str, power: PowerLevel) -> bool:
+        result: bool = True
+        if power.relic > 0:
+            result &= self._spire_has_relics(world.player, prefix, power.relic)
+        if power.boss_relic > 0:
+            result &= self.count(f"{prefix} Boss Relic", world.player) >= power.boss_relic
+        if power.draw > 0:
+            result &= self._spire_has_cards(world.player, prefix, power.draw)
+        if world.options.campfire_sanity != 0:
+            if power.rest > 0:
+                result &= self.count(f"{prefix} Progressive Rest", world.player) >= power.rest
+            if power.smith > 0:
+                result &= self.count(f"{prefix} Progressive Smith", world.player) >= power.smith
+        return result
+
+
 
 def set_rules(world: 'SpireWorld', player: int):
-    from . import character_list
     multiworld = world.multiworld
     for config in world.characters:
         _set_rules(world, player, config)
@@ -47,94 +70,94 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
     multiworld = world.multiworld
     prefix = config.name
     # Act 1 Card Draws
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 1", player), lambda state: True)
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 2", player), lambda state: True)
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 3", player), lambda state: True)
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player), lambda state: state._spire_has_relics(player, prefix, 1)
-             and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
 
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 5", player), lambda state: state._spire_has_relics(player, prefix, 1)
-            and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 5", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1, rest=1)))
 
     # Act 1 Relics
-    set_rule(multiworld.get_location(f"{prefix} Relic 1", player), lambda state: state._spire_has_cards(player, prefix, 1))
-    set_rule(multiworld.get_location(f"{prefix} Relic 2", player), lambda state: state._spire_has_cards(player, prefix, 2)
-            and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
-    set_rule(multiworld.get_location(f"{prefix} Relic 3", player), lambda state: state._spire_has_cards(player, prefix, 2)
-            and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
+    set_rule(multiworld.get_location(f"{prefix} Relic 1", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=1)))
+    set_rule(multiworld.get_location(f"{prefix} Relic 2", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=2, rest=1)))
+    set_rule(multiworld.get_location(f"{prefix} Relic 3", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=2, rest=1)))
 
-    set_rule(multiworld.get_entrance(f"{prefix} Late Act 1", player), lambda state: state._spire_has_cards(player, prefix, 2)
-            and state._spire_has_rests(player, prefix, 1, world.options.campfire_sanity))
+    set_rule(multiworld.get_entrance(f"{prefix} Late Act 1", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=2, rest=1)))
 
     # Act 1 Boss Event
-    set_rule(multiworld.get_entrance(f"{prefix} Act 1 Boss Arena", player),lambda state: state._spire_has_cards(player, prefix, 3) and
-                                                                                         state._spire_has_relics(player, prefix, 2) and
-                                                                                        state._spire_has_smiths(player, prefix, 1, world.options.campfire_sanity))
+    set_rule(multiworld.get_entrance(f"{prefix} Act 1 Boss Arena", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=3, relic=2, smith=1)))
 
     # Act 1 Boss Rewards
-    set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 1", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
-    set_rule(multiworld.get_location(f"{prefix} Boss Relic 1", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
-
-    set_rule(multiworld.get_entrance(f"{prefix} Early Act 2", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
+    set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 1", player),
+             lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
+    set_rule(multiworld.get_location(f"{prefix} Boss Relic 1", player),
+             lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
+    set_rule(multiworld.get_entrance(f"{prefix} Early Act 2", player),
+             lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
 
     # Act 2 Card Draws
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 6", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 7", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 8", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and
-                                                                                     state._spire_has_cards(player, prefix, 6) and state._spire_has_relics(player, prefix, 3))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 9", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and
-                                                                                     state._spire_has_cards(player, prefix, 6) and state._spire_has_relics(player, prefix, 4))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 10", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and
-                                                                                      state._spire_has_cards(player, prefix, 7) and state._spire_has_relics(player, prefix, 4))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 8", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 9", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6, relic=4)))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 10", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=4)))
 
     # Act 2 Relics
-    set_rule(multiworld.get_location(f"{prefix} Relic 4", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and
-                                                                                 state._spire_has_cards(player, prefix, 7) and state._spire_has_relics(player, prefix, 2))
-    set_rule(multiworld.get_location(f"{prefix} Relic 5", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and
-                                                                                 state._spire_has_cards(player, prefix, 7) and state._spire_has_relics(player, prefix, 2))
-    set_rule(multiworld.get_location(f"{prefix} Relic 6", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and
-                                                                                 state._spire_has_cards(player, prefix, 7) and state._spire_has_relics(player, prefix, 3))
+    set_rule(multiworld.get_location(f"{prefix} Relic 4", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=2)))
+    set_rule(multiworld.get_location(f"{prefix} Relic 5", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=2)))
+    set_rule(multiworld.get_location(f"{prefix} Relic 6", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=3)))
 
-    set_rule(multiworld.get_entrance(f"{prefix} Mid Act 2", player), lambda state: state._spire_has_cards(player, prefix, 6) and
-                                                                                   state._spire_has_relics(player, prefix, 2) and
-                                                                                   state._spire_has_rests(player, prefix, 2, world.options.campfire_sanity))
+    set_rule(multiworld.get_entrance(f"{prefix} Mid Act 2", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=2,rest=2)))
 
-    set_rule(multiworld.get_entrance(f"{prefix} Late Act 2", player), lambda state: state._spire_has_cards(player, prefix, 6) and
-                                                                                    state._spire_has_relics(player, prefix, 3))
+    set_rule(multiworld.get_entrance(f"{prefix} Late Act 2", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6, relic=3)))
 
     # Act 2 Boss Event
-    set_rule(multiworld.get_entrance(f"{prefix} Act 2 Boss Arena", player), lambda state: state.has(f"{prefix} Beat Act 1 Boss", player) and
-                                                                                          state._spire_has_cards(player, prefix, 7) and
-                                                                                          state._spire_has_relics(player, prefix, 4) and
-                                                                                          state.has(f"{prefix} Boss Relic", player) and
-                                                                                          state._spire_has_smiths(player, prefix, 2, world.options.campfire_sanity))
+    set_rule(multiworld.get_entrance(f"{prefix} Act 2 Boss Arena", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=4, boss_relic=1, smith=2)))
 
     # Act 2 Boss Rewards
-    set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 2", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
-    set_rule(multiworld.get_location(f"{prefix} Boss Relic 2", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
+    set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 2", player),
+             lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
+    set_rule(multiworld.get_location(f"{prefix} Boss Relic 2", player),
+             lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
 
-    set_rule(multiworld.get_entrance(f"{prefix} Early Act 3", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
+    set_rule(multiworld.get_entrance(f"{prefix} Early Act 3", player),
+             lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
 
     # Act 3 Card Draws
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 11", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 12", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 13", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 4))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 14", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 4))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 15", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 4))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 13", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 14", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 15", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
 
     # Act 3 Relics
-    set_rule(multiworld.get_location(f"{prefix} Relic 7", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 4))
-    set_rule(multiworld.get_location(f"{prefix} Relic 8", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 5))
-    set_rule(multiworld.get_location(f"{prefix} Relic 9", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 5))
-    set_rule(multiworld.get_location(f"{prefix} Relic 10", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and state._spire_has_relics(player, prefix, 5))
+    set_rule(multiworld.get_location(f"{prefix} Relic 7", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
+    set_rule(multiworld.get_location(f"{prefix} Relic 8", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=5)))
+    set_rule(multiworld.get_location(f"{prefix} Relic 9", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=5)))
+    set_rule(multiworld.get_location(f"{prefix} Relic 10", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=5)))
 
-    set_rule(multiworld.get_entrance(f"{prefix} Mid Act 3", player), lambda state: state._spire_has_relics(player, prefix, 4) and
-                                                                                                state._spire_has_rests(player, prefix, 3, world.options.campfire_sanity))
+    set_rule(multiworld.get_entrance(f"{prefix} Mid Act 3", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4, rest=3)))
 
     # Act 3 Boss Event
-    set_rule(multiworld.get_entrance(f"{prefix} Act 3 Boss Arena", player), lambda state: state.has(f"{prefix} Beat Act 2 Boss", player) and
-                                                                                          state._spire_has_relics(player, prefix, 7) and
-                                                                                          state.has(f"{prefix} Boss Relic", player, 2) and
-                                                                                          state._spire_has_smiths(player, prefix, 3, world.options.campfire_sanity))
+    set_rule(multiworld.get_entrance(f"{prefix} Act 3 Boss Arena", player),
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=7, boss_relic=2, smith=3)))
 
-    set_rule(multiworld.get_entrance(f"{prefix} Act 4", player), lambda state: state.has(f"{prefix} Beat Act 3 Boss", player))
+    set_rule(multiworld.get_entrance(f"{prefix} Act 4", player),
+             lambda state: state.has(f"{prefix} Beat Act 3 Boss", player))

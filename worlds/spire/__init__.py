@@ -123,6 +123,7 @@ class SpireWorld(World):
                 remaining_checks = 51
 
                 if config.final_act:
+                    print("Adding final act checks")
                     remaining_checks += 4
                 if config.ascension >= 20:
                     remaining_checks += 1

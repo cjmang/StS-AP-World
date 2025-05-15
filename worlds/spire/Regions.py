@@ -132,7 +132,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
     multiworld.regions.append(world.create_region(player, prefix, 'Act 4',
                                             [
                                                 "Heart Room",
-                                                *(_create_floor_check(52 + acension_mod,55 + acension_mod) if world.options.final_act else [])
+                                                *(_create_floor_check(52 + acension_mod,55 + acension_mod) if config.final_act else [])
                                             ]))
 
 
