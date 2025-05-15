@@ -50,13 +50,6 @@ base_item_table: Dict[str, ItemData] = {
 
 }
 
-# item_pool: Dict[str, int] = {
-#     'Card Draw': 15,
-#     'Rare Card Draw': 2,
-#     'Relic': 10,
-#     'Boss Relic': 2
-# }
-
 base_event_item_pairs: Dict[str, str] = {
     "Heart Room": "Victory",
     "Act 1 Boss": "Beat Act 1 Boss",

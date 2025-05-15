@@ -3,14 +3,8 @@ from typing import List, Optional
 from typing_extensions import NamedTuple, Iterable
 
 from BaseClasses import CollectionState
+from worlds.spire.Rules import PowerLevel
 from worlds.spire.test import SpireTestBase
-
-class PowerLevel(NamedTuple):
-    draw: int = 0
-    relic: int = 0
-    boss_relic: int = 0
-    rest: int = 0
-    smith: int = 0
 
 def _create_floor_check(start: int, end: int) -> List[str]:
     return [f"Reached Floor {i}" for i in range(start, end + 1)]
