@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, List
 
-from BaseClasses import MultiWorld
 from ..AutoWorld import LogicMixin
 from ..generic.Rules import set_rule
 

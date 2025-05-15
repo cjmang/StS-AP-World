@@ -6,7 +6,7 @@ from typing import Optional, List
 from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
 from .Characters import character_list, CharacterConfig, character_option_map, character_offset_map, NUM_CUSTOM
 from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs
-from .Locations import location_table
+from .Locations import location_table, loc_ids_to_data, LocationData, LocationType
 from .Options import SpireOptions
 from .Regions import create_regions
 from .Rules import set_rules
@@ -169,20 +169,31 @@ class SpireWorld(World):
         return self.random.choice([f"{config.name} One Gold", f"{config.name} Five Gold"])
 
 
-def create_region(world: MultiWorld, player: int, prefix: Optional[str], name: str, locations: List[str] = None, exits: List[str] =None):
-    ret = Region(f"{prefix} {name}" if prefix is not None else name, player, world)
-    if locations:
-        locs: dict[str, Optional[int]] = dict()
-        for location in locations:
-            loc_name = f"{prefix} {location}" if prefix is not None else location
-            loc_id = location_table.get(loc_name, 0)
-            locs[loc_name] = loc_id
-        ret.add_locations(locs, SpireLocation)
-    if exits:
-        for exit in exits:
-            exit_name = f"{prefix} {exit}" if prefix is not None else exit
-            ret.create_exit(exit_name)
-    return ret
+    def create_region(self, player: int, prefix: Optional[str], name: str, locations: List[str] = None, exits: List[str] =None):
+        ret = Region(f"{prefix} {name}" if prefix is not None else name, player, self.multiworld)
+        if locations:
+            locs: dict[str, Optional[int]] = dict()
+            for location in locations:
+                loc_name = f"{prefix} {location}" if prefix is not None else location
+                loc_id = location_table.get(loc_name, 0)
+                loc_data = loc_ids_to_data.get(loc_id, None)
+                if self._should_include_location(loc_data):
+                    locs[loc_name] = loc_id
+            ret.add_locations(locs, SpireLocation)
+        if exits:
+            for exit in exits:
+                exit_name = f"{prefix} {exit}" if prefix is not None else exit
+                ret.create_exit(exit_name)
+        return ret
+
+    def _should_include_location(self, data: LocationData) -> bool:
+        if data is None:
+            return True
+        if data.type == LocationType.Floor and self.options.include_floor_checks == 0:
+            return False
+        elif data.type == LocationType.Campfire and self.options.campfire_sanity == 0:
+            return False
+        return True
 
 
 class SpireLocation(Location):
