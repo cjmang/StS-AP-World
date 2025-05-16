@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from schema import Schema, Optional, And
 
-from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict
+from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice
 
 
 class Character(TextChoice):
@@ -125,6 +125,23 @@ class ShopRemoveSlot(Toggle):
     option_false = 0
     default = 0
 
+class ShopSanityCosts(Choice):
+    """How expensive the AP shop items should be. Tiered means costs map to typical costs rarity for the slot.
+    Progression = Rare, Useful = Uncommon, Filler = Common
+    Logic does not take this option into account.
+    Fixed=20 gold each
+    Super_Discount_Tiered=20% of tiered costs
+    Discount_Tiered=50% of tiered costs
+    Tiered=Vanilla price for slot
+    """
+    display_name = "Shop Sanity Costs"
+    option_Fixed = 0
+    option_Super_Discount_Tiered = 1
+    option_Discount_Tiered = 2
+    option_Tiered = 3
+    default = 1
+
+
 class MultiChar(Toggle):
     """Whether to enable a multi character run. "Spire Take the Wheel" does not work with this feature,
     and the normal options for character, ascension, etc. are ignored. See the "characters" option."""
@@ -171,3 +188,4 @@ class SpireOptions(PerGameCommonOptions):
     shop_relic_slots: ShopRelicSlots
     shop_potion_slots: ShopPotionSlots
     shop_remove_slots: ShopRemoveSlot
+    shop_sanity_costs: ShopSanityCosts

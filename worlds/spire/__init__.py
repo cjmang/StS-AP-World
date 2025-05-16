@@ -166,7 +166,15 @@ class SpireWorld(World):
         slot_data = {
             'characters': [
                 c.to_dict() for c in self.characters
-            ]
+            ],
+            'shop_sanity_options': {
+                "card_slots": self.options.shop_card_slots.value,
+                "neutral_slots": self.options.shop_neutral_card_slots.value,
+                "relic_slots": self.options.shop_relic_slots.value,
+                "potion_slots": self.options.shop_potion_slots.value,
+                "card_remove": self.options.shop_remove_slots != 0,
+                "costs": self.options.shop_sanity_costs.value,
+            }
         }
         slot_data.update(self.options.as_dict(
             "character",
@@ -177,11 +185,6 @@ class SpireWorld(World):
             "include_floor_checks",
             "campfire_sanity",
             "shop_sanity",
-            "shop_card_slots",
-            "shop_neutral_card_slots",
-            "shop_relic_slots",
-            "shop_potion_slots",
-            "shop_remove_slots",
         ))
         return slot_data
 
