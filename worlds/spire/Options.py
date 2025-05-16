@@ -81,6 +81,50 @@ class CampfireSanity(Toggle):
     option_false = 0
     default = 0
 
+class ShopSanity(Toggle):
+    """Whether to shuffle shop slots into the pool.  Also adds new locations at the shop per slot shuffled."""
+    display_name = "Shop Sanity"
+    option_true = 1
+    option_false = 0
+    default = 0
+
+class ShopCardSlots(Range):
+    """When shop_sanity is enabled, the number of colored card slots to shuffle."""
+    display_name = "Shop Card Slots"
+    range_start = 0
+    range_end = 5
+    default = 2
+
+class ShopNeutralSlots(Range):
+    """When shop_sanity is enabled, the number of neutral card slots to shuffle."""
+    display_name = "Shop Neutral Card Slots"
+    range_start = 0
+    range_end = 2
+    default = 1
+
+class ShopRelicSlots(Range):
+    """WHen shop_sanity is enabled, the number of relic slots to shuffle."""
+    display_name = "Shop Relic Slots"
+    range_start = 0
+    range_end = 3
+    default = 2
+
+class ShopPotionSlots(Range):
+    """When shop_sanity is enabled, the number of potion slots to shuffle"""
+    display_name = "Shop Potion Slots"
+    range_start = 0
+    range_end = 3
+    default = 2
+
+class ShopRemoveSlot(Toggle):
+    """When shop_sanity is enabled, whether to shuffle the ability to remove cards at the shop.
+    Progressive based on Act; i.e. you'll gain the ability to remove cards per Act, starting from Act 1.
+    Act 4 will be treated as Act 3."""
+    display_name = "Shop Remove Slot"
+    option_true = 1
+    option_false = 0
+    default = 0
+
 class MultiChar(Toggle):
     """Whether to enable a multi character run. "Spire Take the Wheel" does not work with this feature,
     and the normal options for character, ascension, etc. are ignored. See the "characters" option."""
@@ -121,3 +165,9 @@ class SpireOptions(PerGameCommonOptions):
     multi_char: MultiChar
     characters: CharacterOptions
     campfire_sanity: CampfireSanity
+    shop_sanity: ShopSanity
+    shop_card_slots: ShopCardSlots
+    shop_neutral_card_slots: ShopNeutralSlots
+    shop_relic_slots: ShopRelicSlots
+    shop_potion_slots: ShopPotionSlots
+    shop_remove_slots: ShopRemoveSlot

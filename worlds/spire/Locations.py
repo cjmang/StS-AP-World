@@ -15,6 +15,7 @@ class LocationType(Enum):
     Floor = auto()
     Campfire = auto()
     Event = auto()
+    Shop = auto()
 
 
 class LocationData(NamedTuple):
@@ -26,6 +27,12 @@ def create_location_data() -> List[LocationData]:
     return ([LocationData(f"Reached Floor {j}", j, LocationType.Floor) for j in range(1, 56)] +
             [LocationData(f"Card Draw {j}", j + 100, LocationType.Draw) for j in range(1,16)] +
             [LocationData(f"Relic Draw {j}", j + 140, LocationType.Relic) for j in range(1, 10)] +
+            [LocationData(f"Shop Slot {j}", j + 163, LocationType.Shop) for j in range(1,17)] +
+            # [LocationData(f"Shop Card Slot {j}", j + 163, LocationType.Shop) for j in range(1,5)] +
+            # [LocationData(f"Shop Neutral Card Slot {j}", j + 168, LocationType.Shop) for j in range(1,2)] +
+            # [LocationData(f"Shop Relic Slot {j}", j + 170, LocationType.Shop) for j in range(1,3)] +
+            # [LocationData(f"Shop Potion Slot {j}", j + 173, LocationType.Shop) for j in range(1,3)] +
+            # [LocationData(f"Shop Remove Slot {j}", j + 176, LocationType.Shop) for j in range(1,3)] +
             [LocationData('Act 1 Campfire 1', 121, LocationType.Campfire),
             LocationData('Act 1 Campfire 2', 122, LocationType.Campfire),
             LocationData('Act 2 Campfire 1', 123, LocationType.Campfire),

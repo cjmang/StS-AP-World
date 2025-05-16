@@ -9,6 +9,9 @@ from worlds.spire.test import SpireTestBase
 def _create_floor_check(start: int, end: int) -> List[str]:
     return [f"Reached Floor {i}" for i in range(start, end + 1)]
 
+def _create_shop_check(start: int, end: int) -> List[str]:
+    return [f"Shop Slot {i}" for i in range(start, end + 1)]
+
 logic_map: dict[PowerLevel, List[str]] = {
     PowerLevel(): [
         "Card Draw 1",
@@ -16,8 +19,35 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Card Draw 3",
         "Act 1 Campfire 1",
         "Act 1 Campfire 2",
-        *_create_floor_check(1,10)
+        # "Shop Card Slot 1",
+        # "Shop Neutral Card Slot 1",
+        # "Shop Relic Slot 1",
+        # "Shop Potion Slot 1",
+        # "Shop Remove Slot 1",
+        *_create_shop_check(1,5),
+        *_create_floor_check(1,10),
     ],
+    # PowerLevel(shop=4): [
+    #     "Shop Card Slot 2",
+    #     "Shop Neutral Card Slot 2",
+    #     "Shop Relic Slot 2",
+    #     "Shop Potion Slot 2",
+    # ],
+    # PowerLevel(shop=7): [
+    #     "Shop Card Slot 3",
+    #     "Shop Relic Slot 3",
+    #     "Shop Potion Slot 3",
+    # ],
+    # PowerLevel(shop=9): [
+    #     "Shop Card Slot 4",
+    #     "Shop Card Slot 5",
+    # ],
+    # PowerLevel(shop_remove=1): [
+    #     "Shop Remove Slot 2"
+    # ],
+    # PowerLevel(shop_remove=2): [
+    #     "Shop Remove Slot 3"
+    # ],
     PowerLevel(1): [
         "Relic 1",
     ],
@@ -25,64 +55,73 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Card Draw 4",
         "Card Draw 5",
     ],
-    PowerLevel(draw=2,rest=1): [
+    PowerLevel(draw=2,rest=1, shop=2): [
         "Relic 2",
         "Relic 3",
         *_create_floor_check(11, 15)
     ],
-    PowerLevel(draw=3,relic=2, rest=1, smith=1): [
+    PowerLevel(draw=3,relic=2, rest=1, smith=1, shop=3, shop_remove=1): [
         "Act 1 Boss",
         "Rare Card Draw 1",
         "Boss Relic 1",
         "Card Draw 6",
         "Card Draw 7",
+        *_create_shop_check(6,10),
         *_create_floor_check(16, 22)
     ],
-    PowerLevel(draw=6,relic=2, rest=2,smith=1): [
+    PowerLevel(draw=6,relic=2, rest=2,smith=1, shop=4, shop_remove=1): [
         "Act 2 Campfire 1",
         "Act 2 Campfire 2",
         *_create_floor_check(23, 27)
     ],
-    PowerLevel(draw=6, relic=3, rest=2, smith=1): [
+    PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=4, shop_remove=1): [
         "Card Draw 8",
+    ],
+    PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=5, shop_remove=1): [
         *_create_floor_check(28, 32)
     ],
-    PowerLevel(draw=6, relic=4, rest=2, smith=1): [
+    PowerLevel(draw=6, relic=4, rest=2, smith=1, shop=5, shop_remove=1): [
         "Card Draw 9",
     ],
-    PowerLevel(draw=7, relic=2, rest=2,smith=1): [
+    PowerLevel(draw=7, relic=2, rest=2,smith=1, shop=4, shop_remove=1): [
         "Relic 4",
         "Relic 5",
     ],
-    PowerLevel(draw=7, relic=3, rest=2,smith=1): [
+    PowerLevel(draw=7, relic=3, rest=2,smith=1, shop=5, shop_remove=1): [
         "Relic 6",
     ],
-    PowerLevel(draw=7, relic=4, rest=2, smith=1): [
+    PowerLevel(draw=7, relic=4, rest=2, smith=1, shop=5, shop_remove=1): [
         "Card Draw 10",
     ],
-    PowerLevel(draw=7, relic=3, boss_relic=1, rest=2, smith=2): [
+    PowerLevel(draw=7, relic=3, boss_relic=1, rest=2, smith=2, shop=6, shop_remove=2): [
         "Act 2 Boss",
         "Rare Card Draw 2",
         "Boss Relic 2",
         "Card Draw 11",
         "Card Draw 12",
+        *_create_shop_check(11, 16),
         *_create_floor_check(33, 39)
     ],
-    PowerLevel(draw=7,relic=3,boss_relic=1, rest=3,smith=2): [
-        "Card Draw 13",
-        "Card Draw 14",
-        "Card Draw 15",
+    PowerLevel(draw=7,relic=3,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [
         "Relic 7",
+        "Card Draw 13",
         "Act 3 Campfire 1",
         "Act 3 Campfire 2",
-        *_create_floor_check(40, 49)
+        *_create_floor_check(40, 44)
     ],
-    PowerLevel(draw=7,relic=4,boss_relic=1, rest=3,smith=2): [
+    PowerLevel(draw=7,relic=3,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
+        "Card Draw 14",
+        "Card Draw 15",
+        *_create_floor_check(45, 49)
+    ],
+    PowerLevel(draw=7,relic=4,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [
         "Relic 8",
+    ],
+    PowerLevel(draw=7,relic=4,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
         "Relic 9",
         "Relic 10",
     ],
-    PowerLevel(draw=7,relic=5,boss_relic=2,rest=3,smith=3): [
+    PowerLevel(draw=7,relic=5,boss_relic=2,rest=3,smith=3, shop=10,shop_remove=3): [
         "Act 3 Boss",
         "Heart Room",
         * _create_floor_check(50, 55)
@@ -98,6 +137,12 @@ class LogicTestBase(SpireTestBase):
         'character': 1,
         'final_act': 1,
         'campfire_sanity':1,
+        'shop_sanity': 1,
+        'shop_card_slots': 5,
+        'shop_neutral_card_slots': 2,
+        'shop_relic_slots': 3,
+        'shop_potion_slots': 3,
+        'shop_remove_slots': 1,
     }
 
     def _setup_state_accessible(self, original_state: CollectionState, power: PowerLevel) -> CollectionState:
@@ -124,6 +169,14 @@ class LogicTestBase(SpireTestBase):
         for _ in range(power.smith):
             state.collect(smith)
 
+        shop = self.get_item_by_name(f"{self.prefix} Shop Card Slot")
+        for _ in range(power.shop):
+            state.collect(shop)
+
+        remove = self.get_item_by_name(f"{self.prefix} Progressive Shop Remove")
+        for _ in range(power.shop_remove):
+            state.collect(remove)
+
         return state
 
     def _setup_state_inaccessible(self, original_state: CollectionState, power: PowerLevel, type: str):
@@ -144,6 +197,13 @@ class LogicTestBase(SpireTestBase):
 
         smith = self.get_item_by_name(f"{self.prefix} Progressive Smith")
         smiths = [smith for _ in range(power.smith)]
+
+        shop = self.get_item_by_name(f"{self.prefix} Shop Card Slot")
+        shops = [shop for _ in range(power.shop)]
+
+        remove = self.get_item_by_name(f"{self.prefix} Progressive Shop Remove")
+        removes = [remove for _ in range(power.shop_remove)]
+
         if type == "Card Draw":
             draws.pop()
         elif type == "Relic":
@@ -154,8 +214,12 @@ class LogicTestBase(SpireTestBase):
             rests.pop()
         elif type == "Progressive Smith":
             smiths.pop()
+        elif type == "Shop Card Slot":
+            shops.pop()
+        elif type == "Progressive Shop Remove":
+            removes.pop()
 
-        for list in [draws, relics, boss_relics, rests, smiths]:
+        for list in [draws, relics, boss_relics, rests, smiths, shops, removes]:
             for item in list:
                 state.collect(item)
 
@@ -163,7 +227,7 @@ class LogicTestBase(SpireTestBase):
 
     def _test_inaccessible(self, power: PowerLevel, locations: Iterable[str]):
 
-        for i, type in enumerate([ x for x in ['Card Draw', 'Relic', 'Boss Relic', 'Progressive Rest', 'Progressive Smith']]):
+        for i, type in enumerate([ x for x in ['Card Draw', 'Relic', 'Boss Relic', 'Progressive Rest', 'Progressive Smith', "Shop Card Slot", "Progressive Shop Remove"]]):
             if power[i] == 0:
                 continue
             state = self._setup_state_inaccessible(self.multiworld.state, power, type)

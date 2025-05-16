@@ -18,6 +18,11 @@ class ItemType(Enum):
     GOLD = auto()
     EVENT = auto()
     CAMPFIRE = auto()
+    SHOP_CARD = auto()
+    SHOP_NEUTRAL = auto()
+    SHOP_RELIC = auto()
+    SHOP_POTION = auto()
+    SHOP_REMOVE = auto()
 
 
 class ItemData(typing.NamedTuple):
@@ -41,6 +46,11 @@ base_item_table: Dict[str, ItemData] = {
     'Five Gold': ItemData(6, ItemType.GOLD, ItemClassification.filler),
     'Progressive Rest': ItemData(7, ItemType.CAMPFIRE),
     'Progressive Smith': ItemData(8, ItemType.CAMPFIRE),
+    'Shop Card Slot': ItemData(9, ItemType.SHOP_CARD),
+    'Neutral Shop Card Slot': ItemData(10, ItemType.SHOP_NEUTRAL),
+    'Shop Relic Slot': ItemData(11, ItemType.SHOP_RELIC),
+    'Shop Potion Slot': ItemData(12, ItemType.SHOP_POTION),
+    'Progressive Shop Remove': ItemData(13, ItemType.SHOP_REMOVE),
 
     # Event Items
     'Victory': ItemData(None, None, ItemClassification.progression, True, True),

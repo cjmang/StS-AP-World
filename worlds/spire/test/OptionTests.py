@@ -73,3 +73,13 @@ class TestNoCampfireSanity(SpireTestBase):
         for loc in self.world.get_locations():
             self.assertFalse("Rest" in loc.name)
             self.assertFalse("Smith" in loc.name)
+
+class TestNoShopSanity(SpireTestBase):
+
+    def no_items(self):
+        for item in self.world.multiworld.get_items():
+            self.assertFalse("Shop" in item.name)
+
+    def no_locations(self):
+        for loc in self.world.get_locations():
+            self.assertFalse("Shop" in loc.name)

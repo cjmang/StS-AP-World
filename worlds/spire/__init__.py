@@ -46,6 +46,7 @@ class SpireWorld(World):
         self.characters: List[CharacterConfig] = []
         self.modded_num = 0
         self.modded_chars: List[CharacterConfig] = []
+        self.total_shop = 0
 
     def generate_early(self):
         if self.options.multi_char.value == 0:
@@ -97,6 +98,8 @@ class SpireWorld(World):
                     self.modded_chars.append(config)
         for config in self.characters:
             self.logger.info("StS: Got character configuration" + str(config))
+        self.total_shop = (self.options.shop_card_slots.value + self.options.shop_neutral_card_slots.value +
+                           self.options.shop_relic_slots.value + self.options.shop_potion_slots.value)
         if len(self.modded_chars) > NUM_CUSTOM:
             raise Exception(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
 
@@ -116,6 +119,17 @@ class SpireWorld(World):
                     amount = 10
                 elif ItemType.CAMPFIRE == data.type and self.options.campfire_sanity:
                     amount = 3
+                elif self.options.shop_sanity:
+                    if ItemType.SHOP_CARD == data.type:
+                        amount = self.options.shop_card_slots.value
+                    elif ItemType.SHOP_NEUTRAL == data.type:
+                        amount = self.options.shop_neutral_card_slots.value
+                    elif ItemType.SHOP_RELIC == data.type:
+                        amount = self.options.shop_relic_slots.value
+                    elif ItemType.SHOP_POTION == data.type:
+                        amount = self.options.shop_potion_slots.value
+                    elif ItemType.SHOP_REMOVE == data.type and self.options.shop_remove_slots:
+                        amount = 3
                 for _ in range(amount):
                     pool.append(SpireItem(name, self.player))
 
@@ -161,7 +175,13 @@ class SpireWorld(World):
             "downfall",
             "death_link",
             "include_floor_checks",
-            "campfire_sanity"
+            "campfire_sanity",
+            "shop_sanity",
+            "shop_card_slots",
+            "shop_neutral_card_slots",
+            "shop_relic_slots",
+            "shop_potion_slots",
+            "shop_remove_slots",
         ))
         return slot_data
 
@@ -194,6 +214,11 @@ class SpireWorld(World):
             return False
         elif data.type == LocationType.Campfire and self.options.campfire_sanity == 0:
             return False
+        elif data.type == LocationType.Shop:
+            if self.options.shop_sanity.value == 0:
+                return False
+            total_shop = self.total_shop + 3 if self.options.shop_remove_slots else self.total_shop
+            return total_shop >= data.id - 163
         return True
 
 

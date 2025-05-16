@@ -36,9 +36,12 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 3",
                                                 *_create_floor_check(1,5)
                                             ],
-                                            ["Mid Act 1"])
+                                            ["Mid Act 1", "Act 1 Shop"])
     neow.connect(first_char_region, first_char_region.name)
     multiworld.regions.append(first_char_region)
+
+    multiworld.regions.append(world.create_region(player, prefix, "Act 1 Shop",
+                              [f"Shop Slot {i}" for i in range(1,6)]))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 1',
                                             [
@@ -69,8 +72,10 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 6",
                                                 "Card Draw 7",
                                                 *_create_floor_check(18, 22)
-                                            ], ["Mid Act 2"]))
+                                            ], ["Mid Act 2", "Act 2 Shop"]))
 
+    multiworld.regions.append(world.create_region(player, prefix, "Act 2 Shop",
+                                                  [f"Shop Slot {i}" for i in range(6,11)]))
     multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 2',
                                             [
                                                 'Card Draw 8',
@@ -101,7 +106,10 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 11",
                                                 "Card Draw 12",
                                                 *_create_floor_check(35, 39),
-                                            ], ["Mid Act 3"]))
+                                            ], ["Mid Act 3", "Act 3 Shop"]))
+
+    multiworld.regions.append(world.create_region(player, prefix, "Act 3 Shop",
+                                                  [f"Shop Slot {i}" for i in range(11,17)]))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 3',
                                             [
@@ -111,6 +119,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 *_create_campfire_check(3),
                                                 *_create_floor_check(40, 44),
                                             ], ["Late Act 3"]))
+
 
     multiworld.regions.append(world.create_region(player, prefix, 'Late Act 3',
                                             [
