@@ -46,16 +46,12 @@ class Ascension(Range):
 class FinalAct(Toggle):
     """Whether you will need to collect the 3 keys and beat the final act to complete the game."""
     display_name = "Final Act"
-    option_true = 1
-    option_false = 0
     default = 0
 
 
 class Downfall(Toggle):
     """When Downfall is Installed this will switch the played mode to Downfall"""
     display_name = "Downfall"
-    option_true = 1
-    option_false = 0
     default = 0
 
 
@@ -69,16 +65,12 @@ class DeathLink(Range):
 class IncludeFloorChecks(Toggle):
     """Whether to include reaching new floors as a location.  Adds small amounts of gold as items."""
     display_name = "Include Floor Checks"
-    option_true = 1
-    option_false = 0
     default = 1
 
 class CampfireSanity(Toggle):
     """Whether to shuffle being able to rest and smith at each campsite per act.  Also adds
     new locations at campsites per act."""
     display_name = "Campfire Sanity"
-    option_true = 1
-    option_false = 0
     default = 0
 
 class ShopSanity(Toggle):
@@ -121,8 +113,6 @@ class ShopRemoveSlots(Toggle):
     Progressive based on Act; i.e. you'll gain the ability to remove cards per Act, starting from Act 1.
     Act 4 will be treated as Act 3."""
     display_name = "Shop Remove Slots"
-    option_true = 1
-    option_false = 0
     default = 0
 
 class ShopSanityCosts(Choice):
@@ -140,6 +130,11 @@ class ShopSanityCosts(Choice):
     option_Discount_Tiered = 2
     option_Tiered = 3
     default = 2
+
+class SeededRun(Toggle):
+    """Whether each character should have a fixed seed to climb the spire with or not."""
+    display_name = "Seeded Run"
+    default = 0
 
 
 class MultiChar(Toggle):
@@ -182,6 +177,7 @@ class SpireOptions(PerGameCommonOptions):
     multi_char: MultiChar
     characters: CharacterOptions
     campfire_sanity: CampfireSanity
+    seeded: SeededRun
     shop_sanity: ShopSanity
     shop_card_slots: ShopCardSlots
     shop_neutral_card_slots: ShopNeutralSlots

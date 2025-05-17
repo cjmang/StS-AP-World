@@ -63,7 +63,10 @@ class SpireWorld(World):
                 name = f"Custom Character {mod_num}"
                 char_offset = len(character_list) + mod_num
 
-            seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
+            if self.options.seeded:
+                seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
+            else:
+                seed = ""
             config = CharacterConfig(name,
                                      option_name,
                                      char_offset,
@@ -86,7 +89,10 @@ class SpireWorld(World):
                     name = f"Custom Character {mod_num}"
                 else:
                     name = character_list[char_offset]
-                seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
+                if self.options.seeded:
+                    seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
+                else:
+                    seed = ""
                 config = CharacterConfig(name,
                                          option_name,
                                          char_offset,
