@@ -116,11 +116,11 @@ class ShopPotionSlots(Range):
     range_end = 3
     default = 2
 
-class ShopRemoveSlot(Toggle):
+class ShopRemoveSlots(Toggle):
     """When shop_sanity is enabled, whether to shuffle the ability to remove cards at the shop.
     Progressive based on Act; i.e. you'll gain the ability to remove cards per Act, starting from Act 1.
     Act 4 will be treated as Act 3."""
-    display_name = "Shop Remove Slot"
+    display_name = "Shop Remove Slots"
     option_true = 1
     option_false = 0
     default = 0
@@ -129,7 +129,7 @@ class ShopSanityCosts(Choice):
     """How expensive the AP shop items should be. Tiered means costs map to typical costs rarity for the slot.
     Progression = Rare, Useful = Uncommon, Filler = Common
     Logic does not take this option into account.
-    Fixed=20 gold each
+    Fixed=15 gold each
     Super_Discount_Tiered=20% of tiered costs
     Discount_Tiered=50% of tiered costs
     Tiered=Vanilla price for slot
@@ -139,7 +139,7 @@ class ShopSanityCosts(Choice):
     option_Super_Discount_Tiered = 1
     option_Discount_Tiered = 2
     option_Tiered = 3
-    default = 1
+    default = 2
 
 
 class MultiChar(Toggle):
@@ -187,5 +187,5 @@ class SpireOptions(PerGameCommonOptions):
     shop_neutral_card_slots: ShopNeutralSlots
     shop_relic_slots: ShopRelicSlots
     shop_potion_slots: ShopPotionSlots
-    shop_remove_slots: ShopRemoveSlot
+    shop_remove_slots: ShopRemoveSlots
     shop_sanity_costs: ShopSanityCosts

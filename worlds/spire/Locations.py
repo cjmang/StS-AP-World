@@ -26,7 +26,7 @@ class LocationData(NamedTuple):
 def create_location_data() -> List[LocationData]:
     return ([LocationData(f"Reached Floor {j}", j, LocationType.Floor) for j in range(1, 56)] +
             [LocationData(f"Card Draw {j}", j + 100, LocationType.Draw) for j in range(1,16)] +
-            [LocationData(f"Relic Draw {j}", j + 140, LocationType.Relic) for j in range(1, 10)] +
+            [LocationData(f"Relic {j}", j + 140, LocationType.Relic) for j in range(1, 11)] +
             [LocationData(f"Shop Slot {j}", j + 163, LocationType.Shop) for j in range(1,17)] +
             # [LocationData(f"Shop Card Slot {j}", j + 163, LocationType.Shop) for j in range(1,5)] +
             # [LocationData(f"Shop Neutral Card Slot {j}", j + 168, LocationType.Shop) for j in range(1,2)] +
