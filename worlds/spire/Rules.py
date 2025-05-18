@@ -90,6 +90,10 @@ def set_rules(world: 'SpireWorld', player: int):
 def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
     multiworld = world.multiworld
     prefix = config.name
+
+    if config.locked:
+        set_rule(multiworld.get_entrance(f"{prefix} Early Act 1", player),
+                 lambda state: state.has(f"{prefix} Unlock", player))
     # Act 1 Card Draws
     set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))

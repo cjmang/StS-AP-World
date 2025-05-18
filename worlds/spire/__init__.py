@@ -72,6 +72,7 @@ class SpireWorld(World):
                                      char_offset,
                                      mod_num,
                                      seed,
+                                     False,
                                      ascension=self.options.ascension.value,
                                      final_act=self.options.final_act.value==1,
                                      downfall=self.options.downfall.value==1)
@@ -79,6 +80,18 @@ class SpireWorld(World):
             if config.mod_num > 0:
                 self.modded_chars.append(config)
         else:
+            locked_opt = self.options.lock_characters.value
+            unlocked_char =  None
+            if locked_opt == 0:
+                unlocked_char = None
+            elif locked_opt == 1:
+                tmp = self.options.character.value
+                if type(tmp) == int:
+                    unlocked_char = self.options.character.get_option_name(tmp).lower().replace(' ', '_')
+                else:
+                    unlocked_char = tmp
+            elif locked_opt == 2:
+                unlocked_char = self.random.choice([x for x in self.options.characters.keys()])
             for option_name, options in self.options.characters.value.items():
                 mod_num = 0
                 char_offset = character_offset_map.get(option_name, None)
@@ -93,17 +106,24 @@ class SpireWorld(World):
                     seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
                 else:
                     seed = ""
+                locked = False if unlocked_char is None or unlocked_char == option_name else True
                 config = CharacterConfig(name,
                                          option_name,
                                          char_offset,
                                          mod_num,
                                          seed,
+                                         locked,
                                          **options)
                 self.characters.append(config)
                 if config.mod_num > 0:
                     self.modded_chars.append(config)
         for config in self.characters:
             self.logger.info("StS: Got character configuration" + str(config))
+        for config in self.characters:
+            if not config.locked:
+                break
+        else:
+            raise Exception("No character started unlocked!")
         self.total_shop = (self.options.shop_card_slots.value + self.options.shop_neutral_card_slots.value +
                            self.options.shop_relic_slots.value + self.options.shop_potion_slots.value)
         if len(self.modded_chars) > NUM_CUSTOM:
@@ -123,9 +143,11 @@ class SpireWorld(World):
                     amount = 2
                 elif ItemType.RELIC == data.type:
                     amount = 10
-                elif ItemType.CAMPFIRE == data.type and self.options.campfire_sanity:
+                elif ItemType.CAMPFIRE == data.type and self.options.campfire_sanity.value != 0:
                     amount = 3
-                elif self.options.shop_sanity:
+                elif ItemType.CHAR_UNLOCK == data.type and self.options.lock_characters.value != 0 and config.locked:
+                    amount = 1
+                elif self.options.shop_sanity.value != 0:
                     if ItemType.SHOP_CARD == data.type:
                         amount = self.options.shop_card_slots.value
                     elif ItemType.SHOP_NEUTRAL == data.type:
@@ -134,7 +156,7 @@ class SpireWorld(World):
                         amount = self.options.shop_relic_slots.value
                     elif ItemType.SHOP_POTION == data.type:
                         amount = self.options.shop_potion_slots.value
-                    elif ItemType.SHOP_REMOVE == data.type and self.options.shop_remove_slots:
+                    elif ItemType.SHOP_REMOVE == data.type and self.options.shop_remove_slots.value != 0:
                         amount = 3
                 for _ in range(amount):
                     pool.append(SpireItem(name, self.player))
@@ -199,7 +221,7 @@ class SpireWorld(World):
         return self.random.choice([f"{config.name} One Gold", f"{config.name} Five Gold"])
 
 
-    def create_region(self, player: int, prefix: Optional[str], name: str, locations: List[str] = None, exits: List[str] =None):
+    def create_region(self, player: int, prefix: Optional[str], name: str, config: CharacterConfig, locations: List[str] = None, exits: List[str] =None):
         ret = Region(f"{prefix} {name}" if prefix is not None else name, player, self.multiworld)
         if locations:
             locs: dict[str, Optional[int]] = dict()
@@ -207,7 +229,7 @@ class SpireWorld(World):
                 loc_name = f"{prefix} {location}" if prefix is not None else location
                 loc_id = location_table.get(loc_name, 0)
                 loc_data = loc_ids_to_data.get(loc_id, None)
-                if self._should_include_location(loc_data):
+                if self._should_include_location(loc_data, config):
                     locs[loc_name] = loc_id
             ret.add_locations(locs, SpireLocation)
         if exits:
@@ -216,7 +238,7 @@ class SpireWorld(World):
                 ret.create_exit(exit_name)
         return ret
 
-    def _should_include_location(self, data: LocationData) -> bool:
+    def _should_include_location(self, data: LocationData, config: CharacterConfig) -> bool:
         if data is None:
             return True
         if data.type == LocationType.Floor and self.options.include_floor_checks == 0:
@@ -228,6 +250,8 @@ class SpireWorld(World):
                 return False
             total_shop = self.total_shop + 3 if self.options.shop_remove_slots else self.total_shop
             return total_shop >= data.id - 163
+        elif data.type == LocationType.Start and (self.options.lock_characters == 0 or not config.locked):
+            return False
         return True
 
 

@@ -16,6 +16,7 @@ class LocationType(Enum):
     Campfire = auto()
     Event = auto()
     Shop = auto()
+    Start = auto()
 
 
 class LocationData(NamedTuple):
@@ -43,6 +44,7 @@ def create_location_data() -> List[LocationData]:
             LocationData('Rare Card Draw 2', 132, LocationType.Rare_Draw),
             LocationData('Boss Relic 1', 161, LocationType.Boss_Relic),
             LocationData('Boss Relic 2', 162, LocationType.Boss_Relic),
+            LocationData('Press Start', 163, LocationType.Start),
             LocationData('Heart Room', None, LocationType.Event),
             LocationData('Act 1 Boss', None, LocationType.Event),
             LocationData('Act 2 Boss', None, LocationType.Event),

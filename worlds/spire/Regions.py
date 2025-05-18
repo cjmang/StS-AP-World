@@ -29,21 +29,23 @@ def create_regions(world: 'SpireWorld', player: int):
 def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig', neow: Region):
     prefix = config.name
     multiworld = world.multiworld
-    first_char_region = world.create_region(player, prefix, 'Early Act 1',
+    first_char_region = world.create_region(player, prefix, 'Early Act 1', config,
                                             [
+                                                "Press Start",
                                                 "Card Draw 1",
                                                 "Card Draw 2",
                                                 "Card Draw 3",
                                                 *_create_floor_check(1,5)
                                             ],
                                             ["Mid Act 1", "Act 1 Shop"])
+
     neow.connect(first_char_region, first_char_region.name)
     multiworld.regions.append(first_char_region)
 
-    multiworld.regions.append(world.create_region(player, prefix, "Act 1 Shop",
+    multiworld.regions.append(world.create_region(player, prefix, "Act 1 Shop", config,
                               [f"Shop Slot {i}" for i in range(1,6)]))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 1',
+    multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 1', config,
                                             [
                                                 'Card Draw 4',
                                                 'Card Draw 5',
@@ -53,13 +55,13 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 *_create_floor_check(6, 10)
                                             ],["Late Act 1"]))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Late Act 1',
+    multiworld.regions.append(world.create_region(player, prefix, 'Late Act 1', config,
                                             [
                                                 'Relic 3',
                                                 *_create_floor_check(11, 15)
                                             ], ['Act 1 Boss Arena']))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Act 1 Boss Arena',
+    multiworld.regions.append(world.create_region(player, prefix, 'Act 1 Boss Arena', config,
                                             [
                                                 'Act 1 Boss',
                                                 'Rare Card Draw 1',
@@ -67,16 +69,16 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 * _create_floor_check(16, 17)
                                             ], ['Early Act 2']))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Early Act 2',
+    multiworld.regions.append(world.create_region(player, prefix, 'Early Act 2', config,
                                             [
                                                 "Card Draw 6",
                                                 "Card Draw 7",
                                                 *_create_floor_check(18, 22)
                                             ], ["Mid Act 2", "Act 2 Shop"]))
 
-    multiworld.regions.append(world.create_region(player, prefix, "Act 2 Shop",
+    multiworld.regions.append(world.create_region(player, prefix, "Act 2 Shop", config,
                                                   [f"Shop Slot {i}" for i in range(6,11)]))
-    multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 2',
+    multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 2', config,
                                             [
                                                 'Card Draw 8',
                                                 'Relic 4',
@@ -85,7 +87,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 * _create_floor_check(23, 27)
                                             ], ["Late Act 2"]))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Late Act 2',
+    multiworld.regions.append(world.create_region(player, prefix, 'Late Act 2', config,
                                             [
                                                 'Card Draw 9',
                                                 'Card Draw 10',
@@ -93,7 +95,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 *_create_floor_check(28, 32),
                                             ], ['Act 2 Boss Arena']))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Act 2 Boss Arena',
+    multiworld.regions.append(world.create_region(player, prefix, 'Act 2 Boss Arena', config,
                                             [
                                                 'Act 2 Boss',
                                                 'Rare Card Draw 2',
@@ -101,17 +103,17 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 *_create_floor_check(33, 34),
                                             ], ['Early Act 3']))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Early Act 3',
+    multiworld.regions.append(world.create_region(player, prefix, 'Early Act 3', config,
                                             [
                                                 "Card Draw 11",
                                                 "Card Draw 12",
                                                 *_create_floor_check(35, 39),
                                             ], ["Mid Act 3", "Act 3 Shop"]))
 
-    multiworld.regions.append(world.create_region(player, prefix, "Act 3 Shop",
+    multiworld.regions.append(world.create_region(player, prefix, "Act 3 Shop", config,
                                                   [f"Shop Slot {i}" for i in range(11,17)]))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 3',
+    multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 3', config,
                                             [
                                                 "Card Draw 13",
                                                 "Relic 7",
@@ -121,7 +123,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                             ], ["Late Act 3"]))
 
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Late Act 3',
+    multiworld.regions.append(world.create_region(player, prefix, 'Late Act 3', config,
                                             [
                                                 "Card Draw 14",
                                                 "Card Draw 15",
@@ -132,13 +134,13 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
 
     acension_mod = 1 if world.options.ascension >= 20 else 0
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Act 3 Boss Arena',
+    multiworld.regions.append(world.create_region(player, prefix, 'Act 3 Boss Arena', config,
                                             [
                                                 "Act 3 Boss",
                                                 *_create_floor_check(50, 51 + acension_mod),
                                             ], ["Act 4"]))
 
-    multiworld.regions.append(world.create_region(player, prefix, 'Act 4',
+    multiworld.regions.append(world.create_region(player, prefix, 'Act 4', config,
                                             [
                                                 "Heart Room",
                                                 *(_create_floor_check(52 + acension_mod,55 + acension_mod) if config.final_act else [])

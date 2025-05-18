@@ -83,3 +83,40 @@ class TestNoShopSanity(SpireTestBase):
     def no_locations(self):
         for loc in self.world.get_locations():
             self.assertFalse("Shop" in loc.name)
+
+class TestNoCharLocked(SpireTestBase):
+
+    def no_items(self):
+        for item in self.world.multiworld.get_items():
+            self.assertFalse("Unlock" in item.name)
+
+
+    def no_locations(self):
+        for loc in self.world.get_locations():
+            self.assertFalse("Press Start" in loc.name)
+
+class TestCharLocked(SpireTestBase):
+
+    options = {
+        "character": "the_ironclad",
+        "multi_char": 1,
+        "lock_characters": 1,
+        "characters": {
+            "the_ironclad": {
+                "ascension": 1
+            },
+            "the_silent": {
+                "final_act": True
+            }
+        }
+    }
+
+    def test_silent_locked(self):
+        self.assertTrue("Silent Unlock" in [ i.name for i in self.world.multiworld.get_items()])
+        start = self.world.get_location("Silent Press Start")
+        self.assertTrue( start is not None)
+        state = self.multiworld.state.copy()
+        self.assertFalse(start.can_reach(state))
+        state.collect(self.get_item_by_name("Silent Unlock"))
+        self.assertTrue(start.can_reach(state))
+

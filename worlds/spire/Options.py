@@ -146,6 +146,18 @@ class MultiChar(Toggle):
     option_false = 0
     default = 0
 
+class LockCharacters(Choice):
+    """Whether in a multi character run "Unlock [Char]" items should be shuffled in.
+    locked_fixed means the character option is used to determine which character to start with
+    locked_random means which character you start with is randomized
+    unlocked means you start with all characters available"""
+    visibility = Visibility.template
+    display_name = "Lock Characters"
+    option_locked_fixed = 1
+    option_unlocked = 0
+    option_locked_random = 2
+    default = 2
+
 class CharacterOptions(OptionDict):
     """The configuration for multicharacter.  Each character's options can be configured
     independently of each other.  No validation is done on the character name, so use carefully.
@@ -175,6 +187,7 @@ class SpireOptions(PerGameCommonOptions):
     death_link: DeathLink
     include_floor_checks: IncludeFloorChecks
     multi_char: MultiChar
+    lock_characters: LockCharacters
     characters: CharacterOptions
     campfire_sanity: CampfireSanity
     seeded: SeededRun

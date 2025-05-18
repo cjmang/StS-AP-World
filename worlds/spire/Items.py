@@ -23,6 +23,7 @@ class ItemType(Enum):
     SHOP_RELIC = auto()
     SHOP_POTION = auto()
     SHOP_REMOVE = auto()
+    CHAR_UNLOCK = auto()
 
 
 class ItemData(typing.NamedTuple):
@@ -51,6 +52,7 @@ base_item_table: Dict[str, ItemData] = {
     'Shop Relic Slot': ItemData(11, ItemType.SHOP_RELIC),
     'Shop Potion Slot': ItemData(12, ItemType.SHOP_POTION),
     'Progressive Shop Remove': ItemData(13, ItemType.SHOP_REMOVE),
+    'Unlock': ItemData(14, ItemType.CHAR_UNLOCK),
 
     # Event Items
     'Victory': ItemData(None, None, ItemClassification.progression, True, True),
