@@ -213,6 +213,7 @@ class SpireWorld(World):
             "include_floor_checks",
             "campfire_sanity",
             "shop_sanity",
+            "chatty_mc",
         ))
         return slot_data
 

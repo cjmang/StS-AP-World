@@ -136,6 +136,10 @@ class SeededRun(Toggle):
     display_name = "Seeded Run"
     default = 0
 
+class ChattyMC(Toggle):
+    """Whether the MC should talk about AP events."""
+    display_name = "Chatty MC"
+    default = 1
 
 class MultiChar(Toggle):
     """Whether to enable a multi character run. "Spire Take the Wheel" does not work with this feature,
@@ -191,6 +195,7 @@ class SpireOptions(PerGameCommonOptions):
     characters: CharacterOptions
     campfire_sanity: CampfireSanity
     seeded: SeededRun
+    chatty_mc: ChattyMC
     shop_sanity: ShopSanity
     shop_card_slots: ShopCardSlots
     shop_neutral_card_slots: ShopNeutralSlots
