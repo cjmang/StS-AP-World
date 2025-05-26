@@ -40,8 +40,8 @@ character_option_map = {
 }
 
 character_offset_map = {
-    value: key
-    for key, value in character_option_map.items()
+    name.lower(): i
+    for i, name in enumerate(character_list)
 }
 
 class CharacterConfig:
@@ -66,8 +66,8 @@ class CharacterConfig:
         self.seed: str = seed
         self.locked = locked
         self.ascension: int = kwargs['ascension']
-        self.final_act: bool = kwargs['final_act']
-        self.downfall: bool = kwargs['downfall']
+        self.final_act: int = kwargs['final_act']
+        self.downfall: int = kwargs['downfall']
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -79,8 +79,8 @@ class CharacterConfig:
             'locked': self.locked,
             'mod_num': self.mod_num,
             'ascension': self.ascension,
-            'final_act': self.final_act,
-            'downfall': self.downfall,
+            'final_act': self.final_act != 0,
+            'downfall': self.downfall != 0,
         }
 
     def __repr__(self):

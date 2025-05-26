@@ -2,35 +2,40 @@ from dataclasses import dataclass
 
 from schema import Schema, Optional, And
 
-from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice
+from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet
 
 
-class Character(TextChoice):
-    """Enter the internal ID of the character to use.
-
-      if you don't know the exact ID to enter with the mod installed go to
-     `Mods -> Archipelago Multi-world -> config` to view a list of installed modded character IDs.
-
-     the downfall characters will only work if you have downfall installed.
-
-     Spire Take the Wheel will have your client pick a random character from the list of all your installed characters
-     including custom ones.
-
-     if the chosen character mod is not installed it will default back to 'The Ironclad'
-     """
+class Character(OptionSet):
+    """Enter the list of characters to play as.  Valid characters are:
+        'Ironclad'
+        'Silent'
+        'Defect'
+        'Watcher'
+        'Hermit'
+        'Slime Boss'
+        'Guardian'
+        'Hexaghost'
+        'Champ'
+        'Gremlins'
+        'Automaton'
+        'Snecko'"""
     display_name = "Character"
-    option_The_Ironclad = 0
-    option_The_Silent = 1
-    option_The_Defect = 2
-    option_The_Watcher = 3
-    option_The_Hermit = 4
-    option_The_Slime_Boss = 5
-    option_The_Guardian = 6
-    option_The_Hexaghost = 7
-    option_The_Champ = 8
-    option_The_Gremlins = 9
-    option_The_Automaton = 10
-    option_The_Snecko = 11
+    valid_keys = [
+        "Ironclad",
+        "Silent",
+        "Defect",
+        "Watcher",
+        "Hermit",
+        "Slime Boss",
+        "Guardian",
+        "Hexaghost",
+        "Champ",
+        "Gremlins",
+        "Automaton",
+        "Snecko",
+    ]
+    default = ["Ironclad"]
+    valid_keys_casefold = False
     # TODO: Spire Takes the wheel doesn't work with the current setup
     # option_spire_take_the_wheel = 12
 
@@ -141,44 +146,60 @@ class ChattyMC(Toggle):
     display_name = "Chatty MC"
     default = 1
 
-class MultiChar(Toggle):
-    """Whether to enable a multi character run. "Spire Take the Wheel" does not work with this feature,
-    and the normal options for character, ascension, etc. are ignored. See the "characters" option."""
+class AdvancedChar(Toggle):
+    """Whether to use the advanced characters feature. The normal options for character, ascension, etc. are ignored.
+    See the "advanced_characters" option.
+    """
     visibility = Visibility.template
     display_name = "Multiple Character Run"
     option_true = 1
     option_false = 0
     default = 0
 
-class LockCharacters(Choice):
+class LockCharacters(TextChoice):
     """Whether in a multi character run "Unlock [Char]" items should be shuffled in.
     locked_fixed means the character option is used to determine which character to start with
     locked_random means which character you start with is randomized
     unlocked means you start with all characters available"""
     visibility = Visibility.template
     display_name = "Lock Characters"
-    option_locked_fixed = 1
     option_unlocked = 0
-    option_locked_random = 2
-    default = 2
+    option_locked_random = 1
+    default = 1
 
 class CharacterOptions(OptionDict):
-    """The configuration for multicharacter.  Each character's options can be configured
+    """The configuration for advanced characters.  Each character's options can be configured
     independently of each other.  No validation is done on the character name, so use carefully.
+    Format is:
+        <char name>:
+            ascension:
+            downfall:
+            final_act:
+
+    If using a non-downfall modded character:
+    Enter the internal ID of the character to use.
+
+     if you don't know the exact ID to enter with the mod installed go to
+    `Mods -> Archipelago Multi-world -> config` to view a list of installed modded character IDs.
+
+    the downfall characters will only work if you have downfall installed.
+    If the chosen character mod is not installed, checks will be sent when another character
+    sends them.  If none of the chosen character mods are installed, you will be playing
+    a very boring Ironclad run.
     """
     visibility = Visibility.template
     default = {
-        "the_ironclad": {
+        "ironclad": {
             "ascension": 0,
-            "final_act": False,
-            "downfall": False,
+            "final_act": 1,
+            "downfall": 1,
         }
     }
     schema = Schema({
         str: {
             Optional("ascension", default=0): And(int,lambda n: 0 <= n <= 20),
-            Optional("final_act", default=False): bool,
-            Optional("downfall", default=False): bool,
+            Optional("final_act", default=0): And(int, lambda n: 0 <= n <= 1),
+            Optional("downfall", default=0): And(int, lambda n: 0 <= n <= 1),
         }
     })
 
@@ -190,9 +211,9 @@ class SpireOptions(PerGameCommonOptions):
     downfall: Downfall
     death_link: DeathLink
     include_floor_checks: IncludeFloorChecks
-    multi_char: MultiChar
+    use_advanced_characters: AdvancedChar
     lock_characters: LockCharacters
-    characters: CharacterOptions
+    advanced_characters: CharacterOptions
     campfire_sanity: CampfireSanity
     seeded: SeededRun
     chatty_mc: ChattyMC

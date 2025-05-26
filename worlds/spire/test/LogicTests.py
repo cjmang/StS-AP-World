@@ -102,26 +102,27 @@ logic_map: dict[PowerLevel, List[str]] = {
         *_create_shop_check(11, 16),
         *_create_floor_check(33, 39)
     ],
-    PowerLevel(draw=7,relic=3,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [
+    PowerLevel(draw=8,relic=4,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [
         "Relic 7",
+        "Relic 8",
         "Card Draw 13",
         "Act 3 Campfire 1",
         "Act 3 Campfire 2",
         *_create_floor_check(40, 44)
     ],
-    PowerLevel(draw=7,relic=3,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
+    PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
         "Card Draw 14",
         "Card Draw 15",
         *_create_floor_check(45, 49)
     ],
-    PowerLevel(draw=7,relic=4,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [
-        "Relic 8",
-    ],
-    PowerLevel(draw=7,relic=4,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
+    # PowerLevel(draw=8,relic=5,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [
+    #     "Relic 8",
+    # ],
+    PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
         "Relic 9",
         "Relic 10",
     ],
-    PowerLevel(draw=7,relic=5,boss_relic=2,rest=3,smith=3, shop=10,shop_remove=3): [
+    PowerLevel(draw=10,relic=7,boss_relic=2,rest=3,smith=3, shop=10,shop_remove=3): [
         "Act 3 Boss",
         "Heart Room",
         * _create_floor_check(50, 55)
@@ -134,7 +135,7 @@ def setup_power_map(map: dict[PowerLevel, List[str]], prefix: str) -> dict[Power
 class LogicTestBase(SpireTestBase):
 
     options = {
-        'character': 1,
+        'character': {"silent"},
         'final_act': 1,
         'campfire_sanity':1,
         'shop_sanity': 1,

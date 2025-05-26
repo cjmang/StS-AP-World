@@ -6,25 +6,37 @@ class TestDefault(SpireTestBase):
 
     def test_validate_default(self):
         world = self.world
-        self.assertEquals(1,len(world.options.characters))
-        CharacterOptions.schema.validate(world.options.characters.value)
+        self.assertEquals(1, len(world.options.advanced_characters))
+        CharacterOptions.schema.validate(world.options.advanced_characters.value)
 
 class TestMultiCharsValid(SpireTestBase):
 
     options = {
-        "multi_char": 1,
-        "characters": {
-            "the_ironclad": {
+        "character": [
+            "ironclad",
+            "silent",
+        ]
+    }
+
+    def test_valid(self):
+        CharacterOptions.schema.validate(self.world.options.advanced_characters.value)
+
+class TestAdvancedMultiCharsValid(SpireTestBase):
+
+    options = {
+        "use_advanced_characters": 1,
+        "advanced_characters": {
+            "ironclad": {
                 "ascension": 1
             },
-            "the_silent": {
-                "final_act": True
+            "silent": {
+                "final_act": 1
             }
         }
     }
 
     def test_valid(self):
-        CharacterOptions.schema.validate(self.world.options.characters.value)
+        CharacterOptions.schema.validate(self.world.options.advanced_characters.value)
 
 class TestNoFloorChecks(SpireTestBase):
 
@@ -99,13 +111,13 @@ class TestCharLocked(SpireTestBase):
 
     options = {
         "character": "the_ironclad",
-        "multi_char": 1,
+        "use_advanced_characters": 1,
         "lock_characters": 1,
-        "characters": {
-            "the_ironclad": {
+        "advanced_characters": {
+            "ironclad": {
                 "ascension": 1
             },
-            "the_silent": {
+            "silent": {
                 "final_act": True
             }
         }

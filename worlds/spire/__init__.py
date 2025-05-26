@@ -1,7 +1,7 @@
 import logging
 import string
 from logging import Logger
-from typing import Optional, List
+from typing import Optional, List, Set
 
 from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
 from .Characters import character_list, CharacterConfig, character_option_map, character_offset_map, NUM_CUSTOM
@@ -49,50 +49,34 @@ class SpireWorld(World):
         self.total_shop = 0
 
     def generate_early(self):
-        if self.options.multi_char.value == 0:
-            char_val = self.options.character.value
-            if type(char_val) is int:
-                name = character_list[char_val]
-                option_name = character_option_map[char_val]
-                mod_num = 0
-                char_offset = char_val
-            else:
+        if self.options.use_advanced_characters.value == 0:
+            char_options = self.options.character.value
+            unlocked_char = self._get_unlocked_char(char_options)
+            for char_val in char_options:
                 option_name = char_val
-                self.modded_num += 1
-                mod_num = self.modded_num
-                name = f"Custom Character {mod_num}"
-                char_offset = len(character_list) + mod_num
-
-            if self.options.seeded:
-                seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
-            else:
-                seed = ""
-            config = CharacterConfig(name,
-                                     option_name,
-                                     char_offset,
-                                     mod_num,
-                                     seed,
-                                     False,
-                                     ascension=self.options.ascension.value,
-                                     final_act=self.options.final_act.value==1,
-                                     downfall=self.options.downfall.value==1)
-            self.characters.append(config)
-            if config.mod_num > 0:
-                self.modded_chars.append(config)
-        else:
-            locked_opt = self.options.lock_characters.value
-            unlocked_char =  None
-            if locked_opt == 0:
-                unlocked_char = None
-            elif locked_opt == 1:
-                tmp = self.options.character.value
-                if type(tmp) == int:
-                    unlocked_char = self.options.character.get_option_name(tmp).lower().replace(' ', '_')
+                char_offset = character_offset_map[option_name.lower()]
+                name = character_list[char_offset]
+                if self.options.seeded:
+                    seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
                 else:
-                    unlocked_char = tmp
-            elif locked_opt == 2:
-                unlocked_char = self.random.choice([x for x in self.options.characters.keys()])
-            for option_name, options in self.options.characters.value.items():
+                    seed = ""
+                locked = False if unlocked_char is None or unlocked_char == option_name else True
+
+                config = CharacterConfig(name,
+                                         option_name,
+                                         char_offset,
+                                         0,
+                                         seed,
+                                         locked,
+                                         ascension=self.options.ascension.value,
+                                         final_act=self.options.final_act.value==1,
+                                         downfall=self.options.downfall.value==1)
+                self.characters.append(config)
+                # if config.mod_num > 0:
+                    # self.modded_chars.append(config)
+        else:
+            unlocked_char = self._get_unlocked_char(self.options.advanced_characters.keys())
+            for option_name, options in self.options.advanced_characters.value.items():
                 mod_num = 0
                 char_offset = character_offset_map.get(option_name, None)
                 if char_offset is None:
@@ -129,6 +113,18 @@ class SpireWorld(World):
         if len(self.modded_chars) > NUM_CUSTOM:
             raise Exception(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
 
+    def _get_unlocked_char(self, characters: Set[str]) -> Optional[str]:
+        locked_opt = self.options.lock_characters.value
+        if locked_opt == 0:
+            unlocked_char = None
+        elif locked_opt == 1:
+            unlocked_char = self.random.choice([x for x in characters])
+        else:
+            unlocked_char = locked_opt
+            if unlocked_char not in characters:
+                raise Exception(
+                    f"Configured {unlocked_char} as the first unlocked character, but was not one of: {characters}")
+        return unlocked_char
 
     def create_items(self):
         # Fill out our pool with our items from item_pool, assuming 1 item if not present in item_pool
