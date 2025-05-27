@@ -16,7 +16,7 @@ logic_map: dict[PowerLevel, List[str]] = {
     PowerLevel(): [
         "Card Draw 1",
         "Card Draw 2",
-        "Card Draw 3",
+        # "Card Draw 3",
         "Act 1 Campfire 1",
         "Act 1 Campfire 2",
         # "Shop Card Slot 1",
@@ -52,8 +52,9 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Relic 1",
     ],
     PowerLevel(draw=0,relic=1, rest=1): [
+        "Card Draw 3",
         "Card Draw 4",
-        "Card Draw 5",
+        # "Card Draw 5",
     ],
     PowerLevel(draw=2,rest=1, shop=2): [
         "Relic 2",
@@ -64,8 +65,8 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Act 1 Boss",
         "Rare Card Draw 1",
         "Boss Relic 1",
+        "Card Draw 5",
         "Card Draw 6",
-        "Card Draw 7",
         *_create_shop_check(6,10),
         *_create_floor_check(16, 22)
     ],
@@ -75,13 +76,13 @@ logic_map: dict[PowerLevel, List[str]] = {
         *_create_floor_check(23, 27)
     ],
     PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=4, shop_remove=1): [
-        "Card Draw 8",
+        "Card Draw 7",
     ],
     PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=5, shop_remove=1): [
         *_create_floor_check(28, 32)
     ],
     PowerLevel(draw=6, relic=4, rest=2, smith=1, shop=5, shop_remove=1): [
-        "Card Draw 9",
+        "Card Draw 8",
     ],
     PowerLevel(draw=7, relic=2, rest=2,smith=1, shop=4, shop_remove=1): [
         "Relic 4",
@@ -90,29 +91,29 @@ logic_map: dict[PowerLevel, List[str]] = {
     PowerLevel(draw=7, relic=3, rest=2,smith=1, shop=5, shop_remove=1): [
         "Relic 6",
     ],
-    PowerLevel(draw=7, relic=4, rest=2, smith=1, shop=5, shop_remove=1): [
-        "Card Draw 10",
-    ],
+    # PowerLevel(draw=7, relic=4, rest=2, smith=1, shop=5, shop_remove=1): [
+    #     "Card Draw 9",
+    # ],
     PowerLevel(draw=7, relic=3, boss_relic=1, rest=2, smith=2, shop=6, shop_remove=2): [
         "Act 2 Boss",
         "Rare Card Draw 2",
         "Boss Relic 2",
-        "Card Draw 11",
-        "Card Draw 12",
+        "Card Draw 9",
+        "Card Draw 10",
         *_create_shop_check(11, 16),
         *_create_floor_check(33, 39)
     ],
     PowerLevel(draw=8,relic=4,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [
         "Relic 7",
         "Relic 8",
-        "Card Draw 13",
+        "Card Draw 11",
         "Act 3 Campfire 1",
         "Act 3 Campfire 2",
         *_create_floor_check(40, 44)
     ],
     PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
-        "Card Draw 14",
-        "Card Draw 15",
+        "Card Draw 12",
+        # "Card Draw 15",
         *_create_floor_check(45, 49)
     ],
     # PowerLevel(draw=8,relic=5,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [

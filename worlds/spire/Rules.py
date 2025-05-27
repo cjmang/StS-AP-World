@@ -95,10 +95,10 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
         set_rule(multiworld.get_entrance(f"{prefix} Early Act 1", player),
                  lambda state: state.has(f"{prefix} Unlock", player))
     # Act 1 Card Draws
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player),
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 3", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
 
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 5", player),
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1, rest=1)))
 
     # Act 1 Relics
@@ -125,12 +125,10 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
              lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
 
     # Act 2 Card Draws
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 8", player),
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 7", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 9", player),
+    set_rule(multiworld.get_location(f"{prefix} Card Draw 8", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6, relic=4)))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 10", player),
-             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=4)))
 
     # Act 2 Relics
     set_rule(multiworld.get_location(f"{prefix} Relic 4", player),
@@ -159,23 +157,9 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
     set_rule(multiworld.get_entrance(f"{prefix} Early Act 3", player),
              lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
 
-    # Act 3 Card Draws
-    # set_rule(multiworld.get_location(f"{prefix} Card Draw 13", player),
-    #          lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
-    # set_rule(multiworld.get_location(f"{prefix} Card Draw 14", player),
-    #          lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
-    # set_rule(multiworld.get_location(f"{prefix} Card Draw 15", player),
-    #          lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
-
     # Act 3 Relics
     set_rule(multiworld.get_location(f"{prefix} Relic 7", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
-    # set_rule(multiworld.get_location(f"{prefix} Relic 8", player),
-    #          lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=5)))
-    # set_rule(multiworld.get_location(f"{prefix} Relic 9", player),
-    #          lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=5)))
-    # set_rule(multiworld.get_location(f"{prefix} Relic 10", player),
-    #          lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=5)))
 
     set_rule(multiworld.get_entrance(f"{prefix} Mid Act 3", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=8, relic=5, rest=3, shop=8)))

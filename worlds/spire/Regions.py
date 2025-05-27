@@ -34,7 +34,6 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Press Start",
                                                 "Card Draw 1",
                                                 "Card Draw 2",
-                                                "Card Draw 3",
                                                 *_create_floor_check(1,5)
                                             ],
                                             ["Mid Act 1", "Act 1 Shop"])
@@ -47,8 +46,8 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
 
     multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 1', config,
                                             [
+                                                'Card Draw 3',
                                                 'Card Draw 4',
-                                                'Card Draw 5',
                                                 'Relic 1',
                                                 'Relic 2',
                                                 *_create_campfire_check(1),
@@ -71,8 +70,8 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
 
     multiworld.regions.append(world.create_region(player, prefix, 'Early Act 2', config,
                                             [
+                                                "Card Draw 5",
                                                 "Card Draw 6",
-                                                "Card Draw 7",
                                                 *_create_floor_check(18, 22)
                                             ], ["Mid Act 2", "Act 2 Shop"]))
 
@@ -80,7 +79,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                   [f"Shop Slot {i}" for i in range(6,11)]))
     multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 2', config,
                                             [
-                                                'Card Draw 8',
+                                                'Card Draw 7',
                                                 'Relic 4',
                                                 'Relic 5',
                                                 *_create_campfire_check(2),
@@ -89,8 +88,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
 
     multiworld.regions.append(world.create_region(player, prefix, 'Late Act 2', config,
                                             [
-                                                'Card Draw 9',
-                                                'Card Draw 10',
+                                                'Card Draw 8',
                                                 'Relic 6',
                                                 *_create_floor_check(28, 32),
                                             ], ['Act 2 Boss Arena']))
@@ -105,8 +103,8 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
 
     multiworld.regions.append(world.create_region(player, prefix, 'Early Act 3', config,
                                             [
-                                                "Card Draw 11",
-                                                "Card Draw 12",
+                                                "Card Draw 9",
+                                                "Card Draw 10",
                                                 *_create_floor_check(35, 39),
                                             ], ["Mid Act 3", "Act 3 Shop"]))
 
@@ -115,7 +113,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
 
     multiworld.regions.append(world.create_region(player, prefix, 'Mid Act 3', config,
                                             [
-                                                "Card Draw 13",
+                                                "Card Draw 11",
                                                 "Relic 7",
                                                 "Relic 8",
                                                 *_create_campfire_check(3),
@@ -125,8 +123,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
 
     multiworld.regions.append(world.create_region(player, prefix, 'Late Act 3', config,
                                             [
-                                                "Card Draw 14",
-                                                "Card Draw 15",
+                                                "Card Draw 12",
                                                 "Relic 9",
                                                 "Relic 10",
                                                 *_create_floor_check(45, 49),
