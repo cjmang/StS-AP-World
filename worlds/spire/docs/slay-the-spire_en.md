@@ -2,7 +2,7 @@
 
 ## Required Software
 
-For Steam-based installation, subscribe to the following mods:
+### For Steam-based installation, subscribe to the following mods:
 
 - [ModTheSpire](https://steamcommunity.com/sharedfiles/filedetails/?id=1605060445)
 - [BaseMod](https://steamcommunity.com/workshop/filedetails/?id=1605833019)
@@ -10,7 +10,7 @@ For Steam-based installation, subscribe to the following mods:
 - (optional) [Downfall](https://steamcommunity.com/sharedfiles/filedetails/?id=1610056683)
 - (required for downfall) [StSLib](https://steamcommunity.com/workshop/filedetails/?id=1609158507)
 
-For GOG or Xbox PC Game Pass installation:
+### For GOG or Xbox PC Game Pass installation:
 
 1. Download the official Steam Console Client [SteamCMD](https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip).
 2. Unpack that .zip file into some folder and double-click on `steamcmd.exe`.
@@ -43,16 +43,31 @@ an experience customized for their taste, and different players in the same mult
 
 ### Where do I get a YAML file?
 
-you can customize your options by visiting
-the [Slay the Spire Options Page](/games/Slay%20the%20Spire/player-options).
+[//]: # (You can customize your options by visiting)
+
+[//]: # (the [Slay the Spire Options Page]&#40;/games/Slay%20the%20Spire/player-options&#41;.)
+
+Open ArchipelagoLauncher.exe to start the Launcher, and click on "Generate Template Options" to create template yamls 
+for all of the apworlds in your `\custom_worlds` folder as well as your `\lib\worlds` folder.  
+After you click on this button, a File Explorer window will open (on Windows) pointing directly to your 
+`\Players\Templates` folder, with all of the new template files.
+You will find the Slay the Spire template yaml among them.
 
 ### Connect to the MultiServer
 
-For Steam-based installations, if you are subscribed to ModTheSpire, when you launch the game, you should have the
+#### Steam
+If you are subscribed to ModTheSpire, when you launch the game, you should have the
 option to launch the game with mods.
 
-For GOG or Xbox PC Game Pass intallations, launch the game by double-clicking the `start.bat` file you created earlier
+Then follow the **Common** instructions.
+
+#### GOG/XBox PC
+Launch the game by double-clicking the `start.bat` file you created earlier
 which will give you the option to launch the game with mods.
+
+Then follow the **Common** instructions.
+
+#### Common
 
 On the mod loader screen, ensure you only have the following mods enabled and then start the game:
 
@@ -64,6 +79,8 @@ If playing with Downfall, also make sure the following are enabled:
 - Downfall
 - StSLib
 
-Once you are in-game, you will be able to click the **Archipelago** menu option and enter the ip and port (separated by
+Do note that no guarantees are made about compatibility with mods outside the ones listed here.
+
+Once you are in-game, you will be able to click the **Archipelago** menu option and enter the IP and Port (separated by
 a colon) in the hostname field and enter your player slot name in the Slot Name field. Then click connect, and now you
 are ready to climb the spire!
