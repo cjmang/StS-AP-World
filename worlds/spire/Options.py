@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from schema import Schema, Optional, And
 
-from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet
+from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet, FreeText
 
 
 class Character(OptionSet):
@@ -156,16 +156,20 @@ class AdvancedChar(Toggle):
     option_false = 0
     default = 0
 
-class LockCharacters(TextChoice):
+class LockCharacters(Choice):
     """Whether in a multi character run "Unlock [Char]" items should be shuffled in.
-    locked_fixed means the character option is used to determine which character to start with
+    locked_fixed means the unlocked_character option is used to determine which character to start with
     locked_random means which character you start with is randomized
     unlocked means you start with all characters available"""
     visibility = Visibility.template
     display_name = "Lock Characters"
     option_unlocked = 0
     option_locked_random = 1
+    option_locked_fixed = 2
     default = 1
+
+class UnlockedCharacter(FreeText):
+    """Which character to start unlocked, if lock_characters is set to 2"""
 
 class CharacterOptions(OptionDict):
     """The configuration for advanced characters.  Each character's options can be configured
@@ -213,6 +217,7 @@ class SpireOptions(PerGameCommonOptions):
     include_floor_checks: IncludeFloorChecks
     use_advanced_characters: AdvancedChar
     lock_characters: LockCharacters
+    unlocked_character: UnlockedCharacter
     advanced_characters: CharacterOptions
     campfire_sanity: CampfireSanity
     seeded: SeededRun

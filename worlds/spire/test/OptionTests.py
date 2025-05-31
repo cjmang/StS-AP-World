@@ -112,13 +112,14 @@ class TestCharLocked(SpireTestBase):
     options = {
         "character": "the_ironclad",
         "use_advanced_characters": 1,
-        "lock_characters": 1,
+        "lock_characters": 2,
+        "unlocked_character": "ironclad",
         "advanced_characters": {
             "ironclad": {
                 "ascension": 1
             },
             "silent": {
-                "final_act": True
+                "final_act": 1
             }
         }
     }

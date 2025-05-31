@@ -269,7 +269,18 @@ class LogicTests(LogicTestBase):
 class CustomCharTest(LogicTests):
     prefix = "Custom Character 1"
     options = {
-        'character': 'foobar',
-        'final_act': 1,
+        'use_advanced_characters': 1,
+        'advanced_characters': {
+            "foobar": {
+                'final_act': 1,
+                'ascension': 1,
+            }
+        },
         'campfire_sanity': 1,
+        'shop_sanity': 1,
+        'shop_card_slots': 5,
+        'shop_neutral_card_slots': 2,
+        'shop_relic_slots': 3,
+        'shop_potion_slots': 3,
+        'shop_remove_slots': 1,
     }

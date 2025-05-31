@@ -35,7 +35,8 @@ class SpireWorld(World):
     game = "Slay the Spire"
     topology_present = False
     web = SpireWeb()
-    required_client_version = (0, 3, 7)
+    required_client_version = (0, 6, 1)
+    mod_version = 2
 
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = location_table
@@ -101,8 +102,12 @@ class SpireWorld(World):
                 self.characters.append(config)
                 if config.mod_num > 0:
                     self.modded_chars.append(config)
+        names = set()
         for config in self.characters:
             self.logger.info("StS: Got character configuration" + str(config))
+            names.add(config.official_name)
+        if len(names) != len(self.characters):
+            raise Exception(f"Found duplicate characters: {names}")
         for config in self.characters:
             if not config.locked:
                 break
@@ -115,12 +120,11 @@ class SpireWorld(World):
 
     def _get_unlocked_char(self, characters: Set[str]) -> Optional[str]:
         locked_opt = self.options.lock_characters.value
-        if locked_opt == 0:
-            unlocked_char = None
-        elif locked_opt == 1:
+        unlocked_char = None
+        if locked_opt == 1:
             unlocked_char = self.random.choice([x for x in characters])
-        else:
-            unlocked_char = locked_opt
+        elif locked_opt == 2:
+            unlocked_char = self.options.unlocked_character.value
             if unlocked_char not in characters:
                 raise Exception(
                     f"Configured {unlocked_char} as the first unlocked character, but was not one of: {characters}")
@@ -198,7 +202,8 @@ class SpireWorld(World):
                 "potion_slots": self.options.shop_potion_slots.value,
                 "card_remove": self.options.shop_remove_slots != 0,
                 "costs": self.options.shop_sanity_costs.value,
-            }
+            },
+            "mod_version": self.mod_version,
         }
         slot_data.update(self.options.as_dict(
             "character",

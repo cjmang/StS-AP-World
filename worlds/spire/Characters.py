@@ -44,6 +44,9 @@ character_offset_map = {
     for i, name in enumerate(character_list)
 }
 
+for i, name in enumerate(official_names):
+    character_offset_map[name.lower()] = i
+
 class CharacterConfig:
     # name: str
     # option_name: str
