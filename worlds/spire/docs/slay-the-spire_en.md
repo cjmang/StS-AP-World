@@ -6,20 +6,20 @@
 
 - [ModTheSpire](https://steamcommunity.com/sharedfiles/filedetails/?id=1605060445)
 - [BaseMod](https://steamcommunity.com/workshop/filedetails/?id=1605833019)
-- [Archipelago Multiworld Randomizer](https://steamcommunity.com/sharedfiles/filedetails/?id=2596397288)
+- [Archipelago Multiworld Randomizer](https://steamcommunity.com/sharedfiles/filedetails/?id=3488453081)
 - (optional) [Downfall](https://steamcommunity.com/sharedfiles/filedetails/?id=1610056683)
 - (required for downfall) [StSLib](https://steamcommunity.com/workshop/filedetails/?id=1609158507)
 
 ### For GOG or Xbox PC Game Pass installation:
 
-1. Download the official Steam Console Client [SteamCMD](https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip).
+1. Download the official Steam Console Client [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD#Downloading_SteamCMD).
 2. Unpack that .zip file into some folder and double-click on `steamcmd.exe`.
 3. The client will now update itself. When it's ready type `login anonymous`. Now you are ready to download the actual
     mods.
 4. Run the following commands to download the required mod files:
   - Mod the Spire: `workshop_download_item 646570 1605060445`
   - BaseMod: `workshop_download_item 646570 1605833019`
-  - ArchipelagoMW: `workshop_download_item 646570 2596397288`
+  - ArchipelagoMW: `workshop_download_item 646570 3488453081`
   - (optional) Downfall: `workshop_download_item 646570 1610056683`
   - (required for Downfall) StSLib: `workshop_download_item 646570 1609158507`
 5. Open your Slay the Spire installation directory. By default on GOG this is `C:\GOG Games\Slay the Spire`, on PC Game
