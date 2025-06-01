@@ -32,7 +32,7 @@ class SpireWorld(World):
 
     options_dataclass = SpireOptions
     options: SpireOptions
-    game = "Slay the Spire Custom"
+    game = "Slay the Spire"
     topology_present = False
     web = SpireWeb()
     required_client_version = (0, 6, 1)
