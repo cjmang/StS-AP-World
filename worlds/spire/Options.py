@@ -26,7 +26,7 @@ class Character(OptionSet):
         "Defect",
         "Watcher",
         "Hermit",
-        "Slime Boss",
+        "SlimeBoss",
         "Guardian",
         "Hexaghost",
         "Champ",
