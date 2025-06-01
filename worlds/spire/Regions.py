@@ -124,6 +124,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
     multiworld.regions.append(world.create_region(player, prefix, 'Late Act 3', config,
                                             [
                                                 "Card Draw 12",
+                                                "Card Draw 13",
                                                 "Relic 9",
                                                 "Relic 10",
                                                 *_create_floor_check(45, 49),

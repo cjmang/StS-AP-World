@@ -5,7 +5,7 @@ from typing import Optional, List, Tuple, Union, NamedTuple
 from worlds.spire import character_list
 from worlds.spire.Characters import NUM_CUSTOM
 
-CARD_DRAW_COUNT = 12
+CARD_DRAW_COUNT = 13
 
 CHAR_OFFSET = 200
 

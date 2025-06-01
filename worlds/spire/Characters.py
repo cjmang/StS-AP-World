@@ -10,7 +10,7 @@ character_list: List[str] = [
     "Defect",
     "Watcher",
     "Hermit",
-    "Slime Boss",
+    "SlimeBoss",
     "Guardian",
     "Hexaghost",
     "Champ",

@@ -113,6 +113,7 @@ logic_map: dict[PowerLevel, List[str]] = {
     ],
     PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
         "Card Draw 12",
+        "Card Draw 13",
         # "Card Draw 15",
         *_create_floor_check(45, 49)
     ],
