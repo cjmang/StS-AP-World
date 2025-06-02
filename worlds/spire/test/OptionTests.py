@@ -107,6 +107,19 @@ class TestNoCharLocked(SpireTestBase):
         for loc in self.world.get_locations():
             self.assertFalse("Press Start" in loc.name)
 
+class TestAcension20(SpireTestBase):
+    options = {
+        "use_advanced_characters": 1,
+        "advanced_characters": {
+            "foobar": {
+                "ascension": 20,
+            },
+            "barfoo": {
+                "ascension": 20,
+            }
+        }
+    }
+
 class TestCharLocked(SpireTestBase):
 
     options = {
