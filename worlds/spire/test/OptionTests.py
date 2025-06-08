@@ -1,3 +1,4 @@
+from BaseClasses import CollectionState
 from worlds.spire.Options import CharacterOptions
 from worlds.spire.test import SpireTestBase
 
@@ -141,7 +142,7 @@ class TestCharLocked(SpireTestBase):
         self.assertTrue("Silent Unlock" in [ i.name for i in self.world.multiworld.get_items()])
         start = self.world.get_location("Silent Press Start")
         self.assertTrue( start is not None)
-        state = self.multiworld.state.copy()
+        state = CollectionState(self.multiworld)
         self.assertFalse(start.can_reach(state))
         state.collect(self.get_item_by_name("Silent Unlock"))
         self.assertTrue(start.can_reach(state))

@@ -148,9 +148,9 @@ class LogicTestBase(SpireTestBase):
         'shop_remove_slots': 1,
     }
 
-    def _setup_state_accessible(self, original_state: CollectionState, power: PowerLevel) -> CollectionState:
+    def _setup_state_accessible(self, power: PowerLevel) -> CollectionState:
 
-        state = original_state.copy()
+        state = CollectionState(self.multiworld)
 
         draw = self.get_item_by_name(f"{self.prefix} Card Draw")
         for _ in range(power.draw):
@@ -182,9 +182,9 @@ class LogicTestBase(SpireTestBase):
 
         return state
 
-    def _setup_state_inaccessible(self, original_state: CollectionState, power: PowerLevel, type: str):
+    def _setup_state_inaccessible(self, power: PowerLevel, type: str):
 
-        state = original_state.copy()
+        state = CollectionState(self.multiworld)
 
         draw = self.get_item_by_name(f"{self.prefix} Card Draw")
         draws = [draw for _ in range(power.draw)]
@@ -233,7 +233,7 @@ class LogicTestBase(SpireTestBase):
         for i, type in enumerate([ x for x in ['Card Draw', 'Relic', 'Boss Relic', 'Progressive Rest', 'Progressive Smith', "Shop Card Slot", "Progressive Shop Remove"]]):
             if power[i] == 0:
                 continue
-            state = self._setup_state_inaccessible(self.multiworld.state, power, type)
+            state = self._setup_state_inaccessible(power, type)
 
             for location in locations:
                 with self.subTest(f"Cannot access {location} while missing one {type}", reqs=power):
@@ -242,7 +242,7 @@ class LogicTestBase(SpireTestBase):
                                     f"Location {location} can be reached with power level {power}, but missing one {type}; state {state.prog_items}")
 
     def _test_accessible(self, power: PowerLevel, locations: Iterable[str]):
-        state = self._setup_state_accessible(self.multiworld.state, power)
+        state = self._setup_state_accessible(power)
 
         for location in locations:
             with self.subTest(f"Can access {location} with all reqs", reqs=power):
