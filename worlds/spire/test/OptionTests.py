@@ -121,6 +121,22 @@ class TestAcension20(SpireTestBase):
         }
     }
 
+class TestAcension20Final(SpireTestBase):
+    options = {
+        "character": {
+            "Ironclad", "Defect"
+        },
+        "ascension": 20,
+        "final_act": 1,
+        "include_floor_checks": 1,
+        "campfire_sanity":1,
+        "shop_sanity":1,
+    }
+
+    def test_floor_56_has_address(self):
+        self.assertEquals(56, self.multiworld.get_location("Ironclad Reached Floor 56", self.player).address)
+        self.assertEquals((200*2)+56, self.multiworld.get_location("Defect Reached Floor 56", self.player).address)
+
 class TestCharLocked(SpireTestBase):
 
     options = {
