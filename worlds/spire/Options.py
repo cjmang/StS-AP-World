@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Final
+from typing import List
 
 from schema import Schema, Optional, And
 

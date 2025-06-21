@@ -6,8 +6,8 @@ from typing import Optional, List, Set
 from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
 from Options import OptionError
 from .Characters import character_list, CharacterConfig, character_option_map, character_offset_map, NUM_CUSTOM
-from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs
-from .Locations import location_table, loc_ids_to_data, LocationData, LocationType, CARD_DRAW_COUNT
+from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs, item_groups
+from .Locations import location_table, loc_ids_to_data, LocationData, LocationType, CARD_DRAW_COUNT, location_groups
 from .Options import SpireOptions, option_groups
 from .Regions import create_regions
 from .Rules import set_rules
@@ -39,6 +39,8 @@ class SpireWorld(World):
     web = SpireWeb()
     required_client_version = (0, 6, 1)
     mod_version = 2
+    location_name_groups = location_groups
+    item_name_groups = item_groups
 
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = location_table

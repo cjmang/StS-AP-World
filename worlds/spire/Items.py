@@ -99,4 +99,47 @@ def create_item_tables(vanilla_chars: typing.List[str], extras: int) -> typing.T
 
     return item_name_to_data, characters_to_items, event_item_pairs
 
+def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, ItemData]]) -> dict[str, typing.Set[str]]:
+    gold = set()
+    campfire = set()
+    shop = set()
+    unlock = set()
+    junk = set()
+    ret = dict()
+
+    ret["Gold"] =  gold
+    ret["Campfire"] = campfire
+    ret["Shop"] = shop
+    ret["Unlock"] = unlock
+    ret["Junk"] = junk
+
+    for key, data in chars_to_items.items():
+        char = key if type(key) == str else f"Custom Character {key+1}"
+        char_gold = set()
+        char_campfire = set()
+        char_shop = set()
+
+        ret[f"{char} Gold"] = char_gold
+        ret[f"{char} Campfire"] = char_campfire
+        ret[f"{char} Shop"] = char_shop
+
+        for item_name, item_data in data.items():
+            if item_data.classification == 0:
+                junk.add(item_name)
+            if item_data.type == ItemType.GOLD:
+                char_gold.add(item_name)
+                gold.add(item_name)
+            elif item_data.type == ItemType.CAMPFIRE:
+                char_campfire.add(item_name)
+                campfire.add(item_name)
+            elif item_data.type in [ItemType.SHOP_RELIC, ItemType.SHOP_REMOVE, ItemType.SHOP_POTION, ItemType.SHOP_NEUTRAL, ItemType.SHOP_CARD]:
+                char_shop.add(item_name)
+                shop.add(item_name)
+            elif item_data.type == ItemType.CHAR_UNLOCK:
+                unlock.add(item_name)
+
+    return ret
+
 item_table, chars_to_items, event_item_pairs = create_item_tables(character_list, NUM_CUSTOM)
+
+item_groups = create_item_groups(chars_to_items)
