@@ -4,6 +4,7 @@ from logging import Logger
 from typing import Optional, List, Set
 
 from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
+from Options import OptionError
 from .Characters import character_list, CharacterConfig, character_option_map, character_offset_map, NUM_CUSTOM
 from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs
 from .Locations import location_table, loc_ids_to_data, LocationData, LocationType, CARD_DRAW_COUNT
@@ -107,18 +108,20 @@ class SpireWorld(World):
             self.logger.info("StS: Got character configuration" + str(config))
             names.add(config.official_name)
         if len(names) != len(self.characters):
-            raise Exception(f"Found duplicate characters: {names}")
+            raise OptionError(f"Found duplicate characters: {names}")
         for config in self.characters:
             if not config.locked:
                 break
         else:
-            raise Exception("No character started unlocked!")
+            raise OptionError("No character started unlocked!")
         self.total_shop = (self.options.shop_card_slots.value + self.options.shop_neutral_card_slots.value +
                            self.options.shop_relic_slots.value + self.options.shop_potion_slots.value)
         if len(self.modded_chars) > NUM_CUSTOM:
-            raise Exception(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
+            raise OptionError(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
 
     def _get_unlocked_char(self, characters: Set[str]) -> Optional[str]:
+        if len(characters) <= 0:
+            raise OptionError("At least one character must be selected.")
         locked_opt = self.options.lock_characters.value
         unlocked_char = None
         if locked_opt == 1:
@@ -126,7 +129,7 @@ class SpireWorld(World):
         elif locked_opt == 2:
             unlocked_char = self.options.unlocked_character.value
             if unlocked_char not in characters:
-                raise Exception(
+                raise OptionError(
                     f"Configured {unlocked_char} as the first unlocked character, but was not one of: {characters}")
         return unlocked_char
 
@@ -165,7 +168,6 @@ class SpireWorld(World):
                 remaining_checks = 51
 
                 if config.final_act:
-                    print("Adding final act checks")
                     remaining_checks += 4
                 if config.ascension >= 20:
                     remaining_checks += 1
