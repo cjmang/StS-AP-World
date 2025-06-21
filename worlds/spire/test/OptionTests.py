@@ -133,9 +133,23 @@ class TestAcension20Final(SpireTestBase):
         "shop_sanity":1,
     }
 
+
     def test_floor_56_has_address(self):
         self.assertEquals(56, self.multiworld.get_location("Ironclad Reached Floor 56", self.player).address)
         self.assertEquals((200*2)+56, self.multiworld.get_location("Defect Reached Floor 56", self.player).address)
+
+
+class TestOfficialNamesRecognized(SpireTestBase):
+    options = {
+        "use_advanced_characters": 1,
+        "advanced_characters": {
+            "tHe_SnEcKo": {}
+        }
+    }
+
+    def test_has_snecko_location(self):
+        self.world.get_location("Snecko Reached Floor 1")
+
 
 class TestCharLocked(SpireTestBase):
 

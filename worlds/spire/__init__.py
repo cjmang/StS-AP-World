@@ -78,10 +78,10 @@ class SpireWorld(World):
                 # if config.mod_num > 0:
                     # self.modded_chars.append(config)
         else:
-            unlocked_char = self._get_unlocked_char(self.options.advanced_characters.keys())
+            unlocked_char = self._get_unlocked_char(self.options.advanced_characters.keys()).lower()
             for option_name, options in self.options.advanced_characters.value.items():
                 mod_num = 0
-                char_offset = character_offset_map.get(option_name, None)
+                char_offset = character_offset_map.get(option_name.lower(), None)
                 if char_offset is None:
                     self.modded_num += 1
                     mod_num = self.modded_num
@@ -93,7 +93,7 @@ class SpireWorld(World):
                     seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
                 else:
                     seed = ""
-                locked = False if unlocked_char is None or unlocked_char == option_name else True
+                locked = False if unlocked_char is None or unlocked_char == option_name.lower() else True
                 config = CharacterConfig(name,
                                          option_name,
                                          char_offset,
