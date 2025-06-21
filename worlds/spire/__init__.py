@@ -119,6 +119,8 @@ class SpireWorld(World):
             raise OptionError("No character started unlocked!")
         self.total_shop = (self.options.shop_card_slots.value + self.options.shop_neutral_card_slots.value +
                            self.options.shop_relic_slots.value + self.options.shop_potion_slots.value)
+        if self.total_shop <= 0:
+            self.options.shop_sanity.value = 0
         if len(self.modded_chars) > NUM_CUSTOM:
             raise OptionError(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
 
@@ -153,6 +155,13 @@ class SpireWorld(World):
                     amount = 3
                 elif ItemType.CHAR_UNLOCK == data.type and self.options.lock_characters.value != 0 and config.locked:
                     amount = 1
+                elif ItemType.GOLD == data.type and self.options.gold_sanity.value != 0:
+                    if '15 Gold' in name:
+                        amount = 26
+                    elif '30 Gold' in name:
+                        amount = 7
+                    elif 'Boss Gold' in name:
+                        amount = 2
                 elif self.options.shop_sanity.value != 0:
                     if ItemType.SHOP_CARD == data.type:
                         amount = self.options.shop_card_slots.value
@@ -219,6 +228,7 @@ class SpireWorld(World):
             "include_floor_checks",
             "campfire_sanity",
             "shop_sanity",
+            "gold_sanity",
             "chatty_mc",
         ))
         return slot_data
@@ -258,6 +268,8 @@ class SpireWorld(World):
             total_shop = self.total_shop + 3 if self.options.shop_remove_slots else self.total_shop
             return total_shop >= data.id - 163
         elif data.type == LocationType.Start and (self.options.lock_characters == 0 or not config.locked):
+            return False
+        elif data.type == LocationType.Gold and self.options.gold_sanity.value == 0:
             return False
         return True
 

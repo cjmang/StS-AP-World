@@ -138,6 +138,11 @@ class ShopSanityCosts(Choice):
     option_Tiered = 3
     default = 2
 
+class GoldSanity(Toggle):
+    """Whether to enable shuffling gold rewards into the multiworld."""
+    display_name = "Gold Sanity"
+    default = 0
+
 class SeededRun(Toggle):
     """Whether each character should have a fixed seed to climb the spire with or not."""
     display_name = "Seeded Run"
@@ -222,6 +227,7 @@ class SpireOptions(PerGameCommonOptions):
     unlocked_character: UnlockedCharacter
     advanced_characters: CharacterOptions
     campfire_sanity: CampfireSanity
+    gold_sanity: GoldSanity
     seeded: SeededRun
     chatty_mc: ChattyMC
     shop_sanity: ShopSanity
@@ -236,6 +242,7 @@ option_groups: List[OptionGroup] = [
     OptionGroup("Sanities", [
         IncludeFloorChecks,
         CampfireSanity,
+        GoldSanity,
         ShopSanity,
         ShopCardSlots,
         ShopNeutralSlots,

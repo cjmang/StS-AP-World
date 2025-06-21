@@ -16,6 +16,7 @@ class PowerLevel(NamedTuple):
     smith: int = 0
     shop: int = 0
     shop_remove: int = 0
+    gold: int = 0
 
 class SpireLogic(LogicMixin):
     def _spire_has_relics(self: CollectionState, player: int, prefix, amount: int) -> bool:
@@ -53,11 +54,18 @@ class SpireLogic(LogicMixin):
         else:
             return True
 
+    def _spire_has_gold(self: CollectionState, player: int, prefix: str, amount: int, world: 'SpireWorld'):
+        if world.options.gold_sanity:
+            return self.count(f"{prefix} 30 Gold", player) * 30 + self.count(f"{prefix} Boss Gold", player) * 75 >= amount
+        else:
+            return True
+
     def _spire_has_victories(self: CollectionState, player: int, configs: List['CharacterConfig']):
         for config in configs:
             if not self.has(f"{config.name} Victory", player):
                 return False
         return True
+
 
     def _spire_has_power(self: Union[CollectionState, 'SpireLogic'], world: 'SpireWorld', prefix: str, power: PowerLevel) -> bool:
         result: bool = True
@@ -76,6 +84,8 @@ class SpireLogic(LogicMixin):
             result &= self._spire_has_shop(world.player, prefix, power.shop, world)
         if power.shop_remove > 0:
             result &= self._spire_has_shop_removes(world.player, prefix, power.shop_remove, world)
+        if power.gold > 0:
+            result &= self._spire_has_gold(world.player, prefix, power.gold, world)
         return result
 
 
@@ -97,9 +107,10 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
     # Act 1 Card Draws
     set_rule(multiworld.get_location(f"{prefix} Card Draw 3", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
-
     set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1, rest=1)))
+
+
 
     # Act 1 Relics
     set_rule(multiworld.get_location(f"{prefix} Relic 1", player),
@@ -123,6 +134,7 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
              lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
     set_rule(multiworld.get_entrance(f"{prefix} Early Act 2", player),
              lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
+
 
     # Act 2 Card Draws
     set_rule(multiworld.get_location(f"{prefix} Card Draw 7", player),
@@ -156,6 +168,58 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
 
     set_rule(multiworld.get_entrance(f"{prefix} Early Act 3", player),
              lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
+
+    if world.options.shop_sanity:
+        total_shop = world.total_shop
+        # Act 1 Shop
+        for i in range(1, min(6, total_shop)):
+            set_rule(multiworld.get_location(f"{prefix} Shop Slot {i}", player),
+                     lambda state: state._spire_has_power(world, prefix, PowerLevel(gold=50)))
+
+        # Act 2 Shop
+        for i in range(min(6, total_shop), min(11, total_shop)):
+            set_rule(multiworld.get_location(f"{prefix} Shop Slot {i}", player),
+                     lambda state: state._spire_has_power(world, prefix, PowerLevel(gold=150)))
+
+        # Act 3 Shop
+        for i in range(min(11, total_shop), min(17, total_shop)):
+            set_rule(multiworld.get_location(f"{prefix} Shop Slot {i}", player),
+                     lambda state: state._spire_has_power(world, prefix, PowerLevel(gold=270)))
+
+    if world.options.gold_sanity:
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 5", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 6", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
+
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 7", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 8", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
+
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 13", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 14", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
+
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 15", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=4)))
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 16", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=4)))
+
+        set_rule(multiworld.get_location(f"{prefix} Elite Gold 1", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=2, rest=1, shop=2)))
+        set_rule(multiworld.get_location(f"{prefix} Elite Gold 2", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=2, rest=1, shop=2)))
+        set_rule(multiworld.get_location(f"{prefix} Elite Gold 3", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=2)))
+        set_rule(multiworld.get_location(f"{prefix} Elite Gold 4", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=3)))
+        set_rule(multiworld.get_location(f"{prefix} Boss Gold 1", player),
+                 lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
+        set_rule(multiworld.get_location(f"{prefix} Boss Gold 2", player),
+                 lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
+
 
     # Act 3 Relics
     set_rule(multiworld.get_location(f"{prefix} Relic 7", player),
