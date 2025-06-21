@@ -1,8 +1,10 @@
 from dataclasses import dataclass
+from typing import List, Final
 
 from schema import Schema, Optional, And
 
-from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet, FreeText
+from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet, \
+    FreeText, OptionGroup
 
 
 class Character(OptionSet):
@@ -229,3 +231,20 @@ class SpireOptions(PerGameCommonOptions):
     shop_potion_slots: ShopPotionSlots
     shop_remove_slots: ShopRemoveSlots
     shop_sanity_costs: ShopSanityCosts
+
+option_groups: List[OptionGroup] = [
+    OptionGroup("Sanities", [
+        IncludeFloorChecks,
+        CampfireSanity,
+        ShopSanity,
+        ShopCardSlots,
+        ShopNeutralSlots,
+        ShopRelicSlots,
+        ShopPotionSlots,
+        ShopRemoveSlots,
+        ShopSanityCosts,
+    ]),
+    OptionGroup("Misc", [
+        ChattyMC,
+    ])
+]

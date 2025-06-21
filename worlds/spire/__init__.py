@@ -8,7 +8,7 @@ from Options import OptionError
 from .Characters import character_list, CharacterConfig, character_option_map, character_offset_map, NUM_CUSTOM
 from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs
 from .Locations import location_table, loc_ids_to_data, LocationData, LocationType, CARD_DRAW_COUNT
-from .Options import SpireOptions
+from .Options import SpireOptions, option_groups
 from .Regions import create_regions
 from .Rules import set_rules
 from ..AutoWorld import WebWorld, World
@@ -24,6 +24,7 @@ class SpireWeb(WebWorld):
         "slay-the-spire/en",
         ["Phar"]
     )]
+    option_groups = option_groups
 
 class SpireWorld(World):
     """
