@@ -6,6 +6,7 @@ from schema import Schema, Optional, And
 from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet, \
     FreeText, OptionGroup
 
+NUM_CUSTOM = 5
 
 class Character(OptionSet):
     """Enter the list of characters to play as.  Valid characters are:
@@ -20,7 +21,8 @@ class Character(OptionSet):
         'Champ'
         'Gremlins'
         'Automaton'
-        'Snecko'"""
+        'Snecko'
+        'Collector'"""
     display_name = "Character"
     valid_keys = [
         "Ironclad",
@@ -35,12 +37,19 @@ class Character(OptionSet):
         "Gremlins",
         "Automaton",
         "Snecko",
+        "Collector",
     ]
     default = ["Ironclad"]
     valid_keys_casefold = False
     # TODO: Spire Takes the wheel doesn't work with the current setup
     # option_spire_take_the_wheel = 12
 
+class GoalNumChar(Range):
+    """How many characters you need to complete a run with before you goal. 0 means all characters"""
+    display_name = "Number of Characters to Goal"
+    range_start = 0
+    range_end = 13 + NUM_CUSTOM
+    default = 0
 
 class Ascension(Range):
     """What Ascension do you wish to play with."""
@@ -49,6 +58,13 @@ class Ascension(Range):
     range_end = 20
     default = 0
 
+class PickNumberCharacters(Range):
+    """Randomly select from the configured characters this many characters to generate for.
+    0 disables."""
+    display_name = "Pick Number of Characters"
+    range_start = 0
+    range_end = 13 + NUM_CUSTOM - 1
+    default = 0
 
 class FinalAct(Toggle):
     """Whether you will need to collect the 3 keys and beat the final act to complete the game."""
@@ -222,6 +238,7 @@ class CharacterOptions(OptionDict):
 @dataclass
 class SpireOptions(PerGameCommonOptions):
     character: Character
+    num_chars_goal: GoalNumChar
     ascension: Ascension
     final_act: FinalAct
     downfall: Downfall
@@ -231,6 +248,7 @@ class SpireOptions(PerGameCommonOptions):
     lock_characters: LockCharacters
     unlocked_character: UnlockedCharacter
     advanced_characters: CharacterOptions
+    pick_num_characters: PickNumberCharacters
     campfire_sanity: CampfireSanity
     gold_sanity: GoldSanity
     potion_sanity: PotionSanity

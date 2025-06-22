@@ -60,11 +60,15 @@ class SpireLogic(LogicMixin):
         else:
             return True
 
-    def _spire_has_victories(self: CollectionState, player: int, configs: List['CharacterConfig']):
+    def _spire_has_victories(self: CollectionState, player: int, configs: List['CharacterConfig'], world: 'SpireWorld'):
+        num_chars_goal = world.options.num_chars_goal.value
+        count = 0
         for config in configs:
-            if not self.has(f"{config.name} Victory", player):
-                return False
-        return True
+            if self.has(f"{config.name} Victory", player):
+                count += 1
+        if num_chars_goal == 0 and count >= len(configs):
+            return True
+        return count >= num_chars_goal
 
 
     def _spire_has_power(self: Union[CollectionState, 'SpireLogic'], world: 'SpireWorld', prefix: str, power: PowerLevel) -> bool:
@@ -95,7 +99,7 @@ def set_rules(world: 'SpireWorld', player: int):
     for config in world.characters:
         _set_rules(world, player, config)
 
-    multiworld.completion_condition[player] = lambda state: state._spire_has_victories(player, world.characters)
+    multiworld.completion_condition[player] = lambda state: state._spire_has_victories(player, world.characters, world)
 
 def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
     multiworld = world.multiworld

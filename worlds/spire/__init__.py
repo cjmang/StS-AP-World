@@ -56,7 +56,11 @@ class SpireWorld(World):
     def generate_early(self):
         if self.options.use_advanced_characters.value == 0:
             char_options = self.options.character.value
+            num_rand_chars = self.options.pick_num_characters.value
+            if num_rand_chars != 0 and num_rand_chars < len(char_options):
+                char_options = self.random.sample(list(char_options), k=num_rand_chars)
             unlocked_char = self._get_unlocked_char(char_options)
+            self.logger.info("Generating with characters %s", char_options)
             for char_val in char_options:
                 option_name = char_val
                 char_offset = character_offset_map[option_name.lower()]
@@ -65,7 +69,7 @@ class SpireWorld(World):
                     seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
                 else:
                     seed = ""
-                locked = False if unlocked_char is None or unlocked_char == option_name else True
+                locked = False if unlocked_char is None or unlocked_char.lower() == option_name.lower() else True
 
                 config = CharacterConfig(name,
                                          option_name,
@@ -77,11 +81,15 @@ class SpireWorld(World):
                                          final_act=self.options.final_act.value==1,
                                          downfall=self.options.downfall.value==1)
                 self.characters.append(config)
-                # if config.mod_num > 0:
-                    # self.modded_chars.append(config)
         else:
-            unlocked_char = self._get_unlocked_char(self.options.advanced_characters.keys()).lower()
-            for option_name, options in self.options.advanced_characters.value.items():
+            advanced_chars = self.options.advanced_characters.keys()
+            num_rand_chars = self.options.pick_num_characters.value
+            if num_rand_chars != 0 and num_rand_chars < len(advanced_chars):
+                advanced_chars = self.random.sample(list(advanced_chars), k=num_rand_chars)
+            unlocked_char = self._get_unlocked_char(advanced_chars)
+            self.logger.info("Generating with characters %s", advanced_chars)
+            for option_name in advanced_chars:
+                options = self.options.advanced_characters[option_name]
                 mod_num = 0
                 char_offset = character_offset_map.get(option_name.lower(), None)
                 if char_offset is None:
@@ -95,7 +103,7 @@ class SpireWorld(World):
                     seed = "".join(self.random.choice(string.ascii_letters) for i in range(16))
                 else:
                     seed = ""
-                locked = False if unlocked_char is None or unlocked_char == option_name.lower() else True
+                locked = False if unlocked_char is None or unlocked_char.lower() == option_name.lower() else True
                 config = CharacterConfig(name,
                                          option_name,
                                          char_offset,
@@ -124,6 +132,10 @@ class SpireWorld(World):
             self.options.shop_sanity.value = 0
         if len(self.modded_chars) > NUM_CUSTOM:
             raise OptionError(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
+        num_chars_goal = self.options.num_chars_goal.value
+        if num_chars_goal != 0:
+            if num_chars_goal > len(self.characters):
+                self.options.num_chars_goal.value = 0
 
     def _get_unlocked_char(self, characters: Set[str]) -> Optional[str]:
         if len(characters) <= 0:
@@ -234,6 +246,7 @@ class SpireWorld(World):
             "gold_sanity",
             "potion_sanity",
             "chatty_mc",
+            "num_chars_goal",
         ))
         return slot_data
 

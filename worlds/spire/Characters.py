@@ -1,8 +1,8 @@
-from typing import List, Optional, Any
+from typing import List, Any
 
-from worlds.spire.Options import Character
+from worlds.spire.Options import Character, NUM_CUSTOM
 
-NUM_CUSTOM = 5
+NUM_CUSTOM = NUM_CUSTOM
 
 character_list: List[str] = [
     "Ironclad",
@@ -17,6 +17,7 @@ character_list: List[str] = [
     "Gremlins",
     "Automaton",
     "Snecko",
+    "Collector",
 ]
 
 official_names: List[str] = [
@@ -31,7 +32,8 @@ official_names: List[str] = [
     "THE_CHAMP",
     "GREMLIN",
     "THE_AUTOMATON",
-    "THE_SNECKO"
+    "THE_SNECKO",
+    "THE_COLLECTOR",
 ]
 
 character_option_map = {
