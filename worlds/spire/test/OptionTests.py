@@ -191,6 +191,35 @@ class NoUnlockedChar(SpireTestBase):
         "lock_characters": 0
     }
 
+class PickTwoCharacters(SpireTestBase):
+    options = {
+        "character": {
+            "Silent",
+            "Ironclad",
+            "Watcher",
+            "Defect",
+        },
+        "pick_num_characters": 2
+    }
+
+    def test_has_two(self):
+        self.assertEqual(2, len(self.world.characters))
+
+class PickTwoAdvancedCharacters(SpireTestBase):
+    options = {
+        "use_advanced_characters": 1,
+        "advanced_characters": {
+            "Silent": {},
+            "Ironclad": {},
+            "Watcher": {},
+            "Defect": {},
+        },
+        "pick_num_characters": 2
+    }
+
+    def test_has_two(self):
+        self.assertEqual(2, len(self.world.characters))
+
 class GoalWithTwoChars(SpireTestBase):
 
     options = {

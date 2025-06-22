@@ -58,6 +58,13 @@ class Ascension(Range):
     range_end = 20
     default = 0
 
+class PickNumberCharacters(Range):
+    """Randomly select from the configured characters this many characters to generate for.
+    0 disables."""
+    display_name = "Pick Number of Characters"
+    range_start = 0
+    range_end = 13 + NUM_CUSTOM - 1
+    default = 0
 
 class FinalAct(Toggle):
     """Whether you will need to collect the 3 keys and beat the final act to complete the game."""
@@ -241,6 +248,7 @@ class SpireOptions(PerGameCommonOptions):
     lock_characters: LockCharacters
     unlocked_character: UnlockedCharacter
     advanced_characters: CharacterOptions
+    pick_num_characters: PickNumberCharacters
     campfire_sanity: CampfireSanity
     gold_sanity: GoldSanity
     potion_sanity: PotionSanity
