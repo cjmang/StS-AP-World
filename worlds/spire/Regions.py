@@ -36,7 +36,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 2",
                                                 "Potion Drop 1",
                                                 *_create_floor_check(1,5),
-                                                *_create_combat_check(1,3),
+                                                *_create_combat_check(1,2),
                                             ],
                                             ["Mid Act 1", "Act 1 Shop"])
 
@@ -56,7 +56,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Potion Drop 2",
                                                 *_create_campfire_check(1),
                                                 *_create_floor_check(6, 10),
-                                                *_create_combat_check(4, 6),
+                                                *_create_combat_check(3, 4),
                                             ],["Late Act 1"]))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Late Act 1', config,
@@ -64,7 +64,8 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Relic 3',
                                                 'Elite Gold 2',
                                                 "Potion Drop 3",
-                                                *_create_floor_check(11, 15)
+                                                *_create_floor_check(11, 15),
+                                                *_create_combat_check(5, 6),
                                             ], ['Act 1 Boss Arena']))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Act 1 Boss Arena', config,
@@ -82,7 +83,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 6",
                                                 "Potion Drop 4",
                                                 *_create_floor_check(18, 22),
-                                                *_create_combat_check(7, 9),
+                                                *_create_combat_check(7, 8),
                                             ], ["Mid Act 2", "Act 2 Shop"]))
 
     multiworld.regions.append(world.create_region(player, prefix, "Act 2 Shop", config,
@@ -96,7 +97,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Potion Drop 5",
                                                 *_create_campfire_check(2),
                                                 *_create_floor_check(23, 27),
-                                                *_create_combat_check(10, 12),
+                                                *_create_combat_check(9, 10),
                                             ], ["Late Act 2"]))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Late Act 2', config,
@@ -106,7 +107,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Elite Gold 4',
                                                 "Potion Drop 6",
                                                 *_create_floor_check(28, 32),
-                                                *_create_combat_check(13, 13),
+                                                *_create_combat_check(11, 12),
                                             ], ['Act 2 Boss Arena']))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Act 2 Boss Arena', config,
@@ -124,7 +125,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 10",
                                                 "Potion Drop 7",
                                                 *_create_floor_check(35, 39),
-                                                *_create_combat_check(14, 16),
+                                                *_create_combat_check(13, 14),
                                             ], ["Mid Act 3", "Act 3 Shop"]))
 
     multiworld.regions.append(world.create_region(player, prefix, "Act 3 Shop", config,
@@ -139,7 +140,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Potion Drop 8",
                                                 *_create_campfire_check(3),
                                                 *_create_floor_check(40, 44),
-                                                *_create_combat_check(17, 17),
+                                                *_create_combat_check(15, 16),
                                             ], ["Late Act 3"]))
 
 
@@ -153,7 +154,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Elite Gold 7',
                                                 "Potion Drop 9",
                                                 *_create_floor_check(45, 49),
-                                                *_create_combat_check(18, 18),
+                                                *_create_combat_check(17, 18),
                                             ], ['Act 3 Boss Arena']))
 
     acension_mod = 1 if config.ascension >= 20 else 0
