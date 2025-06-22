@@ -125,7 +125,7 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
 
     # Act 1 Boss Event
     set_rule(multiworld.get_entrance(f"{prefix} Act 1 Boss Arena", player),
-             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=3, relic=2, smith=1, shop=3, shop_remove=1)))
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=3, relic=2, smith=1, shop=3, shop_remove=1, gold=50)))
 
     # Act 1 Boss Rewards
     set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 1", player),
@@ -158,7 +158,7 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
 
     # Act 2 Boss Event
     set_rule(multiworld.get_entrance(f"{prefix} Act 2 Boss Arena", player),
-             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=4, boss_relic=1, smith=2, shop=6, shop_remove=2)))
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=4, boss_relic=1, smith=2, shop=6, shop_remove=2, gold=150)))
 
     # Act 2 Boss Rewards
     set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 2", player),
@@ -235,7 +235,7 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
 
     # Act 3 Boss Event
     set_rule(multiworld.get_entrance(f"{prefix} Act 3 Boss Arena", player),
-             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=10, relic=9, boss_relic=2, smith=3, shop=10, shop_remove=3)))
+             lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=10, relic=9, boss_relic=2, smith=3, shop=10, shop_remove=3, gold=270)))
 
     set_rule(multiworld.get_entrance(f"{prefix} Act 4", player),
              lambda state: state.has(f"{prefix} Beat Act 3 Boss", player))

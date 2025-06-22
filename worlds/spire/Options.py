@@ -139,8 +139,13 @@ class ShopSanityCosts(Choice):
     default = 2
 
 class GoldSanity(Toggle):
-    """Whether to enable shuffling gold rewards into the multiworld."""
+    """Whether to enable shuffling gold rewards into the multiworld. Adds 27 locations per character"""
     display_name = "Gold Sanity"
+    default = 0
+
+class PotionSanity(Toggle):
+    """Whether to enable shuffling potion drops into the multiworld; adds 9 locations per character."""
+    display_name = "Potion Sanity"
     default = 0
 
 class SeededRun(Toggle):
@@ -228,6 +233,7 @@ class SpireOptions(PerGameCommonOptions):
     advanced_characters: CharacterOptions
     campfire_sanity: CampfireSanity
     gold_sanity: GoldSanity
+    potion_sanity: PotionSanity
     seeded: SeededRun
     chatty_mc: ChattyMC
     shop_sanity: ShopSanity
@@ -243,6 +249,7 @@ option_groups: List[OptionGroup] = [
         IncludeFloorChecks,
         CampfireSanity,
         GoldSanity,
+        PotionSanity,
         ShopSanity,
         ShopCardSlots,
         ShopNeutralSlots,

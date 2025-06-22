@@ -163,6 +163,8 @@ class SpireWorld(World):
                         amount = 7
                     elif 'Boss Gold' in name:
                         amount = 2
+                elif ItemType.POTION == data.type and self.options.potion_sanity:
+                    amount = 9
                 elif self.options.shop_sanity.value != 0:
                     if ItemType.SHOP_CARD == data.type:
                         amount = self.options.shop_card_slots.value
@@ -230,6 +232,7 @@ class SpireWorld(World):
             "campfire_sanity",
             "shop_sanity",
             "gold_sanity",
+            "potion_sanity",
             "chatty_mc",
         ))
         return slot_data
@@ -271,6 +274,8 @@ class SpireWorld(World):
         elif data.type == LocationType.Start and (self.options.lock_characters == 0 or not config.locked):
             return False
         elif data.type == LocationType.Gold and self.options.gold_sanity.value == 0:
+            return False
+        elif data.type == LocationType.Potion and self.options.potion_sanity.value == 0:
             return False
         return True
 

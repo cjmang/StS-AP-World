@@ -20,6 +20,7 @@ class LocationType(Enum):
     Shop = auto()
     Start = auto()
     Gold = auto()
+    Potion = auto()
 
 
 class LocationData(NamedTuple):
@@ -36,6 +37,7 @@ def create_location_data() -> List[LocationData]:
             [LocationData(f"Shop Slot {j}", j + 163, LocationType.Shop, min(((j-1) // 5)+1, 3)) for j in range(1,17)] +
             [LocationData(f"Combat Gold {j}", j + 56, LocationType.Gold, min(((j-1)//6)+1,3)) for j in range(1,19)] +
             [LocationData(f"Elite Gold {j}", j + 75, LocationType.Gold, min(((j-1)//2)+1,3)) for j in range(1,8)] +
+            [LocationData(f"Potion Drop {j}", j + 84, LocationType.Potion, min(((j-1)//3)+1,3)) for j in range(1,10)] +
             [LocationData('Act 1 Campfire 1', 121, LocationType.Campfire, 1),
             LocationData('Act 1 Campfire 2', 122, LocationType.Campfire, 1),
             LocationData('Act 2 Campfire 1', 123, LocationType.Campfire, 2),

@@ -21,6 +21,8 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Card Draw 2",
         "Act 1 Campfire 1",
         "Act 1 Campfire 2",
+        "Potion Drop 1",
+        "Potion Drop 2",
         *_create_floor_check(1,10),
         *_create_combat_check(1,3),
     ],
@@ -40,82 +42,89 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Relic 3",
         "Elite Gold 1",
         "Elite Gold 2",
+        "Potion Drop 3",
         *_create_floor_check(11, 15)
     ],
-    PowerLevel(draw=3,relic=2, rest=1, smith=1, shop=3, shop_remove=1): [
+    PowerLevel(draw=3,relic=2, rest=1, smith=1, shop=3, shop_remove=1, gold=2): [
         "Act 1 Boss",
         "Rare Card Draw 1",
         "Boss Relic 1",
         "Boss Gold 1",
         "Card Draw 5",
         "Card Draw 6",
+        "Potion Drop 4",
         *_create_floor_check(16, 22),
         *_create_combat_check(7, 9),
     ],
     PowerLevel(draw=3,relic=2, rest=1, smith=1, shop=3, shop_remove=1, gold=5): [
         *_create_shop_check(6, 10),
     ],
-    PowerLevel(draw=6,relic=2, rest=2,smith=1, shop=4, shop_remove=1): [
+    PowerLevel(draw=6,relic=2, rest=2,smith=1, shop=4, shop_remove=1, gold=2): [
         "Act 2 Campfire 1",
         "Act 2 Campfire 2",
+        "Potion Drop 5",
         *_create_floor_check(23, 27)
     ],
-    PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=4, shop_remove=1): [
+    PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=4, shop_remove=1, gold=2): [
         "Card Draw 7",
         *_create_combat_check(10, 12),
     ],
-    PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=5, shop_remove=1): [
+    PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=5, shop_remove=1, gold=2): [
+        "Potion Drop 6",
         *_create_floor_check(28, 32)
     ],
-    PowerLevel(draw=6, relic=4, rest=2, smith=1, shop=5, shop_remove=1): [
+    PowerLevel(draw=6, relic=4, rest=2, smith=1, shop=5, shop_remove=1, gold=2): [
         "Card Draw 8",
         *_create_combat_check(13, 13),
     ],
-    PowerLevel(draw=7, relic=2, rest=2,smith=1, shop=4, shop_remove=1): [
+    PowerLevel(draw=7, relic=2, rest=2,smith=1, shop=4, shop_remove=1, gold=2): [
         "Relic 4",
         "Relic 5",
         "Elite Gold 3",
     ],
-    PowerLevel(draw=7, relic=3, rest=2,smith=1, shop=5, shop_remove=1): [
+    PowerLevel(draw=7, relic=3, rest=2,smith=1, shop=5, shop_remove=1, gold=2): [
         "Relic 6",
         "Elite Gold 4",
     ],
-    PowerLevel(draw=7, relic=3, boss_relic=1, rest=2, smith=2, shop=6, shop_remove=2): [
+    PowerLevel(draw=7, relic=3, boss_relic=1, rest=2, smith=2, shop=6, shop_remove=2, gold=5): [
         "Act 2 Boss",
         "Rare Card Draw 2",
         "Boss Relic 2",
         "Boss Gold 2",
         "Card Draw 9",
         "Card Draw 10",
+        "Potion Drop 7",
         *_create_floor_check(33, 39),
         *_create_combat_check(14, 16),
     ],
     PowerLevel(draw=7, relic=3, boss_relic=1, rest=2, smith=2, shop=6, shop_remove=2, gold=9): [
         *_create_shop_check(11, 16),
     ],
-    PowerLevel(draw=8,relic=4,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2): [
+    PowerLevel(draw=8,relic=4,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2, gold=5): [
         "Relic 7",
         "Relic 8",
         "Card Draw 11",
         "Act 3 Campfire 1",
         "Act 3 Campfire 2",
         "Elite Gold 5",
+        "Potion Drop 8",
         *_create_floor_check(40, 44),
         *_create_combat_check(17, 17),
     ],
-    PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
+    PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2, gold=5): [
         "Card Draw 12",
         "Card Draw 13",
+        "Potion Drop 9",
         *_create_floor_check(45, 49),
         *_create_combat_check(18, 18),
     ],
-    PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
+    PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2, gold=5): [
         "Relic 9",
         "Relic 10",
         "Elite Gold 6",
         "Elite Gold 7",
     ],
-    PowerLevel(draw=10,relic=7,boss_relic=2,rest=3,smith=3, shop=10,shop_remove=3): [
+    PowerLevel(draw=10,relic=7,boss_relic=2,rest=3,smith=3, shop=10,shop_remove=3, gold=9): [
         "Act 3 Boss",
         "Heart Room",
         * _create_floor_check(50, 55)
@@ -138,6 +147,7 @@ class LogicTestBase(SpireTestBase):
         'shop_potion_slots': 3,
         'shop_remove_slots': 1,
         'gold_sanity': 1,
+        'potion_sanity': 1,
     }
 
     def _setup_state_accessible(self, power: PowerLevel) -> CollectionState:
@@ -286,4 +296,5 @@ class CustomCharTest(LogicTests):
         'shop_potion_slots': 3,
         'shop_remove_slots': 1,
         'gold_sanity': 1,
+        'potion_sanity': 1,
     }
