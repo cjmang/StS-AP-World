@@ -6,6 +6,7 @@ from schema import Schema, Optional, And
 from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet, \
     FreeText, OptionGroup
 
+NUM_CUSTOM = 5
 
 class Character(OptionSet):
     """Enter the list of characters to play as.  Valid characters are:
@@ -43,6 +44,12 @@ class Character(OptionSet):
     # TODO: Spire Takes the wheel doesn't work with the current setup
     # option_spire_take_the_wheel = 12
 
+class GoalNumChar(Range):
+    """How many characters you need to complete a run with before you goal. 0 means all characters"""
+    display_name = "Number of Characters to Goal"
+    range_start = 0
+    range_end = 13 + NUM_CUSTOM
+    default = 0
 
 class Ascension(Range):
     """What Ascension do you wish to play with."""
@@ -224,6 +231,7 @@ class CharacterOptions(OptionDict):
 @dataclass
 class SpireOptions(PerGameCommonOptions):
     character: Character
+    num_chars_goal: GoalNumChar
     ascension: Ascension
     final_act: FinalAct
     downfall: Downfall

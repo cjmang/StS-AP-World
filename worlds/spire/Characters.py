@@ -1,8 +1,8 @@
-from typing import List, Optional, Any
+from typing import List, Any
 
-from worlds.spire.Options import Character
+from worlds.spire.Options import Character, NUM_CUSTOM
 
-NUM_CUSTOM = 5
+NUM_CUSTOM = NUM_CUSTOM
 
 character_list: List[str] = [
     "Ironclad",

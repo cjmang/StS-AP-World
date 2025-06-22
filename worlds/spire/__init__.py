@@ -124,6 +124,10 @@ class SpireWorld(World):
             self.options.shop_sanity.value = 0
         if len(self.modded_chars) > NUM_CUSTOM:
             raise OptionError(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
+        num_chars_goal = self.options.num_chars_goal.value
+        if num_chars_goal != 0:
+            if num_chars_goal > len(self.characters):
+                self.options.num_chars_goal.value = 0
 
     def _get_unlocked_char(self, characters: Set[str]) -> Optional[str]:
         if len(characters) <= 0:
@@ -234,6 +238,7 @@ class SpireWorld(World):
             "gold_sanity",
             "potion_sanity",
             "chatty_mc",
+            "num_chars_goal",
         ))
         return slot_data
 
