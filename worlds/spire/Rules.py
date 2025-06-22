@@ -56,7 +56,7 @@ class SpireLogic(LogicMixin):
 
     def _spire_has_gold(self: CollectionState, player: int, prefix: str, amount: int, world: 'SpireWorld'):
         if world.options.gold_sanity:
-            return self.count(f"{prefix} 30 Gold", player) * 30 + self.count(f"{prefix} Boss Gold", player) * 75 >= amount
+            return (self.count(f"{prefix} 30 Gold", player) * 30 + self.count(f"{prefix} Boss Gold", player) * 75) >= amount
         else:
             return True
 
@@ -170,7 +170,7 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
              lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
 
     if world.options.shop_sanity:
-        total_shop = world.total_shop
+        total_shop = world.total_shop + 1
         # Act 1 Shop
         for i in range(1, min(6, total_shop)):
             set_rule(multiworld.get_location(f"{prefix} Shop Slot {i}", player),
@@ -187,25 +187,27 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
                      lambda state: state._spire_has_power(world, prefix, PowerLevel(gold=270)))
 
     if world.options.gold_sanity:
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 4", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
         set_rule(multiworld.get_location(f"{prefix} Combat Gold 5", player),
                  lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
+
         set_rule(multiworld.get_location(f"{prefix} Combat Gold 6", player),
                  lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
+        # set_rule(multiworld.get_location(f"{prefix} Combat Gold 8", player),
+        #          lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
 
-        set_rule(multiworld.get_location(f"{prefix} Combat Gold 7", player),
-                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
-        set_rule(multiworld.get_location(f"{prefix} Combat Gold 8", player),
-                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 10", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 11", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 12", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
 
         set_rule(multiworld.get_location(f"{prefix} Combat Gold 13", player),
-                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
-        set_rule(multiworld.get_location(f"{prefix} Combat Gold 14", player),
-                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
-
-        set_rule(multiworld.get_location(f"{prefix} Combat Gold 15", player),
                  lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=4)))
-        set_rule(multiworld.get_location(f"{prefix} Combat Gold 16", player),
-                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=4)))
+        # set_rule(multiworld.get_location(f"{prefix} Combat Gold 16", player),
+        #          lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=4)))
 
         set_rule(multiworld.get_location(f"{prefix} Elite Gold 1", player),
                  lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=2, rest=1, shop=2)))

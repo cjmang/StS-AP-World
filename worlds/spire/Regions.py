@@ -35,7 +35,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 1",
                                                 "Card Draw 2",
                                                 *_create_floor_check(1,5),
-                                                *_create_combat_check(1,4),
+                                                *_create_combat_check(1,3),
                                             ],
                                             ["Mid Act 1", "Act 1 Shop"])
 
@@ -54,7 +54,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Elite Gold 1',
                                                 *_create_campfire_check(1),
                                                 *_create_floor_check(6, 10),
-                                                *_create_combat_check(5, 8),
+                                                *_create_combat_check(4, 6),
                                             ],["Late Act 1"]))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Late Act 1', config,
@@ -78,7 +78,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 5",
                                                 "Card Draw 6",
                                                 *_create_floor_check(18, 22),
-                                                *_create_combat_check(9, 12),
+                                                *_create_combat_check(7, 9),
                                             ], ["Mid Act 2", "Act 2 Shop"]))
 
     multiworld.regions.append(world.create_region(player, prefix, "Act 2 Shop", config,
@@ -91,7 +91,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Elite Gold 3',
                                                 *_create_campfire_check(2),
                                                 *_create_floor_check(23, 27),
-                                                *_create_combat_check(13, 14),
+                                                *_create_combat_check(10, 12),
                                             ], ["Late Act 2"]))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Late Act 2', config,
@@ -100,7 +100,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Relic 6',
                                                 'Elite Gold 4',
                                                 *_create_floor_check(28, 32),
-                                                *_create_combat_check(15, 16),
+                                                *_create_combat_check(13, 13),
                                             ], ['Act 2 Boss Arena']))
 
     multiworld.regions.append(world.create_region(player, prefix, 'Act 2 Boss Arena', config,
@@ -117,7 +117,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 "Card Draw 9",
                                                 "Card Draw 10",
                                                 *_create_floor_check(35, 39),
-                                                *_create_combat_check(17, 20),
+                                                *_create_combat_check(14, 16),
                                             ], ["Mid Act 3", "Act 3 Shop"]))
 
     multiworld.regions.append(world.create_region(player, prefix, "Act 3 Shop", config,
@@ -131,7 +131,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Elite Gold 5',
                                                 *_create_campfire_check(3),
                                                 *_create_floor_check(40, 44),
-                                                *_create_combat_check(21, 22),
+                                                *_create_combat_check(17, 18),
                                             ], ["Late Act 3"]))
 
 
@@ -144,7 +144,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Elite Gold 6',
                                                 'Elite Gold 7',
                                                 *_create_floor_check(45, 49),
-                                                *_create_combat_check(23, 26),
+                                                *_create_combat_check(19, 19),
                                             ], ['Act 3 Boss Arena']))
 
     acension_mod = 1 if config.ascension >= 20 else 0

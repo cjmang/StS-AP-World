@@ -9,7 +9,7 @@ class TestEnsureLocationActs(SpireTestBase):
         self.assertEquals(1, data.act)
         data = loc_ids_to_data[location_table["Ironclad Card Draw 4"]]
         self.assertEquals(1, data.act)
-        data = loc_ids_to_data[location_table["Ironclad Combat Gold 8"]]
+        data = loc_ids_to_data[location_table["Ironclad Combat Gold 6"]]
         self.assertEquals(1, data.act)
         data = loc_ids_to_data[location_table["Ironclad Relic 3"]]
         self.assertEquals(1, data.act)
@@ -27,9 +27,9 @@ class TestEnsureLocationActs(SpireTestBase):
         self.assertEquals(2, data.act)
         data = loc_ids_to_data[location_table["Ironclad Card Draw 8"]]
         self.assertEquals(2, data.act)
-        data = loc_ids_to_data[location_table["Ironclad Combat Gold 9"]]
+        data = loc_ids_to_data[location_table["Ironclad Combat Gold 7"]]
         self.assertEquals(2, data.act)
-        data = loc_ids_to_data[location_table["Ironclad Combat Gold 16"]]
+        data = loc_ids_to_data[location_table["Ironclad Combat Gold 12"]]
         self.assertEquals(2, data.act)
         data = loc_ids_to_data[location_table["Ironclad Relic 4"]]
         self.assertEquals(2, data.act)
@@ -53,9 +53,9 @@ class TestEnsureLocationActs(SpireTestBase):
         self.assertEquals(3, data.act)
         data = loc_ids_to_data[location_table["Ironclad Card Draw 13"]]
         self.assertEquals(3, data.act)
-        data = loc_ids_to_data[location_table["Ironclad Combat Gold 17"]]
+        data = loc_ids_to_data[location_table["Ironclad Combat Gold 13"]]
         self.assertEquals(3, data.act)
-        data = loc_ids_to_data[location_table["Ironclad Combat Gold 26"]]
+        data = loc_ids_to_data[location_table["Ironclad Combat Gold 19"]]
         self.assertEquals(3, data.act)
         data = loc_ids_to_data[location_table["Ironclad Relic 7"]]
         self.assertEquals(3, data.act)

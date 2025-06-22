@@ -119,6 +119,7 @@ class SpireWorld(World):
             raise OptionError("No character started unlocked!")
         self.total_shop = (self.options.shop_card_slots.value + self.options.shop_neutral_card_slots.value +
                            self.options.shop_relic_slots.value + self.options.shop_potion_slots.value)
+        self.total_shop += (3 if self.options.shop_remove_slots else 0)
         if self.total_shop <= 0:
             self.options.shop_sanity.value = 0
         if len(self.modded_chars) > NUM_CUSTOM:
@@ -157,7 +158,7 @@ class SpireWorld(World):
                     amount = 1
                 elif ItemType.GOLD == data.type and self.options.gold_sanity.value != 0:
                     if '15 Gold' in name:
-                        amount = 26
+                        amount = 19
                     elif '30 Gold' in name:
                         amount = 7
                     elif 'Boss Gold' in name:
@@ -265,7 +266,7 @@ class SpireWorld(World):
         elif data.type == LocationType.Shop:
             if self.options.shop_sanity.value == 0:
                 return False
-            total_shop = self.total_shop + 3 if self.options.shop_remove_slots else self.total_shop
+            total_shop = self.total_shop
             return total_shop >= data.id - 163
         elif data.type == LocationType.Start and (self.options.lock_characters == 0 or not config.locked):
             return False
