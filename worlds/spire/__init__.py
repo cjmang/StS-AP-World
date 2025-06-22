@@ -158,7 +158,7 @@ class SpireWorld(World):
                     amount = 1
                 elif ItemType.GOLD == data.type and self.options.gold_sanity.value != 0:
                     if '15 Gold' in name:
-                        amount = 19
+                        amount = 18
                     elif '30 Gold' in name:
                         amount = 7
                     elif 'Boss Gold' in name:

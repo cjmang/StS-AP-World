@@ -101,13 +101,13 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Act 3 Campfire 2",
         "Elite Gold 5",
         *_create_floor_check(40, 44),
-        *_create_combat_check(17, 18),
+        *_create_combat_check(17, 17),
     ],
     PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
         "Card Draw 12",
         "Card Draw 13",
         *_create_floor_check(45, 49),
-        *_create_combat_check(19, 19),
+        *_create_combat_check(18, 18),
     ],
     PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2): [
         "Relic 9",

@@ -55,7 +55,7 @@ class TestEnsureLocationActs(SpireTestBase):
         self.assertEquals(3, data.act)
         data = loc_ids_to_data[location_table["Ironclad Combat Gold 13"]]
         self.assertEquals(3, data.act)
-        data = loc_ids_to_data[location_table["Ironclad Combat Gold 19"]]
+        data = loc_ids_to_data[location_table["Ironclad Combat Gold 18"]]
         self.assertEquals(3, data.act)
         data = loc_ids_to_data[location_table["Ironclad Relic 7"]]
         self.assertEquals(3, data.act)

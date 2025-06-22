@@ -131,7 +131,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Elite Gold 5',
                                                 *_create_campfire_check(3),
                                                 *_create_floor_check(40, 44),
-                                                *_create_combat_check(17, 18),
+                                                *_create_combat_check(17, 17),
                                             ], ["Late Act 3"]))
 
 
@@ -144,7 +144,7 @@ def _create_regions(world: 'SpireWorld', player: int, config: 'CharacterConfig',
                                                 'Elite Gold 6',
                                                 'Elite Gold 7',
                                                 *_create_floor_check(45, 49),
-                                                *_create_combat_check(19, 19),
+                                                *_create_combat_check(18, 18),
                                             ], ['Act 3 Boss Arena']))
 
     acension_mod = 1 if config.ascension >= 20 else 0
