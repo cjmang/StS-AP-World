@@ -17,6 +17,7 @@ character_list: List[str] = [
     "Gremlins",
     "Automaton",
     "Snecko",
+    "Collector",
 ]
 
 official_names: List[str] = [
@@ -31,7 +32,8 @@ official_names: List[str] = [
     "THE_CHAMP",
     "GREMLIN",
     "THE_AUTOMATON",
-    "THE_SNECKO"
+    "THE_SNECKO",
+    "THE_COLLECTOR",
 ]
 
 character_option_map = {

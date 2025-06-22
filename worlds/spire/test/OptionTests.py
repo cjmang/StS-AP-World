@@ -184,3 +184,9 @@ class GoldSanityOff(SpireTestBase):
         self.assertTrue("Silent Combat Gold 1" not in locations)
         self.assertTrue("Silent Elite Gold 1" not in locations)
         self.assertTrue("Silent Boss Gold 1" not in locations)
+
+class NoUnlockedChar(SpireTestBase):
+
+    options = {
+        "lock_characters": 0
+    }

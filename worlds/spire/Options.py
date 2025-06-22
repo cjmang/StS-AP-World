@@ -20,7 +20,8 @@ class Character(OptionSet):
         'Champ'
         'Gremlins'
         'Automaton'
-        'Snecko'"""
+        'Snecko'
+        'Collector'"""
     display_name = "Character"
     valid_keys = [
         "Ironclad",
@@ -35,6 +36,7 @@ class Character(OptionSet):
         "Gremlins",
         "Automaton",
         "Snecko",
+        "Collector",
     ]
     default = ["Ironclad"]
     valid_keys_casefold = False
