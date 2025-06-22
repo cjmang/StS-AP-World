@@ -19,6 +19,8 @@ class LocationType(Enum):
     Event = auto()
     Shop = auto()
     Start = auto()
+    Gold = auto()
+    Potion = auto()
 
 
 class LocationData(NamedTuple):
@@ -33,6 +35,9 @@ def create_location_data() -> List[LocationData]:
             [LocationData(f"Card Draw {j}", j + 100, LocationType.Draw, min(((j-1) // (CARD_DRAW_COUNT//3))+1,3)) for j in range(1,CARD_DRAW_COUNT + 1)] +
             [LocationData(f"Relic {j}", j + 140, LocationType.Relic, min(((j-1) // 3)+1,3)) for j in range(1, 11)] +
             [LocationData(f"Shop Slot {j}", j + 163, LocationType.Shop, min(((j-1) // 5)+1, 3)) for j in range(1,17)] +
+            [LocationData(f"Combat Gold {j}", j + 56, LocationType.Gold, min(((j-1)//6)+1,3)) for j in range(1,19)] +
+            [LocationData(f"Elite Gold {j}", j + 75, LocationType.Gold, min(((j-1)//2)+1,3)) for j in range(1,8)] +
+            [LocationData(f"Potion Drop {j}", j + 84, LocationType.Potion, min(((j-1)//3)+1,3)) for j in range(1,10)] +
             [LocationData('Act 1 Campfire 1', 121, LocationType.Campfire, 1),
             LocationData('Act 1 Campfire 2', 122, LocationType.Campfire, 1),
             LocationData('Act 2 Campfire 1', 123, LocationType.Campfire, 2),
@@ -44,6 +49,8 @@ def create_location_data() -> List[LocationData]:
             LocationData('Boss Relic 1', 161, LocationType.Boss_Relic, 1, True),
             LocationData('Boss Relic 2', 162, LocationType.Boss_Relic, 2, True),
             LocationData('Press Start', 163, LocationType.Start, 1),
+            LocationData('Boss Gold 1', 83, LocationType.Gold, 1, True),
+            LocationData('Boss Gold 2', 84, LocationType.Gold, 2, True),
             LocationData('Heart Room', None, LocationType.Event, 3),
             LocationData('Act 1 Boss', None, LocationType.Event, 1),
             LocationData('Act 2 Boss', None, LocationType.Event, 2),
@@ -59,6 +66,8 @@ def create_location_tables(vanilla_chars: List[str], extras: int) -> Tuple[dict[
 
     base_location_data = create_location_data()
 
+    ids = { x.id for x in base_location_data if x.id is not None}
+    assert len(ids) == (len(base_location_data) - 4), f"{len(ids)} != {len(base_location_data)}"
     for char in vanilla_chars:
         for data in base_location_data:
             newkey = f"{char} {data.name}"

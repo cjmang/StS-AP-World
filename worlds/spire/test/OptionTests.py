@@ -177,3 +177,10 @@ class TestCharLocked(SpireTestBase):
         state.collect(self.get_item_by_name("Silent Unlock"))
         self.assertTrue(start.can_reach(state))
 
+class GoldSanityOff(SpireTestBase):
+
+    def test_ensure_no_gold(self):
+        locations = self.multiworld.get_unfilled_locations(self.player)
+        self.assertTrue("Silent Combat Gold 1" not in locations)
+        self.assertTrue("Silent Elite Gold 1" not in locations)
+        self.assertTrue("Silent Boss Gold 1" not in locations)
