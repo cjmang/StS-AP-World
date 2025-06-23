@@ -267,3 +267,51 @@ class GoalWithTwoChars(SpireTestBase):
     def test_no_goal_with_nothing(self):
         state = CollectionState(self.multiworld)
         self.assertFalse(self.multiworld.completion_condition[self.player](state))
+
+class GoalWithAllChars(SpireTestBase):
+
+    options = {
+        "character": {
+            "Silent",
+            "Ironclad",
+            "Watcher",
+            "Defect",
+        },
+        "num_chars_goal": 0
+    }
+
+    def test_no_goal_with_two(self):
+        items = ["Ironclad Victory", "Watcher Victory"]
+        state = CollectionState(self.multiworld)
+        for name in items:
+            item = self.get_item_by_name(name)
+            state.collect(item)
+        self.assertFalse(self.multiworld.completion_condition[self.player](state))
+
+    def test_no_goal_with_three(self):
+        items = ["Ironclad Victory", "Watcher Victory", "Defect Victory"]
+        state = CollectionState(self.multiworld)
+        for name in items:
+            item = self.get_item_by_name(name)
+            state.collect(item)
+        self.assertFalse(self.multiworld.completion_condition[self.player](state))
+
+    def test_goal_with_four(self):
+        items = ["Ironclad Victory", "Watcher Victory", "Defect Victory", "Silent Victory"]
+        state = CollectionState(self.multiworld)
+        for name in items:
+            item = self.get_item_by_name(name)
+            state.collect(item)
+        self.assertTrue(self.multiworld.completion_condition[self.player](state))
+
+    def test_no_goal_with_one(self):
+        items = ["Silent Victory"]
+        state = CollectionState(self.multiworld)
+        for name in items:
+            item = self.get_item_by_name(name)
+            state.collect(item)
+        self.assertFalse(self.multiworld.completion_condition[self.player](state))
+
+    def test_no_goal_with_nothing(self):
+        state = CollectionState(self.multiworld)
+        self.assertFalse(self.multiworld.completion_condition[self.player](state))

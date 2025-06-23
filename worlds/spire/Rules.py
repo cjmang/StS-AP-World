@@ -66,9 +66,10 @@ class SpireLogic(LogicMixin):
         for config in configs:
             if self.has(f"{config.name} Victory", player):
                 count += 1
-        if num_chars_goal == 0 and count >= len(configs):
-            return True
-        return count >= num_chars_goal
+        if num_chars_goal == 0:
+            return count >= len(configs)
+        else:
+            return count >= num_chars_goal
 
 
     def _spire_has_power(self: Union[CollectionState, 'SpireLogic'], world: 'SpireWorld', prefix: str, power: PowerLevel) -> bool:
