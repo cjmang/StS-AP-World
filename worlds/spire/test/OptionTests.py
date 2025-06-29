@@ -315,3 +315,10 @@ class GoalWithAllChars(SpireTestBase):
     def test_no_goal_with_nothing(self):
         state = CollectionState(self.multiworld)
         self.assertFalse(self.multiworld.completion_condition[self.player](state))
+
+class ShopSanityTests(SpireTestBase):
+
+    options = {
+        "shop_sanity": 1,
+        'shop_remove_slots': 1,
+    }

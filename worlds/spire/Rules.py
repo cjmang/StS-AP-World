@@ -41,10 +41,11 @@ class SpireLogic(LogicMixin):
 
     def _spire_has_shop(self: CollectionState, player: int, prefix: str, amount: int, world: 'SpireWorld') -> bool:
         if world.options.shop_sanity:
+            max_shop = world.total_shop if world.options.shop_remove_slots.value == 0 else world.total_shop -  3
             return (self.count(f"{prefix} Shop Card Slot", player) +
                     self.count(f"{prefix} Neutral Shop Card Slot", player) +
                     self.count(f"{prefix} Shop Relic Slot", player) +
-                    self.count(f"{prefix} Shop Potion Slot", player) >= min(amount, world.total_shop))
+                    self.count(f"{prefix} Shop Potion Slot", player) >= min(amount, max_shop))
         else:
             return True
 
