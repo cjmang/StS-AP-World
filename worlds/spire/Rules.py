@@ -41,7 +41,7 @@ class SpireLogic(LogicMixin):
 
     def _spire_has_shop(self: CollectionState, player: int, prefix: str, amount: int, world: 'SpireWorld') -> bool:
         if world.options.shop_sanity:
-            max_shop = world.total_shop if world.options.shop_remove_slots.value == 0 else world.total_shop -  3
+            max_shop = world.total_shop_items
             return (self.count(f"{prefix} Shop Card Slot", player) +
                     self.count(f"{prefix} Neutral Shop Card Slot", player) +
                     self.count(f"{prefix} Shop Relic Slot", player) +
@@ -176,7 +176,7 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
              lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
 
     if world.options.shop_sanity:
-        total_shop = world.total_shop + 1
+        total_shop = world.total_shop_locations + 1
         # Act 1 Shop
         for i in range(1, min(6, total_shop)):
             set_rule(multiworld.get_location(f"{prefix} Shop Slot {i}", player),

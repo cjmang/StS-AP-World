@@ -131,6 +131,8 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
         ret[f"{char} Shop"] = char_shop
 
         for item_name, item_data in data.items():
+            if item_data.code is None:
+                continue
             if item_data.classification == 0:
                 junk.add(item_name)
             if item_data.type == ItemType.GOLD:

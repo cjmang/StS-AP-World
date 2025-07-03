@@ -44,14 +44,15 @@ class SpireWorld(World):
 
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = location_table
-    logger = logging.getLogger("SlaytheSpire")
+    logger = logging.getLogger("SlayTheSpire")
 
     def __init__(self, mw: MultiWorld, player: int):
         super().__init__(mw, player)
         self.characters: List[CharacterConfig] = []
         self.modded_num = 0
         self.modded_chars: List[CharacterConfig] = []
-        self.total_shop = 0
+        self.total_shop_locations = 0
+        self.total_shop_items = 0
 
     def generate_early(self):
         if self.options.use_advanced_characters.value == 0:
@@ -125,10 +126,10 @@ class SpireWorld(World):
                 break
         else:
             raise OptionError("No character started unlocked!")
-        self.total_shop = (self.options.shop_card_slots.value + self.options.shop_neutral_card_slots.value +
-                           self.options.shop_relic_slots.value + self.options.shop_potion_slots.value)
-        self.total_shop += (3 if self.options.shop_remove_slots else 0)
-        if self.total_shop <= 0:
+        self.total_shop_items = (self.options.shop_card_slots.value + self.options.shop_neutral_card_slots.value +
+                                     self.options.shop_relic_slots.value + self.options.shop_potion_slots.value)
+        self.total_shop_locations = self.total_shop_items + (3 if self.options.shop_remove_slots else 0)
+        if self.total_shop_locations <= 0:
             self.options.shop_sanity.value = 0
         if len(self.modded_chars) > NUM_CUSTOM:
             raise OptionError(f"StS only supports {NUM_CUSTOM} modded characters; got {len(self.modded_chars)}: {[x.option_name for x in self.modded_chars]}")
@@ -282,7 +283,7 @@ class SpireWorld(World):
         elif data.type == LocationType.Shop:
             if self.options.shop_sanity.value == 0:
                 return False
-            total_shop = self.total_shop
+            total_shop = self.total_shop_locations
             return total_shop >= data.id - 163
         elif data.type == LocationType.Start and (self.options.lock_characters == 0 or not config.locked):
             return False

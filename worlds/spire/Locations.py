@@ -118,6 +118,8 @@ def create_location_groups(chars_to_locs: dict[Union[str,int],dict[str,LocationD
         ret[f"{char} Act 1 Boss"] = char_act_one_boss
         ret[f"{char} Act 2 Boss"] = char_act_two_boss
         for loc_name, loc_data in data.items():
+            if loc_data.id is None:
+                continue
             if loc_data.act == 1:
                 char_act_one.add(loc_name)
                 act_one.add(loc_name)
