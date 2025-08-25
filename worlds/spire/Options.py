@@ -197,7 +197,7 @@ class LockCharacters(Choice):
     default = 1
 
 class UnlockedCharacter(FreeText):
-    """Which character to start unlocked, if lock_characters is set to 2"""
+    """Which character to start unlocked, if lock_characters is set to locked_fixed"""
 
 class CharacterOptions(OptionDict):
     """The configuration for advanced characters.  Each character's options can be configured
