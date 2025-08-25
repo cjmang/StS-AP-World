@@ -361,3 +361,31 @@ class TestAdvancedLockedFixed(SpireTestBase):
         item = self.get_item_by_name("Silent Unlock")
         self.assertIsNotNone(item)
 
+class TestAdvancedLockedFixedModded(SpireTestBase):
+
+    options = {
+        "lock_characters": 2,
+        "unlocked_character": "Foobar",
+        "advanced_characters": {
+            "Ironclad": {},
+            "Silent": {},
+            "Foobar": {}
+        },
+        "use_advanced_characters": 1,
+    }
+
+    def test_no_custom_unlock(self):
+        try:
+            item = self.get_item_by_name("Custom Character 1 Unlock")
+            self.assertIsNone(item)
+        except ValueError:
+            pass
+
+    def test_has_ironclad_unlock(self):
+        item = self.get_item_by_name("Ironclad Unlock")
+        self.assertIsNotNone(item)
+
+    def test_has_silent_unlock(self):
+        item = self.get_item_by_name("Silent Unlock")
+        self.assertIsNotNone(item)
+
