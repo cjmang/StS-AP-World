@@ -84,12 +84,14 @@ class SpireWorld(World):
                 self.characters.append(config)
         else:
             advanced_chars = self.options.advanced_characters.keys()
+            char_options = set(advanced_chars)
             num_rand_chars = self.options.pick_num_characters.value
-            if num_rand_chars != 0 and num_rand_chars < len(advanced_chars):
-                advanced_chars = self.random.sample(list(advanced_chars), k=num_rand_chars)
-            unlocked_char = self._get_unlocked_char(advanced_chars)
-            self.logger.info("Generating with characters %s", advanced_chars)
-            for option_name in advanced_chars:
+            unlocked_char = self._get_unlocked_char(char_options)
+            if num_rand_chars != 0 and num_rand_chars < len(char_options):
+                char_options.remove(unlocked_char)
+                char_options = [unlocked_char] + self.random.sample(list(char_options), k=num_rand_chars-1)
+            self.logger.info("Generating with characters %s", char_options)
+            for option_name in char_options:
                 options = self.options.advanced_characters[option_name]
                 mod_num = 0
                 char_offset = character_offset_map.get(option_name.lower(), None)

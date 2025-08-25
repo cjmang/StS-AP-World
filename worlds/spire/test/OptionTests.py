@@ -389,3 +389,37 @@ class TestAdvancedLockedFixedModded(SpireTestBase):
         item = self.get_item_by_name("Silent Unlock")
         self.assertIsNotNone(item)
 
+
+class TestUnlockedCharFixedWithRandNum(SpireTestBase):
+    options = {
+        "lock_characters": 2,
+        "unlocked_character": 1,
+        "advanced_characters": {
+            "Ironclad": {},
+            "Silent": {},
+            "Defect": {},
+        },
+        "use_advanced_characters": 1,
+        "pick_num_characters": 2
+    }
+
+    def world_setup(self, *args, **kwargs):
+        super().world_setup(seed=3)
+
+    def test_ensure_silent_absent(self):
+        try:
+            item = self.get_item_by_name("Silent Unlock")
+            self.assertIsNone(item)
+        except ValueError:
+            pass
+
+    def test_ensure_ironclad_present(self):
+        try:
+            item = self.get_item_by_name("Ironclad Unlock")
+            self.assertIsNone(item)
+        except ValueError:
+            pass
+
+    def test_ensure_defect_present(self):
+        item = self.get_item_by_name("Defect Unlock")
+        self.assertIsNotNone(item)

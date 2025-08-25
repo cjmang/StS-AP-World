@@ -23,6 +23,8 @@ class Character(OptionSet):
         'Automaton'
         'Snecko'
         'Collector'"""
+    # For those wondering why there's a CharacterOption, it's because
+    # OptionDict doesn't show up on WebHost, which is what Advanced Character is
     display_name = "Character"
     valid_keys = [
         "Ironclad",
@@ -41,8 +43,6 @@ class Character(OptionSet):
     ]
     default = ["Ironclad"]
     valid_keys_casefold = False
-    # TODO: Spire Takes the wheel doesn't work with the current setup
-    # option_spire_take_the_wheel = 12
 
 class GoalNumChar(Range):
     """How many characters you need to complete a run with before you goal. 0 means all characters"""
@@ -60,7 +60,15 @@ class Ascension(Range):
 
 class PickNumberCharacters(Range):
     """Randomly select from the configured characters this many characters to generate for.
-    0 disables."""
+    0 disables.
+    For example, if "character" is configured to be:
+        character:
+            - Ironclad
+            - Silent
+            - Defect
+    And pick_num_characters is set to 2, then one possible outcome is
+    to have a run with Ironclad and Defect, but not the Silent.
+    """
     display_name = "Pick Number of Characters"
     range_start = 0
     range_end = 13 + NUM_CUSTOM - 1
@@ -174,6 +182,7 @@ class ChattyMC(Toggle):
     display_name = "Chatty MC"
     default = 1
 
+
 class AdvancedChar(Toggle):
     """Whether to use the advanced characters feature. The normal options for character, ascension, etc. are ignored.
     See the "advanced_characters" option.
@@ -235,6 +244,8 @@ class CharacterOptions(OptionDict):
     sends them.  If none of the chosen character mods are installed, you will be playing
     a very boring Ironclad run.
     """
+    # For those wondering why on earth there's an advanced character option
+    # it's to support modded characters.
     visibility = Visibility.template
     default = {
         "ironclad": {
