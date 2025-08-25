@@ -11,8 +11,8 @@ from worlds.spire.Characters import character_list, NUM_CUSTOM
 CHAR_OFFSET = 20
 
 class ItemType(Enum):
-    DRAW = auto()
-    RARE_DRAW = auto()
+    CARD_REWARD = auto()
+    RARE_CARD_REWARD = auto()
     RELIC = auto()
     BOSS_RELIC = auto()
     GOLD = auto()
@@ -40,8 +40,8 @@ class ItemData(typing.NamedTuple):
         return ItemData(newcode, base.type, base.classification, base.event, base.is_victory)
 
 base_item_table: Dict[str, ItemData] = {
-    'Card Draw': ItemData(1, ItemType.DRAW),
-    'Rare Card Draw': ItemData(2, ItemType.RARE_DRAW),
+    'Card Reward': ItemData(1, ItemType.CARD_REWARD),
+    'Rare Card Reward': ItemData(2, ItemType.RARE_CARD_REWARD),
     'Relic': ItemData(3, ItemType.RELIC),
     'Boss Relic': ItemData(4, ItemType.BOSS_RELIC),
     'One Gold': ItemData(5, ItemType.GOLD, ItemClassification.filler),
@@ -111,6 +111,10 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
     unlock = set()
     potion = set()
     junk = set()
+    cards = set()
+    rare_cards = set()
+    relics = set()
+    boss_relics = set()
     ret = dict()
 
     ret["Gold"] =  gold
@@ -119,6 +123,10 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
     ret["Unlock"] = unlock
     ret["Junk"] = junk
     ret["Potion"] = potion
+    ret["Card Rewards"] = cards
+    ret["Rare Card Rewards"] = rare_cards
+    ret["Relics"] = relics
+    ret["Boss Relics"] = boss_relics
 
     for key, data in chars_to_items.items():
         char = key if type(key) == str else f"Custom Character {key+1}"
@@ -148,6 +156,14 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
                 unlock.add(item_name)
             elif item_data.type == ItemType.POTION:
                 potion.add(item_name)
+            elif item_data.type == ItemType.CARD_REWARD:
+                cards.add(item_name)
+            elif item_data.type == ItemType.RARE_CARD_REWARD:
+                rare_cards.add(item_name)
+            elif item_data.type == ItemType.RELIC:
+                relics.add(item_name)
+            elif item_data.type == ItemType.BOSS_RELIC:
+                boss_relics.add(item_name)
 
     return ret
 

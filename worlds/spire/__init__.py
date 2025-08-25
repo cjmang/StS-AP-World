@@ -7,7 +7,7 @@ from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, 
 from Options import OptionError
 from .Characters import character_list, CharacterConfig, character_option_map, character_offset_map, NUM_CUSTOM
 from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs, item_groups
-from .Locations import location_table, loc_ids_to_data, LocationData, LocationType, CARD_DRAW_COUNT, location_groups
+from .Locations import location_table, loc_ids_to_data, LocationData, LocationType, CARD_REWARD_COUNT, location_groups
 from .Options import SpireOptions, option_groups
 from .Regions import create_regions
 from .Rules import set_rules
@@ -159,9 +159,9 @@ class SpireWorld(World):
             char_lookup = config.name if config.mod_num == 0 else config.mod_num
             for name, data in chars_to_items[char_lookup].items():
                 amount = 0
-                if ItemType.DRAW == data.type:
-                    amount = CARD_DRAW_COUNT
-                elif ItemType.RARE_DRAW == data.type or ItemType.BOSS_RELIC == data.type:
+                if ItemType.CARD_REWARD == data.type:
+                    amount = CARD_REWARD_COUNT
+                elif ItemType.RARE_CARD_REWARD == data.type or ItemType.BOSS_RELIC == data.type:
                     amount = 2
                 elif ItemType.RELIC == data.type:
                     amount = 10

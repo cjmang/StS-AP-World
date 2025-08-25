@@ -17,8 +17,8 @@ def _create_combat_check(start: int, end: int) -> List[str]:
 
 logic_map: dict[PowerLevel, List[str]] = {
     PowerLevel(): [
-        "Card Draw 1",
-        "Card Draw 2",
+        "Card Reward 1",
+        "Card Reward 2",
         "Act 1 Campfire 1",
         "Act 1 Campfire 2",
         "Potion Drop 1",
@@ -33,8 +33,8 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Relic 1",
     ],
     PowerLevel(draw=0,relic=1, rest=1): [
-        "Card Draw 3",
-        "Card Draw 4",
+        "Card Reward 3",
+        "Card Reward 4",
     ],
     PowerLevel(draw=2,rest=1, shop=2): [
         "Relic 2",
@@ -47,11 +47,11 @@ logic_map: dict[PowerLevel, List[str]] = {
     ],
     PowerLevel(draw=3,relic=2, rest=1, smith=1, shop=3, shop_remove=1, gold=2): [
         "Act 1 Boss",
-        "Rare Card Draw 1",
+        "Rare Card Reward 1",
         "Boss Relic 1",
         "Boss Gold 1",
-        "Card Draw 5",
-        "Card Draw 6",
+        "Card Reward 5",
+        "Card Reward 6",
         "Potion Drop 4",
         *_create_floor_check(16, 22),
         *_create_combat_check(7, 8),
@@ -66,7 +66,7 @@ logic_map: dict[PowerLevel, List[str]] = {
         *_create_floor_check(23, 27)
     ],
     PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=4, shop_remove=1, gold=2): [
-        "Card Draw 7",
+        "Card Reward 7",
         *_create_combat_check(9, 10),
     ],
     PowerLevel(draw=6, relic=3, rest=2, smith=1, shop=5, shop_remove=1, gold=2): [
@@ -74,7 +74,7 @@ logic_map: dict[PowerLevel, List[str]] = {
         *_create_floor_check(28, 32)
     ],
     PowerLevel(draw=6, relic=4, rest=2, smith=1, shop=5, shop_remove=1, gold=2): [
-        "Card Draw 8",
+        "Card Reward 8",
         *_create_combat_check(11, 12),
     ],
     PowerLevel(draw=7, relic=2, rest=2,smith=1, shop=4, shop_remove=1, gold=2): [
@@ -88,11 +88,11 @@ logic_map: dict[PowerLevel, List[str]] = {
     ],
     PowerLevel(draw=7, relic=3, boss_relic=1, rest=2, smith=2, shop=6, shop_remove=2, gold=5): [
         "Act 2 Boss",
-        "Rare Card Draw 2",
+        "Rare Card Reward 2",
         "Boss Relic 2",
         "Boss Gold 2",
-        "Card Draw 9",
-        "Card Draw 10",
+        "Card Reward 9",
+        "Card Reward 10",
         "Potion Drop 7",
         *_create_floor_check(33, 39),
         *_create_combat_check(13, 14),
@@ -103,7 +103,7 @@ logic_map: dict[PowerLevel, List[str]] = {
     PowerLevel(draw=8,relic=4,boss_relic=1, rest=3,smith=2, shop=8, shop_remove=2, gold=5): [
         "Relic 7",
         "Relic 8",
-        "Card Draw 11",
+        "Card Reward 11",
         "Act 3 Campfire 1",
         "Act 3 Campfire 2",
         "Elite Gold 5",
@@ -112,8 +112,8 @@ logic_map: dict[PowerLevel, List[str]] = {
         *_create_combat_check(15, 16),
     ],
     PowerLevel(draw=9,relic=6,boss_relic=1, rest=3,smith=2, shop=10, shop_remove=2, gold=5): [
-        "Card Draw 12",
-        "Card Draw 13",
+        "Card Reward 12",
+        "Card Reward 13",
         "Potion Drop 9",
         *_create_floor_check(45, 49),
         *_create_combat_check(17, 18),
@@ -154,7 +154,7 @@ class LogicTestBase(SpireTestBase):
 
         state = CollectionState(self.multiworld)
 
-        draw = self.get_item_by_name(f"{self.prefix} Card Draw")
+        draw = self.get_item_by_name(f"{self.prefix} Card Reward")
         for _ in range(power.draw):
             state.collect(draw)
 
@@ -192,7 +192,7 @@ class LogicTestBase(SpireTestBase):
 
         state = CollectionState(self.multiworld)
 
-        draw = self.get_item_by_name(f"{self.prefix} Card Draw")
+        draw = self.get_item_by_name(f"{self.prefix} Card Reward")
         draws = [draw for _ in range(power.draw)]
 
         relic = self.get_item_by_name(f"{self.prefix} Relic")
@@ -216,7 +216,7 @@ class LogicTestBase(SpireTestBase):
         gold = self.get_item_by_name(f"{self.prefix} 30 Gold")
         golds = [gold for _ in range(power.gold)]
 
-        if type == "Card Draw":
+        if type == "Card Reward":
             draws.pop()
         elif type == "Relic":
             relics.pop()
@@ -241,7 +241,7 @@ class LogicTestBase(SpireTestBase):
 
     def _test_inaccessible(self, power: PowerLevel, locations: Iterable[str]):
 
-        for i, type in enumerate([ x for x in ['Card Draw', 'Relic', 'Boss Relic', 'Progressive Rest', 'Progressive Smith', "Shop Card Slot", "Progressive Shop Remove", "30 Gold"]]):
+        for i, type in enumerate([ x for x in ['Card Reward', 'Relic', 'Boss Relic', 'Progressive Rest', 'Progressive Smith', "Shop Card Slot", "Progressive Shop Remove", "30 Gold"]]):
             if power[i] == 0:
                 continue
             state = self._setup_state_inaccessible(power, type)

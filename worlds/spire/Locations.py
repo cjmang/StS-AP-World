@@ -5,13 +5,13 @@ from typing import Optional, List, Tuple, Union, NamedTuple, Set
 from worlds.spire import character_list
 from worlds.spire.Characters import NUM_CUSTOM
 
-CARD_DRAW_COUNT = 13
+CARD_REWARD_COUNT = 13
 
 CHAR_OFFSET = 200
 
 class LocationType(Enum):
-    Draw = auto()
-    Rare_Draw = auto()
+    Card_Reward = auto()
+    Rare_Card_Reward = auto()
     Relic = auto()
     Boss_Relic = auto()
     Floor = auto()
@@ -32,7 +32,7 @@ class LocationData(NamedTuple):
 
 def create_location_data() -> List[LocationData]:
     return ([LocationData(f"Reached Floor {j}", j, LocationType.Floor, min(((j-1) // 17)+1,3)) for j in range(1, 57)] +
-            [LocationData(f"Card Draw {j}", j + 100, LocationType.Draw, min(((j-1) // (CARD_DRAW_COUNT//3))+1,3)) for j in range(1,CARD_DRAW_COUNT + 1)] +
+            [LocationData(f"Card Reward {j}", j + 100, LocationType.Card_Reward, min(((j - 1) // (CARD_REWARD_COUNT // 3)) + 1, 3)) for j in range(1, CARD_REWARD_COUNT + 1)] +
             [LocationData(f"Relic {j}", j + 140, LocationType.Relic, min(((j-1) // 3)+1,3)) for j in range(1, 11)] +
             [LocationData(f"Shop Slot {j}", j + 163, LocationType.Shop, min(((j-1) // 5)+1, 3)) for j in range(1,17)] +
             [LocationData(f"Combat Gold {j}", j + 56, LocationType.Gold, min(((j-1)//6)+1,3)) for j in range(1,19)] +
@@ -44,8 +44,8 @@ def create_location_data() -> List[LocationData]:
             LocationData('Act 2 Campfire 2', 124, LocationType.Campfire, 2),
             LocationData('Act 3 Campfire 1', 125, LocationType.Campfire, 3),
             LocationData('Act 3 Campfire 2', 126, LocationType.Campfire, 3),
-            LocationData('Rare Card Draw 1', 131, LocationType.Rare_Draw, 1, True),
-            LocationData('Rare Card Draw 2', 132, LocationType.Rare_Draw, 2, True),
+            LocationData('Rare Card Reward 1', 131, LocationType.Rare_Card_Reward, 1, True),
+            LocationData('Rare Card Reward 2', 132, LocationType.Rare_Card_Reward, 2, True),
             LocationData('Boss Relic 1', 161, LocationType.Boss_Relic, 1, True),
             LocationData('Boss Relic 2', 162, LocationType.Boss_Relic, 2, True),
             LocationData('Press Start', 163, LocationType.Start, 1),

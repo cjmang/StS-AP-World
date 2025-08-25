@@ -24,7 +24,7 @@ class SpireLogic(LogicMixin):
         return count >= amount
 
     def _spire_has_cards(self: CollectionState, player: int, prefix, amount: int) -> bool:
-        count = self.count(f"{prefix} Card Draw", player) + self.count(f"{prefix} Rare Card Draw", player)
+        count = self.count(f"{prefix} Card Reward", player) + self.count(f"{prefix} Rare Card Reward", player)
         return count >= amount
 
     def _spire_has_rests(self: CollectionState, player: int, prefix: str, amount: int, campsanity: int) -> bool:
@@ -106,14 +106,13 @@ def set_rules(world: 'SpireWorld', player: int):
 def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
     multiworld = world.multiworld
     prefix = config.name
-
     if config.locked:
         set_rule(multiworld.get_entrance(f"{prefix} Early Act 1", player),
                  lambda state: state.has(f"{prefix} Unlock", player))
-    # Act 1 Card Draws
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 3", player),
+    # Act 1 Card Rewards
+    set_rule(multiworld.get_location(f"{prefix} Card Reward 3", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1,rest=1)))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 4", player),
+    set_rule(multiworld.get_location(f"{prefix} Card Reward 4", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1, rest=1)))
 
 
@@ -134,7 +133,7 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
              lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=3, relic=2, smith=1, shop=3, shop_remove=1, gold=50)))
 
     # Act 1 Boss Rewards
-    set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 1", player),
+    set_rule(multiworld.get_location(f"{prefix} Rare Card Reward 1", player),
              lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
     set_rule(multiworld.get_location(f"{prefix} Boss Relic 1", player),
              lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
@@ -142,10 +141,10 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
              lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
 
 
-    # Act 2 Card Draws
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 7", player),
+    # Act 2 Card Rewards
+    set_rule(multiworld.get_location(f"{prefix} Card Reward 7", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
-    set_rule(multiworld.get_location(f"{prefix} Card Draw 8", player),
+    set_rule(multiworld.get_location(f"{prefix} Card Reward 8", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6, relic=4)))
 
     # Act 2 Relics
@@ -167,7 +166,7 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
              lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=7, relic=4, boss_relic=1, smith=2, shop=6, shop_remove=2, gold=150)))
 
     # Act 2 Boss Rewards
-    set_rule(multiworld.get_location(f"{prefix} Rare Card Draw 2", player),
+    set_rule(multiworld.get_location(f"{prefix} Rare Card Reward 2", player),
              lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
     set_rule(multiworld.get_location(f"{prefix} Boss Relic 2", player),
              lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
