@@ -2,7 +2,6 @@ from BaseClasses import CollectionState
 from worlds.spire.Options import CharacterOptions
 from worlds.spire.test import SpireTestBase
 
-
 class TestDefault(SpireTestBase):
 
     def test_validate_default(self):
@@ -322,3 +321,43 @@ class ShopSanityTests(SpireTestBase):
         "shop_sanity": 1,
         'shop_remove_slots': 1,
     }
+
+class TestLockedFixed(SpireTestBase):
+
+    options = {
+        "lock_characters": 2,
+        "unlocked_character": 0,
+        "character": ["Ironclad", "Silent"]
+    }
+
+    def test_no_ironclad_unlock(self):
+        try:
+            item = self.get_item_by_name("Ironclad Unlock")
+            self.assertIsNone(item)
+        except ValueError:
+            pass
+
+    def test_has_silent_unlock(self):
+        item = self.get_item_by_name("Silent Unlock")
+        self.assertIsNotNone(item)
+
+class TestAdvancedLockedFixed(SpireTestBase):
+
+    options = {
+        "lock_characters": 2,
+        "unlocked_character": 0,
+        "advanced_characters": {"Ironclad": {}, "Silent": {}},
+        "use_advanced_characters": 1,
+    }
+
+    def test_no_ironclad_unlock(self):
+        try:
+            item = self.get_item_by_name("Ironclad Unlock")
+            self.assertIsNone(item)
+        except ValueError:
+            pass
+
+    def test_has_silent_unlock(self):
+        item = self.get_item_by_name("Silent Unlock")
+        self.assertIsNotNone(item)
+

@@ -196,8 +196,24 @@ class LockCharacters(Choice):
     option_locked_fixed = 2
     default = 1
 
-class UnlockedCharacter(FreeText):
-    """Which character to start unlocked, if lock_characters is set to locked_fixed"""
+class UnlockedCharacter(TextChoice):
+    """Which character to start unlocked, if lock_characters is set to locked_fixed.
+    Can also enter a character name for modded characters."""
+    default = ""
+    option_ironclad = 0
+    option_silent = 1
+    option_defect = 2
+    option_watcher = 3
+    option_hermit = 4
+    option_slimeboss = 5
+    option_guardian = 6
+    option_hexaghost = 7
+    option_champ = 8
+    option_gremlins = 9
+    option_automaton = 10
+    option_snecko = 11
+    option_collector = 12
+
 
 class CharacterOptions(OptionDict):
     """The configuration for advanced characters.  Each character's options can be configured

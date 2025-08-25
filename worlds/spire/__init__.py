@@ -147,6 +147,8 @@ class SpireWorld(World):
             unlocked_char = self.random.choice([x for x in characters])
         elif locked_opt == 2:
             unlocked_char = self.options.unlocked_character.value
+            if type(unlocked_char) == int:
+                unlocked_char = character_list[unlocked_char]
             if unlocked_char not in characters:
                 raise OptionError(
                     f"Configured {unlocked_char} as the first unlocked character, but was not one of: {characters}")
