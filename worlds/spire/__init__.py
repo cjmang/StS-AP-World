@@ -345,24 +345,23 @@ class SpireWorld(World):
         self.options.gold_sanity.value = slot_data['gold_sanity']
         self.options.potion_sanity.value = slot_data['potion_sanity']
         self.options.num_chars_goal.value = slot_data['num_chars_goal']
-        # self.location_id_to_alias: dict[int, str] = dict()
-        # pattern = re.compile("Custom Character [0-9]+ (?P<location_name>.*?)$")
-        # # for i in range(1, len(self.modded_chars) + 1):
-        # for key, value in SpireWorld.location_id_to_name.items():
-        #     if key < (len(character_list)) * CHAR_OFFSET:
-        #         continue
-        #     modded_index = (key // CHAR_OFFSET) - len(character_list)
-        #     self.logger.info(f"Modded index: {modded_index}")
-        #     self.logger.info(f"modded_chars index: {self.modded_chars}")
-        #     if modded_index >= len(self.modded_chars):
-        #         continue
-        #     match = pattern.match(value)
-        #     if match is None:
-        #         raise Exception("Failed to match " + value)
-        #     name = self.modded_chars[modded_index].official_name
-        #     self.logger.info(name)
-        #     self.location_id_to_alias[key] = name + " " + match.group("location_name")
-        # self.logger.info(f"aliases: {self.location_id_to_alias}")
+        self.location_id_to_alias: dict[int, str] = dict()
+        pattern = re.compile("Custom Character [0-9]+ (?P<location_name>.*?)$")
+        # for i in range(1, len(self.modded_chars) + 1):
+        for key, value in SpireWorld.location_id_to_name.items():
+            if key < (len(character_list)) * CHAR_OFFSET:
+                continue
+            modded_index = (key // CHAR_OFFSET) - len(character_list)
+            self.logger.info(f"Modded index: {modded_index}")
+            self.logger.info(f"modded_chars index: {self.modded_chars}")
+            if modded_index >= len(self.modded_chars):
+                continue
+            match = pattern.match(value)
+            if match is None:
+                raise Exception("Failed to match " + value)
+            name = self.modded_chars[modded_index].official_name
+            self.logger.info(name)
+            self.location_id_to_alias[key] = name + " " + match.group("location_name")
 
 
 class SpireLocation(Location):
