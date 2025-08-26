@@ -87,7 +87,7 @@ class SpireWorld(World):
             if num_chars_goal > len(self.characters):
                 self.options.num_chars_goal.value = 0
 
-    def _get_unlocked_char(self, characters: Set[str]) -> Optional[str]:
+    def _get_unlocked_char(self, characters: List[str]) -> Optional[str]:
         if len(characters) <= 0:
             raise OptionError("At least one character must be selected.")
         locked_opt = self.options.lock_characters.value
@@ -108,14 +108,14 @@ class SpireWorld(World):
         return unlocked_char
 
     def _handle_basic_chars(self) -> None:
-        char_options = self.options.character.value
+        char_options = sorted(self.options.character.value)
         num_rand_chars = self.options.pick_num_characters.value
         # if num_rand_chars != 0 and num_rand_chars < len(char_options):
         #     char_options = self.random.sample(list(char_options), k=num_rand_chars)
         unlocked_char = self._get_unlocked_char(char_options)
         if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(char_options):
             char_options.remove(unlocked_char)
-            char_options = [unlocked_char] + self.random.sample(list(char_options), k=num_rand_chars - 1)
+            char_options = [unlocked_char] + self.random.sample(char_options, k=num_rand_chars - 1)
         self.logger.info("Generating with characters %s", char_options)
         for char_val in char_options:
             option_name = char_val
@@ -140,12 +140,13 @@ class SpireWorld(World):
 
     def _handle_advanced_chars(self) -> None:
         advanced_chars = self.options.advanced_characters.keys()
-        char_options = set(advanced_chars)
+        # Curse you python for not having an ordered set
+        char_options = sorted(advanced_chars)
         num_rand_chars = self.options.pick_num_characters.value
         unlocked_char = self._get_unlocked_char(char_options)
-        if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(advanced_chars):
+        if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(char_options):
             char_options.remove(unlocked_char)
-            char_options = [unlocked_char] + self.random.sample(list(char_options), k=num_rand_chars - 1)
+            char_options = [unlocked_char] + self.random.sample(char_options, k=num_rand_chars - 1)
             modded_num = 0
             for char in char_options:
                 if character_offset_map.get(char.lower(), None) is None:

@@ -404,7 +404,7 @@ class TestUnlockedCharFixedWithRandNum(SpireTestBase):
     }
 
     def world_setup(self, *args, **kwargs):
-        super().world_setup(seed=8)
+        super().world_setup(seed=6)
 
     def test_ensure_silent_absent(self):
         try:
@@ -499,7 +499,7 @@ class TestMoreThanFiveModded(SpireTestBase):
 
 
     def world_setup(self, *args, **kwargs):
-        super().world_setup(seed=7)
+        super().world_setup(seed=6)
 
     def test_ensure_silent_present(self):
         item = self.get_item_by_name("Silent Unlock")
