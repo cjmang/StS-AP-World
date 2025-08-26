@@ -69,7 +69,7 @@ class SpireWorld(World):
             self.logger.info("StS: Got character configuration" + str(config))
             names.add(config.official_name)
         if len(names) != len(self.characters):
-            raise OptionError(f"Found duplicate characters: {names}")
+            raise OptionError(f"Found duplicate characters: {[x.official_name for x in self.characters]}")
         for config in self.characters:
             if not config.locked:
                 break
@@ -108,14 +108,14 @@ class SpireWorld(World):
         return unlocked_char
 
     def _handle_basic_chars(self) -> None:
-        char_options = sorted(self.options.character.value)
+        selected_chars = sorted(self.options.character.value)
         num_rand_chars = self.options.pick_num_characters.value
-        unlocked_char = self._get_unlocked_char(char_options)
-        if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(char_options):
-            char_options.remove(unlocked_char)
-            char_options = [unlocked_char] + self.random.sample(char_options, k=num_rand_chars - 1)
-        self.logger.info("Generating with characters %s", char_options)
-        for char_val in char_options:
+        unlocked_char = self._get_unlocked_char(selected_chars)
+        if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(selected_chars):
+            selected_chars.remove(unlocked_char)
+            selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
+        self.logger.info("Generating with characters %s", selected_chars)
+        for char_val in selected_chars:
             option_name = char_val
             char_offset = character_offset_map[option_name.lower()]
             name = character_list[char_offset]
@@ -142,21 +142,25 @@ class SpireWorld(World):
         num_rand_chars = self.options.pick_num_characters.value
         unlocked_char = self._get_unlocked_char(char_options)
         if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(char_options):
-            char_options.remove(unlocked_char)
-            char_options = [unlocked_char] + self.random.sample(char_options, k=num_rand_chars - 1)
+            selected_chars = list(char_options)
+            selected_chars.remove(unlocked_char)
+            selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
             modded_num = 0
-            for char in char_options:
+            for char in selected_chars:
                 if character_offset_map.get(char.lower(), None) is None:
                     modded_num += 1
             if modded_num > NUM_CUSTOM:
-                supported_chars = {x for x in char_options if x.lower() in character_offset_map}
+                supported_chars = sorted({x for x in char_options if x.lower() in character_offset_map})
                 replace_num = modded_num - NUM_CUSTOM
-                remove_me = self.random.sample(list(char_options), k=replace_num)
+                remove_me = self.random.sample(selected_chars, k=replace_num)
                 for remove in remove_me:
-                    char_options.remove(remove)
-                char_options += self.random.sample(list(supported_chars), k=max(replace_num, len(supported_chars)))
-        self.logger.info("Generating with characters %s", char_options)
-        for option_name in char_options:
+                    selected_chars.remove(remove)
+                selected_chars += self.random.sample(supported_chars, k=min(replace_num, len(supported_chars)))
+        else:
+            selected_chars = char_options
+
+        self.logger.info("Generating with characters %s", selected_chars)
+        for option_name in selected_chars:
             options = self.options.advanced_characters[option_name]
             mod_num = 0
             char_offset = character_offset_map.get(option_name.lower(), None)

@@ -504,3 +504,32 @@ class TestMoreThanFiveModded(SpireTestBase):
     def test_ensure_silent_present(self):
         item = self.get_item_by_name("Silent Unlock")
         self.assertIsNotNone(item)
+
+class TestMoreThanFiveModdedAgain(SpireTestBase):
+    options = {
+        "lock_characters": 1,
+        "unlocked_character": 1,
+        "advanced_characters": {
+            "Foobar1": {},
+            "Foobar2": {},
+            "Foobar3": {},
+            "Foobar4": {},
+            "Foobar5": {},
+            "Foobar6": {},
+            "Foobar7": {},
+            "Foobar8": {},
+            "Foobar9": {},
+            "Silent": {},
+            "Ironclad": {},
+        },
+        "use_advanced_characters": 1,
+        "pick_num_characters": 7
+    }
+
+
+    def world_setup(self, *args, **kwargs):
+        super().world_setup(seed=6)
+
+    def test_ensure_silent_present(self):
+        item = self.get_item_by_name("Silent Unlock")
+        self.assertIsNotNone(item)
