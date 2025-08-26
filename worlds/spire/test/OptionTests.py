@@ -6,7 +6,7 @@ class TestDefault(SpireTestBase):
 
     def test_validate_default(self):
         world = self.world
-        self.assertEquals(1, len(world.options.advanced_characters))
+        self.assertEqual(1, len(world.options.advanced_characters))
         CharacterOptions.schema.validate(world.options.advanced_characters.value)
 
 class TestMultiCharsValid(SpireTestBase):
@@ -59,21 +59,21 @@ class TestCampfireSanity(SpireTestBase):
         for loc in self.world.get_locations():
             if "Campfire" in loc.name:
                 count += 1
-        self.assertEquals(6, count)
+        self.assertEqual(6, count)
 
     def test_no_rest(self):
         count = 0
         for item in self.world.multiworld.get_items():
             if "Rest" in item.name:
                     count += 1
-        self.assertEquals(3, count)
+        self.assertEqual(3, count)
 
     def test_no_smith(self):
         count = 0
         for item in self.world.multiworld.get_items():
             if "Smith" in item.name:
                 count += 1
-        self.assertEquals(3, count)
+        self.assertEqual(3, count)
 
 class TestNoCampfireSanity(SpireTestBase):
 
@@ -134,8 +134,8 @@ class TestAcension20Final(SpireTestBase):
 
 
     def test_floor_56_has_address(self):
-        self.assertEquals(56, self.multiworld.get_location("Ironclad Reached Floor 56", self.player).address)
-        self.assertEquals((200*2)+56, self.multiworld.get_location("Defect Reached Floor 56", self.player).address)
+        self.assertEqual(56, self.multiworld.get_location("Ironclad Reached Floor 56", self.player).address)
+        self.assertEqual((200*2)+56, self.multiworld.get_location("Defect Reached Floor 56", self.player).address)
 
 
 class TestOfficialNamesRecognized(SpireTestBase):
@@ -404,7 +404,7 @@ class TestUnlockedCharFixedWithRandNum(SpireTestBase):
     }
 
     def world_setup(self, *args, **kwargs):
-        super().world_setup(seed=3)
+        super().world_setup(seed=8)
 
     def test_ensure_silent_absent(self):
         try:
@@ -438,7 +438,7 @@ class TestUnlockedCharRandWithRandNum(SpireTestBase):
     }
 
     def world_setup(self, *args, **kwargs):
-        super().world_setup(seed=3)
+        super().world_setup(seed=16)
 
     def test_ensure_silent_absent(self):
         try:
@@ -457,3 +457,50 @@ class TestUnlockedCharRandWithRandNum(SpireTestBase):
             self.assertIsNone(item)
         except ValueError:
             pass
+
+class TestFiveModdedChars(SpireTestBase):
+    options = {
+        "lock_characters": 1,
+        "unlocked_character": 1,
+        "advanced_characters": {
+            "Foobar1": {},
+            "Foobar2": {},
+            "Foobar3": {},
+            "Foobar4": {},
+            "Foobar5": {},
+            "Foobar6": {},
+            "Foobar7": {},
+            "Foobar8": {},
+            "Foobar9": {},
+            "Foobar10": {},
+        },
+        "use_advanced_characters": 1,
+        "pick_num_characters": 5
+    }
+
+class TestMoreThanFiveModded(SpireTestBase):
+    options = {
+        "lock_characters": 1,
+        "unlocked_character": 1,
+        "advanced_characters": {
+            "Foobar1": {},
+            "Foobar2": {},
+            "Foobar3": {},
+            "Foobar4": {},
+            "Foobar5": {},
+            "Foobar6": {},
+            "Foobar7": {},
+            "Foobar8": {},
+            "Silent": {},
+        },
+        "use_advanced_characters": 1,
+        "pick_num_characters": 6
+    }
+
+
+    def world_setup(self, *args, **kwargs):
+        super().world_setup(seed=7)
+
+    def test_ensure_silent_present(self):
+        item = self.get_item_by_name("Silent Unlock")
+        self.assertIsNotNone(item)

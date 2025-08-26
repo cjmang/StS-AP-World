@@ -98,7 +98,11 @@ class SpireWorld(World):
             unlocked_char = self.options.unlocked_character.value
             if type(unlocked_char) == int:
                 unlocked_char = character_list[unlocked_char]
-            if unlocked_char not in characters:
+
+            for char in characters:
+                if char.lower() == unlocked_char.lower():
+                    return unlocked_char
+            else:
                 raise OptionError(
                     f"Configured {unlocked_char} as the first unlocked character, but was not one of: {characters}")
         return unlocked_char
@@ -142,6 +146,17 @@ class SpireWorld(World):
         if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(advanced_chars):
             char_options.remove(unlocked_char)
             char_options = [unlocked_char] + self.random.sample(list(char_options), k=num_rand_chars - 1)
+            modded_num = 0
+            for char in char_options:
+                if character_offset_map.get(char.lower(), None) is None:
+                    modded_num += 1
+            if modded_num > NUM_CUSTOM:
+                supported_chars = {x for x in char_options if x.lower() in character_offset_map}
+                replace_num = modded_num - NUM_CUSTOM
+                remove_me = self.random.sample(list(char_options), k=replace_num)
+                for remove in remove_me:
+                    char_options.remove(remove)
+                char_options += self.random.sample(list(supported_chars), k=max(replace_num, len(supported_chars)))
         self.logger.info("Generating with characters %s", char_options)
         for option_name in char_options:
             options = self.options.advanced_characters[option_name]

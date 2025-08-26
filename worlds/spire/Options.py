@@ -4,7 +4,7 @@ from typing import List
 from schema import Schema, Optional, And
 
 from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet, \
-    FreeText, OptionGroup
+    OptionGroup
 
 NUM_CUSTOM = 5
 
