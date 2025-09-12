@@ -44,6 +44,8 @@ class SpireWorld(World):
     location_name_groups = location_groups
     item_name_groups = item_groups
 
+    ut_can_gen_without_yaml = True
+
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = location_table
     logger = logging.getLogger("SlayTheSpire")
@@ -101,7 +103,7 @@ class SpireWorld(World):
 
             for char in characters:
                 if char.lower() == unlocked_char.lower():
-                    return unlocked_char
+                    return char
             else:
                 raise OptionError(
                     f"Configured {unlocked_char} as the first unlocked character, but was not one of: {characters}")
@@ -143,7 +145,8 @@ class SpireWorld(World):
         unlocked_char = self._get_unlocked_char(char_options)
         if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(char_options):
             selected_chars = list(char_options)
-            selected_chars.remove(unlocked_char)
+            if unlocked_char in selected_chars:
+                selected_chars.remove(unlocked_char)
             selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
             modded_num = 0
             for char in selected_chars:
@@ -328,7 +331,8 @@ class SpireWorld(World):
             return False
         return True
 
-    def interpret_slot_data(self, slot_data: dict[str, Any]) -> Any:
+    @staticmethod
+    def interpret_slot_data(slot_data: dict[str, Any]) -> Any:
         return slot_data
 
     def _setup_ut(self, slot_data: dict[str, Any]) -> None:
