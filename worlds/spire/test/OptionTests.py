@@ -51,7 +51,9 @@ class TestNoFloorChecks(SpireTestBase):
 class TestCampfireSanity(SpireTestBase):
 
     options = {
-        "campfire_sanity": 1
+        "campfire_sanity": 1,
+        "pick_num_characters": 0,
+        "character": ["Ironclad"]
     }
 
     def test_locs(self):
@@ -228,7 +230,8 @@ class GoalWithTwoChars(SpireTestBase):
             "Watcher",
             "Defect",
         },
-        "num_chars_goal": 2
+        "num_chars_goal": 2,
+        "pick_num_characters": 0,
     }
 
     def test_goal_with_two(self):
@@ -276,7 +279,8 @@ class GoalWithAllChars(SpireTestBase):
             "Watcher",
             "Defect",
         },
-        "num_chars_goal": 0
+        "num_chars_goal": 0,
+        "pick_num_characters": 0,
     }
 
     def test_no_goal_with_two(self):
@@ -327,7 +331,8 @@ class TestLockedFixed(SpireTestBase):
     options = {
         "lock_characters": 2,
         "unlocked_character": 0,
-        "character": ["Ironclad", "Silent"]
+        "character": ["Ironclad", "Silent"],
+        "pick_num_characters": 0,
     }
 
     def test_no_ironclad_unlock(self):
@@ -348,6 +353,7 @@ class TestAdvancedLockedFixed(SpireTestBase):
         "unlocked_character": 0,
         "advanced_characters": {"Ironclad": {}, "Silent": {}},
         "use_advanced_characters": 1,
+        "pick_num_characters": 0,
     }
 
     def test_no_ironclad_unlock(self):
@@ -372,6 +378,7 @@ class TestAdvancedLockedFixedModded(SpireTestBase):
             "Foobar": {}
         },
         "use_advanced_characters": 1,
+        "pick_num_characters": 0,
     }
 
     def test_no_custom_unlock(self):

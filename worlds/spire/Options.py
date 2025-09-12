@@ -41,7 +41,7 @@ class Character(OptionSet):
         "Snecko",
         "Collector",
     ]
-    default = ["Ironclad"]
+    default = ["Ironclad", "Silent", "Defect", "Watcher"]
     valid_keys_casefold = False
 
 class GoalNumChar(Range):
@@ -56,7 +56,7 @@ class Ascension(Range):
     display_name = "Ascension"
     range_start = 0
     range_end = 20
-    default = 0
+    default = 5
 
 class PickNumberCharacters(Range):
     """Randomly select from the configured characters this many characters to generate for.
@@ -72,7 +72,7 @@ class PickNumberCharacters(Range):
     display_name = "Pick Number of Characters"
     range_start = 0
     range_end = 13 + NUM_CUSTOM - 1
-    default = 0
+    default = 2
 
 class FinalAct(Toggle):
     """Whether you will need to collect the 3 keys and beat the final act to complete the game."""
@@ -102,14 +102,14 @@ class CampfireSanity(Toggle):
     """Whether to shuffle being able to rest and smith at each campsite per act.  Also adds
     new locations at campsites per act."""
     display_name = "Campfire Sanity"
-    default = 0
+    default = 1
 
 class ShopSanity(Toggle):
     """Whether to shuffle shop slots into the pool.  Also adds new locations at the shop per slot shuffled."""
     display_name = "Shop Sanity"
     option_true = 1
     option_false = 0
-    default = 0
+    default = 1
 
 class ShopCardSlots(Range):
     """When shop_sanity is enabled, the number of colored card slots to shuffle."""
@@ -188,7 +188,7 @@ class AdvancedChar(Toggle):
     See the "advanced_characters" option.
     """
     visibility = Visibility.template
-    display_name = "Multiple Character Run"
+    display_name = "Advanced Characters"
     option_true = 1
     option_false = 0
     default = 0
@@ -249,9 +249,9 @@ class CharacterOptions(OptionDict):
     visibility = Visibility.template
     default = {
         "ironclad": {
-            "ascension": 0,
+            "ascension": 1,
             "final_act": 1,
-            "downfall": 1,
+            "downfall": 0,
         }
     }
     schema = Schema({
