@@ -9,6 +9,7 @@
 - [Archipelago Multiworld Randomizer](https://steamcommunity.com/sharedfiles/filedetails/?id=3488453081)
 - (optional) [Downfall](https://steamcommunity.com/sharedfiles/filedetails/?id=1610056683)
 - (required for downfall) [StSLib](https://steamcommunity.com/workshop/filedetails/?id=1609158507)
+- (optional; for the visually impaired) [Say the Spire](https://steamcommunity.com/sharedfiles/filedetails/?id=2239220106)
 
 ### For GOG or Xbox PC Game Pass installation:
 
