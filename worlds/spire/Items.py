@@ -5,7 +5,8 @@ from enum import auto, Enum
 from BaseClasses import ItemClassification
 from typing import Dict
 
-from worlds.spire.Characters import character_list, NUM_CUSTOM
+from .Characters import character_list
+from .Constants import NUM_CUSTOM
 
 
 CHAR_OFFSET = 20
@@ -26,6 +27,7 @@ class ItemType(Enum):
     CHAR_UNLOCK = auto()
     POTION = auto()
     ASCENSION_DOWN = auto()
+    TRAP = auto()
 
 
 class ItemData(typing.NamedTuple):
@@ -76,9 +78,22 @@ base_event_item_pairs: Dict[str, str] = {
     "Act 3 Boss": "Beat Act 3 Boss"
 }
 
+trap_item_table = {
+    "Debuff Trap": ItemData(50000, ItemType.TRAP, ItemClassification.trap),
+    "Strong Debuff Trap": ItemData(50001, ItemType.TRAP, ItemClassification.trap),
+    "Killer Debuff Trap": ItemData(50002, ItemType.TRAP, ItemClassification.trap),
+    "Buff Trap": ItemData(50003, ItemType.TRAP, ItemClassification.trap),
+    "Strong Buff Trap": ItemData(50004, ItemType.TRAP, ItemClassification.trap),
+    "Status Card Trap": ItemData(50005, ItemType.TRAP, ItemClassification.trap),
+    "Gremlin Trap": ItemData(50006, ItemType.TRAP, ItemClassification.trap),
+}
+
 def create_item_tables(vanilla_chars: typing.List[str], extras: int) -> typing.Tuple[dict[str, ItemData], dict[
     typing.Union[str, int],dict[str,ItemData]], dict[str,str]]:
-    item_name_to_data = dict()
+    item_name_to_data = {
+        **trap_item_table
+    }
+
     characters_to_items: dict[typing.Union[str, int],dict[str, ItemData]] = defaultdict(lambda: dict())
     event_item_pairs: dict[str, str] = dict()
     char_num = 0

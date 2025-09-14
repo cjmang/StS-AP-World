@@ -4,9 +4,10 @@ from typing import List
 from schema import Schema, Optional, And
 
 from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet, \
-    OptionGroup
+    OptionGroup, OptionCounter
+from .Items import trap_item_table
+from .Constants import NUM_CUSTOM
 
-NUM_CUSTOM = 5
 
 class Character(OptionSet):
     """Enter the list of characters to play as.  Valid characters are:
@@ -276,6 +277,32 @@ class AscensionDown(Range):
     range_end = 20
     default = 0
 
+class TrapChance(Range):
+    """Chance that a filler item is replaced with a trap.  Requires `include_floor_checks`
+    for any traps to be added.
+    """
+    display_name = "Trap Chance"
+    range_start = 0
+    range_end = 100
+    default = 0
+
+class TrapWeights(OptionCounter):
+    """
+    The list of traps and corresponding weights that will be added to the item pool.
+    Debuff Trap - Start next combat with a weaker debuff
+    Strong debuff Trap - Start next combat with a strong debuff
+    Killer debuff Trap - Start next combat with a debuff has a good chance of killing you
+    Buff Trap - Next combat, enemies start buffed
+    Strong Buff Trap - Next combat, enemies start with a strong buff
+    Status Card Trap - Start next combat with status cards in your draw pile
+    Gremlin Trap - Next combat, a random gremlin is added to the enemies
+    """
+    display_name = "Trap Weights"
+    min = 0
+    default = {trap: 1 for trap in trap_item_table.keys()}
+    valid_keys = sorted(trap_item_table.keys())
+
+
 
 @dataclass
 class SpireOptions(PerGameCommonOptions):
@@ -304,6 +331,8 @@ class SpireOptions(PerGameCommonOptions):
     shop_potion_slots: ShopPotionSlots
     shop_remove_slots: ShopRemoveSlots
     shop_sanity_costs: ShopSanityCosts
+    trap_chance: TrapChance
+    trap_weights: TrapWeights
 
 option_groups: List[OptionGroup] = [
     OptionGroup("Sanities", [
@@ -319,7 +348,11 @@ option_groups: List[OptionGroup] = [
         ShopRemoveSlots,
         ShopSanityCosts,
     ]),
+    OptionGroup("Traps", [
+        TrapChance,
+        TrapWeights
+    ]),
     OptionGroup("Misc", [
         ChattyMC,
-    ])
+    ]),
 ]

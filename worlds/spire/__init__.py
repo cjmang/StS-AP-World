@@ -6,7 +6,7 @@ from typing import Optional, List, Set, Any
 
 from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
 from Options import OptionError
-from .Characters import character_list, CharacterConfig, character_option_map, character_offset_map, NUM_CUSTOM
+from .Characters import character_list, CharacterConfig, character_offset_map, NUM_CUSTOM
 from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs, item_groups
 from .Locations import location_table, loc_ids_to_data, LocationData, LocationType, CARD_REWARD_COUNT, location_groups, \
     CHAR_OFFSET
@@ -88,6 +88,11 @@ class SpireWorld(World):
         if num_chars_goal != 0:
             if num_chars_goal > len(self.characters):
                 self.options.num_chars_goal.value = 0
+        for weight in self.options.trap_weights.values():
+            if weight > 0:
+                break
+        else:
+            self.options.trap_chance.value = 0
 
     def _get_unlocked_char(self, characters: List[str]) -> Optional[str]:
         if len(characters) <= 0:
@@ -247,8 +252,14 @@ class SpireWorld(World):
                     remaining_checks += 4
                 if config.ascension >= 20:
                     remaining_checks += 1
+
+                traps: list[bool] = [self.random.randint(0, 100) > self.options.trap_chance for _ in range(remaining_checks)]
+                trap_num = traps.count(True)
+                filler_num = len(traps) - trap_num
+                for name in self.random.choices(list(self.options.trap_weights.keys()), weights=list(self.options.trap_weights.values()),k=trap_num):
+                    pool.append(SpireItem(name, self.player))
                 for name in self.random.choices([key for key, val in chars_to_items[char_lookup].items()
-                                                 if ItemType.GOLD == val.type and ItemClassification.filler == val.classification], weights=[40,60],k=remaining_checks):
+                                                 if ItemType.GOLD == val.type and ItemClassification.filler == val.classification], weights=[40,60],k=filler_num):
                     pool.append(SpireItem(name, self.player))
             # Pair up our event locations with our event items
             for base_event, base_item in base_event_item_pairs.items():

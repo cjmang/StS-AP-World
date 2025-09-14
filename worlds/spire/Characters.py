@@ -1,6 +1,6 @@
 from typing import List, Any
 
-from worlds.spire.Options import Character, NUM_CUSTOM
+from .Constants import NUM_CUSTOM
 
 NUM_CUSTOM = NUM_CUSTOM
 
@@ -36,10 +36,10 @@ official_names: List[str] = [
     "THE_COLLECTOR",
 ]
 
-character_option_map = {
-    value: key.lower()
-    for key, value in Character.options.items() if key != "spire_take_the_wheel"
-}
+# character_option_map = {
+#     value: key.lower()
+#     for key, value in Character.options.items()
+# }
 
 character_offset_map = {
     name.lower(): i
