@@ -117,6 +117,9 @@ class SpireWorld(World):
             selected_chars.remove(unlocked_char)
             selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
         self.logger.info("Generating with characters %s", selected_chars)
+        ascension_down = self.options.ascension_down.value
+        if self.options.include_floor_checks.value:
+            ascension_down = 0
         for char_val in selected_chars:
             option_name = char_val
             char_offset = character_offset_map[option_name.lower()]
@@ -126,7 +129,6 @@ class SpireWorld(World):
             else:
                 seed = ""
             locked = False if unlocked_char is None or unlocked_char.lower() == option_name.lower() else True
-
             config = CharacterConfig(name,
                                      option_name,
                                      char_offset,
@@ -135,7 +137,8 @@ class SpireWorld(World):
                                      locked,
                                      ascension=self.options.ascension.value,
                                      final_act=self.options.final_act.value == 1,
-                                     downfall=self.options.downfall.value == 1)
+                                     downfall=self.options.downfall.value == 1,
+                                     ascension_down=ascension_down)
             self.characters.append(config)
 
     def _handle_advanced_chars(self) -> None:
@@ -143,6 +146,7 @@ class SpireWorld(World):
         char_options = sorted(advanced_chars)
         num_rand_chars = self.options.pick_num_characters.value
         unlocked_char = self._get_unlocked_char(char_options)
+        include_ascension_down = self.options.include_floor_checks.value != 0
         if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(char_options):
             selected_chars = list(char_options)
             if unlocked_char in selected_chars:
@@ -186,6 +190,8 @@ class SpireWorld(World):
                                      seed,
                                      locked,
                                      **options)
+            if not include_ascension_down:
+                config.ascension_down = 0
             self.characters.append(config)
             if config.mod_num > 0:
                 self.modded_chars.append(config)
@@ -195,6 +201,7 @@ class SpireWorld(World):
         pool = []
         for config in self.characters:
             char_lookup = config.name if config.mod_num == 0 else config.mod_num
+            ascension_downs = min(config.ascension_down, config.ascension)
             for name, data in chars_to_items[char_lookup].items():
                 amount = 0
                 if ItemType.CARD_REWARD == data.type:
@@ -216,6 +223,8 @@ class SpireWorld(World):
                         amount = 2
                 elif ItemType.POTION == data.type and self.options.potion_sanity:
                     amount = 9
+                elif ItemType.ASCENSION_DOWN == data.type and self.options.include_floor_checks.value != 0:
+                    amount = ascension_downs
                 elif self.options.shop_sanity.value != 0:
                     if ItemType.SHOP_CARD == data.type:
                         amount = self.options.shop_card_slots.value
@@ -231,7 +240,8 @@ class SpireWorld(World):
                     pool.append(SpireItem(name, self.player))
 
             if self.options.include_floor_checks.value:
-                remaining_checks = 51
+
+                remaining_checks = 51 - ascension_downs
 
                 if config.final_act:
                     remaining_checks += 4
@@ -351,6 +361,7 @@ class SpireWorld(World):
                 ascension=char_dict['ascension'],
                 final_act=char_dict['final_act'],
                 downfall=char_dict['downfall'],
+                ascension_down=char_dict['ascension_down'],
             )
             self.characters.append(config)
             if char_dict['mod_num'] > 0:

@@ -73,6 +73,7 @@ class CharacterConfig:
         self.ascension: int = kwargs['ascension']
         self.final_act: int = kwargs['final_act']
         self.downfall: int = kwargs['downfall']
+        self.ascension_down: int = kwargs['ascension_down']
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -86,6 +87,7 @@ class CharacterConfig:
             'ascension': self.ascension,
             'final_act': self.final_act != 0,
             'downfall': self.downfall != 0,
+            'ascension_down': self.ascension_down,
         }
 
     def __repr__(self):

@@ -25,6 +25,7 @@ class ItemType(Enum):
     SHOP_REMOVE = auto()
     CHAR_UNLOCK = auto()
     POTION = auto()
+    ASCENSION_DOWN = auto()
 
 
 class ItemData(typing.NamedTuple):
@@ -58,6 +59,7 @@ base_item_table: Dict[str, ItemData] = {
     'Progressive Shop Remove': ItemData(13, ItemType.SHOP_REMOVE),
     'Unlock': ItemData(14, ItemType.CHAR_UNLOCK),
     'Potion': ItemData(18, ItemType.POTION, ItemClassification.useful),
+    'Ascension Down': ItemData(19, ItemType.ASCENSION_DOWN, ItemClassification.useful),
 
     # Event Items
     'Victory': ItemData(None, None, ItemClassification.progression, True, True),
@@ -115,6 +117,7 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
     rare_cards = set()
     relics = set()
     boss_relics = set()
+    ascension_downs = set()
     ret = dict()
 
     ret["Gold"] =  gold
@@ -127,6 +130,7 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
     ret["Rare Card Rewards"] = rare_cards
     ret["Relics"] = relics
     ret["Boss Relics"] = boss_relics
+    ret["Ascension Downs"] = ascension_downs
 
     for key, data in chars_to_items.items():
         char = key if type(key) == str else f"Custom Character {key+1}"
@@ -164,6 +168,8 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
                 relics.add(item_name)
             elif item_data.type == ItemType.BOSS_RELIC:
                 boss_relics.add(item_name)
+            elif item_data.type == ItemType.ASCENSION_DOWN:
+                ascension_downs.add(item_name)
 
     return ret
 

@@ -229,9 +229,10 @@ class CharacterOptions(OptionDict):
     independently of each other.  No validation is done on the character name, so use carefully.
     Format is:
         <char name>:
-            ascension:
-            downfall:
-            final_act:
+            ascension: <number>
+            downfall: 0 or 1
+            final_act: 0 or 1
+            ascension_down: <number>
 
     If using a non-downfall modded character:
     Enter the internal ID of the character to use.
@@ -252,6 +253,7 @@ class CharacterOptions(OptionDict):
             "ascension": 1,
             "final_act": 1,
             "downfall": 0,
+            "ascension_down": 0,
         }
     }
     schema = Schema({
@@ -259,14 +261,28 @@ class CharacterOptions(OptionDict):
             Optional("ascension", default=0): And(int,lambda n: 0 <= n <= 20),
             Optional("final_act", default=0): And(int, lambda n: 0 <= n <= 1),
             Optional("downfall", default=0): And(int, lambda n: 0 <= n <= 1),
+            Optional("ascension_down", default=0): And(int, lambda n: 0 <= n <= 20)
         }
     })
+
+class AscensionDown(Range):
+    """The number of ascension downs to add to the item pool, per character. Only valid when
+    `use_advanced_characters` is false (see `advanced_characters`), and when `include_floor_checks` is true.
+    Will be ignored if invalid.
+
+    Logic does NOT account for this."""
+    display_name = "Ascension Down"
+    range_start = 0
+    range_end = 20
+    default = 0
+
 
 @dataclass
 class SpireOptions(PerGameCommonOptions):
     character: Character
     num_chars_goal: GoalNumChar
     ascension: Ascension
+    ascension_down: AscensionDown
     final_act: FinalAct
     downfall: Downfall
     death_link: DeathLink
