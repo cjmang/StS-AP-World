@@ -10,6 +10,28 @@ from .Constants import NUM_CUSTOM
 
 
 class Character(OptionSet):
+    """Deprecated, use the `characters` option"""
+    visibility = Visibility.none
+    display_name = "Character"
+    valid_keys = [
+        "Ironclad",
+        "Silent",
+        "Defect",
+        "Watcher",
+        "Hermit",
+        "SlimeBoss",
+        "Guardian",
+        "Hexaghost",
+        "Champ",
+        "Gremlins",
+        "Automaton",
+        "Snecko",
+        "Collector",
+    ]
+    default = ["Ironclad", "Silent", "Defect", "Watcher"]
+    valid_keys_casefold = False
+
+class Characters(OptionSet):
     """Enter the list of characters to play as.  Valid characters are:
         'Ironclad'
         'Silent'
@@ -307,6 +329,7 @@ class TrapWeights(OptionCounter):
 @dataclass
 class SpireOptions(PerGameCommonOptions):
     character: Character
+    characters: Characters
     num_chars_goal: GoalNumChar
     ascension: Ascension
     ascension_down: AscensionDown

@@ -28,6 +28,7 @@ class ItemType(Enum):
     POTION = auto()
     ASCENSION_DOWN = auto()
     TRAP = auto()
+    CAW_CAW = auto()
 
 
 class ItemData(typing.NamedTuple):
@@ -62,6 +63,7 @@ base_item_table: Dict[str, ItemData] = {
     'Unlock': ItemData(14, ItemType.CHAR_UNLOCK),
     'Potion': ItemData(18, ItemType.POTION, ItemClassification.useful),
     'Ascension Down': ItemData(19, ItemType.ASCENSION_DOWN, ItemClassification.useful),
+    'CAW CAW': ItemData(100000, ItemType.CAW_CAW, ItemClassification.filler),
 
     # Event Items
     'Victory': ItemData(None, None, ItemClassification.progression, True, True),

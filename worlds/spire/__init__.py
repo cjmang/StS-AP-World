@@ -115,7 +115,10 @@ class SpireWorld(World):
         return unlocked_char
 
     def _handle_basic_chars(self) -> None:
-        selected_chars = sorted(self.options.character.value)
+        if len(self.options.character.value) > 0:
+            self.logger.warning("The 'character' option has been renamed to 'characters'; please update your yaml")
+            self.options.characters.value = self.options.character.value
+        selected_chars = sorted(self.options.characters.value)
         num_rand_chars = self.options.pick_num_characters.value
         unlocked_char = self._get_unlocked_char(selected_chars)
         if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(selected_chars):
@@ -123,7 +126,7 @@ class SpireWorld(World):
             selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
         self.logger.info("Generating with characters %s", selected_chars)
         ascension_down = self.options.ascension_down.value
-        if self.options.include_floor_checks.value:
+        if self.options.include_floor_checks.value == 0:
             ascension_down = 0
         for char_val in selected_chars:
             option_name = char_val
@@ -253,7 +256,7 @@ class SpireWorld(World):
                 if config.ascension >= 20:
                     remaining_checks += 1
 
-                traps: list[bool] = [self.random.randint(0, 100) > self.options.trap_chance for _ in range(remaining_checks)]
+                traps: list[bool] = [self.random.randint(0, 100) < self.options.trap_chance for _ in range(remaining_checks)]
                 trap_num = traps.count(True)
                 filler_num = len(traps) - trap_num
                 for name in self.random.choices(list(self.options.trap_weights.keys()), weights=list(self.options.trap_weights.values()),k=trap_num):
@@ -311,9 +314,10 @@ class SpireWorld(World):
         return slot_data
 
     def get_filler_item_name(self) -> str:
-        config = self.characters[0]
+        if not self.characters:
+            return "CAW CAW"
+        config = self.random.choice(self.characters)
         return self.random.choice([f"{config.name} One Gold", f"{config.name} Five Gold"])
-
 
     def create_region(self, player: int, prefix: Optional[str], name: str, config: CharacterConfig, locations: List[str] = None, exits: List[str] =None):
         ret = Region(f"{prefix} {name}" if prefix is not None else name, player, self.multiworld)

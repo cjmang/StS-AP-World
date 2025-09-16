@@ -137,7 +137,7 @@ def setup_power_map(map: dict[PowerLevel, List[str]], prefix: str) -> dict[Power
 class LogicTestBase(SpireTestBase):
 
     options = {
-        'character': {"silent"},
+        'characters': ["silent"],
         'final_act': 1,
         'campfire_sanity':1,
         'shop_sanity': 1,

@@ -12,7 +12,7 @@ class TestDefault(SpireTestBase):
 class TestMultiCharsValid(SpireTestBase):
 
     options = {
-        "character": [
+        "characters": [
             "ironclad",
             "silent",
         ]
@@ -53,7 +53,7 @@ class TestCampfireSanity(SpireTestBase):
     options = {
         "campfire_sanity": 1,
         "pick_num_characters": 0,
-        "character": ["Ironclad"]
+        "characters": ["Ironclad"]
     }
 
     def test_locs(self):
@@ -124,7 +124,7 @@ class TestAcension20(SpireTestBase):
 
 class TestAcension20Final(SpireTestBase):
     options = {
-        "character": {
+        "characters": {
             "Ironclad", "Defect"
         },
         "ascension": 20,
@@ -155,7 +155,7 @@ class TestOfficialNamesRecognized(SpireTestBase):
 class TestCharLocked(SpireTestBase):
 
     options = {
-        "character": "the_ironclad",
+        "characters": "the_ironclad",
         "use_advanced_characters": 1,
         "lock_characters": 2,
         "unlocked_character": "ironclad",
@@ -194,7 +194,7 @@ class NoUnlockedChar(SpireTestBase):
 
 class PickTwoCharacters(SpireTestBase):
     options = {
-        "character": {
+        "characters": {
             "Silent",
             "Ironclad",
             "Watcher",
@@ -224,7 +224,7 @@ class PickTwoAdvancedCharacters(SpireTestBase):
 class GoalWithTwoChars(SpireTestBase):
 
     options = {
-        "character": {
+        "characters": {
             "Silent",
             "Ironclad",
             "Watcher",
@@ -273,7 +273,7 @@ class GoalWithTwoChars(SpireTestBase):
 class GoalWithAllChars(SpireTestBase):
 
     options = {
-        "character": {
+        "characters": {
             "Silent",
             "Ironclad",
             "Watcher",
@@ -331,7 +331,7 @@ class TestLockedFixed(SpireTestBase):
     options = {
         "lock_characters": 2,
         "unlocked_character": 0,
-        "character": ["Ironclad", "Silent"],
+        "characters": ["Ironclad", "Silent"],
         "pick_num_characters": 0,
     }
 
@@ -540,3 +540,63 @@ class TestMoreThanFiveModdedAgain(SpireTestBase):
     def test_ensure_silent_present(self):
         item = self.get_item_by_name("Silent Unlock")
         self.assertIsNotNone(item)
+
+
+class TestNoTraps(SpireTestBase):
+    options = {
+        "trap_chance": 0
+    }
+
+    def test_ensure_no_traps(self):
+        for item in self.multiworld.get_items():
+            self.assertFalse(item.trap)
+
+class TestHasTraps(SpireTestBase):
+    options = {
+        "trap_chance": 100
+    }
+
+    def test_ensure_traps(self):
+        for item in self.multiworld.get_items():
+            if item.trap:
+                break
+        else:
+            raise AssertionError("Did not find a trap")
+
+class TestAscensionDown(SpireTestBase):
+    options = {
+        "ascension_down": 20,
+        "characters": ["Silent"],
+        "ascension": 20,
+    }
+
+    def test_ensure_ascension_down(self):
+        self.assertIsNotNone(self.get_item_by_name("Silent Ascension Down"))
+
+class TestNoAscensionDown(SpireTestBase):
+    options = {
+        "ascension_down": 0,
+        "characters": ["Silent"],
+        "ascension": 20,
+    }
+
+    def test_ensure_no_ascension_down(self):
+        try:
+            self.get_item_by_name("Silent Ascension Down")
+        except ValueError:
+            return
+        raise AssertionError("oops")
+
+class TestNoAscensionDown2(SpireTestBase):
+    options = {
+        "ascension_down": 20,
+        "characters": ["Silent"],
+        "ascension": 0,
+    }
+
+    def test_ensure_no_ascension_down(self):
+        try:
+            self.get_item_by_name("Silent Ascension Down")
+        except ValueError:
+            return
+        raise AssertionError("oops")
