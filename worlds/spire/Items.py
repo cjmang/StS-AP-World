@@ -139,7 +139,6 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
     relics = set()
     boss_relics = set()
     ascension_downs = set()
-    traps = set()
     ret = dict()
 
     ret["Gold"] =  gold
@@ -153,7 +152,6 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
     ret["Relics"] = relics
     ret["Boss Relics"] = boss_relics
     ret["Ascension Downs"] = ascension_downs
-    ret["Traps"] = traps
 
     for key, data in chars_to_items.items():
         char = key if type(key) == str else f"Custom Character {key+1}"
@@ -193,11 +191,10 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
                 boss_relics.add(item_name)
             elif item_data.type == ItemType.ASCENSION_DOWN:
                 ascension_downs.add(item_name)
-            elif item_data.type == ItemType.TRAP:
-                traps.add(item_name)
 
     return ret
 
 item_table, chars_to_items, event_item_pairs = create_item_tables(character_list, NUM_CUSTOM)
 
 item_groups = create_item_groups(chars_to_items)
+item_groups["Traps"] = set(trap_item_table.keys())
