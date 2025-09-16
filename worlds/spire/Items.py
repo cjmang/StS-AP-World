@@ -63,7 +63,6 @@ base_item_table: Dict[str, ItemData] = {
     'Unlock': ItemData(14, ItemType.CHAR_UNLOCK),
     'Potion': ItemData(18, ItemType.POTION, ItemClassification.useful),
     'Ascension Down': ItemData(19, ItemType.ASCENSION_DOWN, ItemClassification.useful),
-    'CAW CAW': ItemData(100000, ItemType.CAW_CAW, ItemClassification.filler),
 
     # Event Items
     'Victory': ItemData(None, None, ItemClassification.progression, True, True),
@@ -90,10 +89,15 @@ trap_item_table = {
     "Gremlin Trap": ItemData(50006, ItemType.TRAP, ItemClassification.trap),
 }
 
+other_items = {
+    'CAW CAW': ItemData(100000, ItemType.CAW_CAW, ItemClassification.filler),
+}
+
 def create_item_tables(vanilla_chars: typing.List[str], extras: int) -> typing.Tuple[dict[str, ItemData], dict[
     typing.Union[str, int],dict[str,ItemData]], dict[str,str]]:
     item_name_to_data = {
-        **trap_item_table
+        **trap_item_table,
+        **other_items,
     }
 
     characters_to_items: dict[typing.Union[str, int],dict[str, ItemData]] = defaultdict(lambda: dict())
@@ -135,6 +139,7 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
     relics = set()
     boss_relics = set()
     ascension_downs = set()
+    traps = set()
     ret = dict()
 
     ret["Gold"] =  gold
@@ -148,6 +153,7 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
     ret["Relics"] = relics
     ret["Boss Relics"] = boss_relics
     ret["Ascension Downs"] = ascension_downs
+    ret["Traps"] = traps
 
     for key, data in chars_to_items.items():
         char = key if type(key) == str else f"Custom Character {key+1}"
@@ -187,6 +193,8 @@ def create_item_groups(chars_to_items: dict[typing.Union[str,int], dict[str, Ite
                 boss_relics.add(item_name)
             elif item_data.type == ItemType.ASCENSION_DOWN:
                 ascension_downs.add(item_name)
+            elif item_data.type == ItemType.TRAP:
+                traps.add(item_name)
 
     return ret
 

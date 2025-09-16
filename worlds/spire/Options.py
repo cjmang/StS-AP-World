@@ -28,7 +28,7 @@ class Character(OptionSet):
         "Snecko",
         "Collector",
     ]
-    default = ["Ironclad", "Silent", "Defect", "Watcher"]
+    default = []
     valid_keys_casefold = False
 
 class Characters(OptionSet):
