@@ -66,6 +66,9 @@ class SpireWorld(World):
             self._handle_basic_chars()
         else:
             self._handle_advanced_chars()
+
+        if not self.characters:
+            raise OptionError("At least one character must be configured")
         names = set()
         for config in self.characters:
             self.logger.info("StS: Got character configuration" + str(config))
@@ -298,7 +301,6 @@ class SpireWorld(World):
             "mod_version": self.mod_version,
         }
         slot_data.update(self.options.as_dict(
-            "character",
             "ascension",
             "final_act",
             "downfall",
