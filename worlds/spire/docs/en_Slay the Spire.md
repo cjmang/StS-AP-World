@@ -15,7 +15,7 @@ so you can gather both.
 
 ## What items and locations get shuffled?
 
-12 card packs, 10 relics, and 2 boss relics and rare card drops are shuffled into the item pool and can be found at any
+13 card packs, 10 relics, and 2 boss relics and rare card drops are shuffled into the item pool and can be found at any
 location that would normally give you these items, except for card packs, which are found at every other card reward.
 
 It is also possible to shuffle in the ability to rest, smith, and the ability to purchase goods at the shop
