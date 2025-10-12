@@ -221,7 +221,6 @@ class LockCharacters(Choice):
     locked_fixed means the unlocked_character option is used to determine which character to start with
     locked_random means which character you start with is randomized
     unlocked means you start with all characters available"""
-    visibility = Visibility.template
     display_name = "Lock Characters"
     option_unlocked = 0
     option_locked_random = 1
