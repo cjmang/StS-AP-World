@@ -123,9 +123,13 @@ class SpireWorld(World):
         selected_chars = sorted(self.options.characters.value)
         num_rand_chars = self.options.pick_num_characters.value
         unlocked_char = self._get_unlocked_char(selected_chars)
-        if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(selected_chars):
-            selected_chars.remove(unlocked_char)
-            selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
+        if num_rand_chars != 0 and num_rand_chars < len(selected_chars):
+            if self.options.lock_characters.value != 0:
+                selected_chars.remove(unlocked_char)
+                selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
+            else:
+                selected_chars = self.random.sample(selected_chars, k=num_rand_chars)
+
         self.logger.info("Generating with characters %s", selected_chars)
         ascension_down = self.options.ascension_down.value
         if self.options.include_floor_checks.value == 0:
@@ -157,11 +161,14 @@ class SpireWorld(World):
         num_rand_chars = self.options.pick_num_characters.value
         unlocked_char = self._get_unlocked_char(char_options)
         include_ascension_down = self.options.include_floor_checks.value != 0
-        if self.options.lock_characters.value != 0 and num_rand_chars != 0 and num_rand_chars < len(char_options):
+        if num_rand_chars != 0 and num_rand_chars < len(char_options):
             selected_chars = list(char_options)
-            if unlocked_char in selected_chars:
-                selected_chars.remove(unlocked_char)
-            selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
+            if self.options.lock_characters.value != 0:
+                if unlocked_char in selected_chars:
+                    selected_chars.remove(unlocked_char)
+                selected_chars = [unlocked_char] + self.random.sample(selected_chars, k=num_rand_chars - 1)
+            else:
+                selected_chars = self.random.sample(selected_chars, k=num_rand_chars)
             modded_num = 0
             for char in selected_chars:
                 if character_offset_map.get(char.lower(), None) is None:
