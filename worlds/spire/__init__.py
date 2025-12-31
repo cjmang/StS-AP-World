@@ -66,7 +66,6 @@ class SpireWorld(World):
             self._handle_basic_chars()
         else:
             self._handle_advanced_chars()
-
         if not self.characters:
             raise OptionError("At least one character must be configured")
         names = set()
@@ -223,8 +222,11 @@ class SpireWorld(World):
                     amount = 10
                 elif ItemType.CAMPFIRE == data.type and self.options.campfire_sanity.value != 0:
                     amount = 3
-                elif ItemType.CHAR_UNLOCK == data.type and self.options.lock_characters.value != 0 and config.locked:
-                    amount = 1
+                elif ItemType.CHAR_UNLOCK == data.type and self.options.lock_characters.value != 0:
+                    if config.locked:
+                        amount = 1
+                    else:
+                        self.push_precollected(SpireItem(name, self.player))
                 elif ItemType.GOLD == data.type and self.options.gold_sanity.value != 0:
                     if '15 Gold' in name:
                         amount = 18
