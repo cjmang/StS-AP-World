@@ -21,6 +21,7 @@ class LocationType(Enum):
     Start = auto()
     Gold = auto()
     Potion = auto()
+    Key = auto()
 
 
 class LocationData(NamedTuple):
@@ -51,6 +52,9 @@ def create_location_data() -> List[LocationData]:
             LocationData('Press Start', 163, LocationType.Start, 1),
             LocationData('Boss Gold 1', 83, LocationType.Gold, 1, True),
             LocationData('Boss Gold 2', 84, LocationType.Gold, 2, True),
+            LocationData('Sapphire Key', 94, LocationType.Key, 1),
+            LocationData('Ruby Key', 95, LocationType.Key, 1),
+            LocationData('Emerald Key', 96, LocationType.Key, 3),
             LocationData('Heart Room', None, LocationType.Event, 3),
             LocationData('Act 1 Boss', None, LocationType.Event, 1),
             LocationData('Act 2 Boss', None, LocationType.Event, 2),

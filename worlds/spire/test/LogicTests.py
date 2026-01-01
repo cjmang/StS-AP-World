@@ -23,6 +23,7 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Act 1 Campfire 2",
         "Potion Drop 1",
         "Potion Drop 2",
+        "Ruby Key",
         *_create_floor_check(1,10),
         *_create_combat_check(1,4),
     ],
@@ -31,6 +32,7 @@ logic_map: dict[PowerLevel, List[str]] = {
     ],
     PowerLevel(1): [
         "Relic 1",
+        "Sapphire Key",
     ],
     PowerLevel(draw=0,relic=1, rest=1): [
         "Card Reward 3",
@@ -110,6 +112,7 @@ logic_map: dict[PowerLevel, List[str]] = {
         "Card Reward 12",
         "Card Reward 13",
         "Potion Drop 9",
+        "Emerald Key",
         *_create_floor_check(45, 49),
         *_create_combat_check(22, 23),
     ],
@@ -120,8 +123,11 @@ logic_map: dict[PowerLevel, List[str]] = {
     ],
     PowerLevel(draw=10,relic=7,boss_relic=2,rest=3,smith=3, shop=10,shop_remove=3, gold=9): [
         "Act 3 Boss",
+        * _create_floor_check(50, 51)
+    ],
+    PowerLevel(draw=10, relic=7, boss_relic=2, rest=3, smith=3, shop=10, shop_remove=3, gold=9, keys=1): [
         "Heart Room",
-        * _create_floor_check(50, 55)
+        *_create_floor_check(52, 55)
     ],
 }
 
@@ -142,6 +148,7 @@ class LogicTestBase(SpireTestBase):
         'shop_remove_slots': 1,
         'gold_sanity': 1,
         'potion_sanity': 1,
+        'key_sanity': 1,
     }
 
     def _setup_state_accessible(self, power: PowerLevel) -> CollectionState:
@@ -180,6 +187,10 @@ class LogicTestBase(SpireTestBase):
         for _ in range(power.shop_remove):
             state.collect(remove)
 
+        keys = self.get_items_by_name([f"{self.prefix} {key}" for key in ["Ruby Key", "Emerald Key", "Sapphire Key"]])
+        for key in keys:
+            state.collect(key)
+
         return state
 
     def _setup_state_inaccessible(self, power: PowerLevel, type: str):
@@ -210,6 +221,8 @@ class LogicTestBase(SpireTestBase):
         gold = self.get_item_by_name(f"{self.prefix} 30 Gold")
         golds = [gold for _ in range(power.gold)]
 
+        keys = self.get_items_by_name([f"{self.prefix} {key}" for key in ["Ruby Key", "Emerald Key", "Sapphire Key"]])
+
         if type == "Card Reward":
             draws.pop()
         elif type == "Relic":
@@ -226,8 +239,10 @@ class LogicTestBase(SpireTestBase):
             removes.pop()
         elif type == "30 Gold":
             golds.pop()
+        elif type == "Keys":
+            keys.pop()
 
-        for list in [draws, relics, boss_relics, rests, smiths, shops, removes, golds]:
+        for list in [draws, relics, boss_relics, rests, smiths, shops, removes, golds, keys]:
             for item in list:
                 state.collect(item)
 
@@ -235,7 +250,7 @@ class LogicTestBase(SpireTestBase):
 
     def _test_inaccessible(self, power: PowerLevel, locations: Iterable[str]):
 
-        for i, type in enumerate([ x for x in ['Card Reward', 'Relic', 'Boss Relic', 'Progressive Rest', 'Progressive Smith', "Shop Card Slot", "Progressive Shop Remove", "30 Gold"]]):
+        for i, type in enumerate([ x for x in ['Card Reward', 'Relic', 'Boss Relic', 'Progressive Rest', 'Progressive Smith', "Shop Card Slot", "Progressive Shop Remove", "30 Gold", "Keys"]]):
             if power[i] == 0:
                 continue
             state = self._setup_state_inaccessible(power, type)
@@ -280,6 +295,7 @@ class CustomCharTest(LogicTests):
             "foobar": {
                 'final_act': 1,
                 'ascension': 1,
+                'key_sanity': 1,
             }
         },
         'campfire_sanity': 1,
@@ -291,4 +307,5 @@ class CustomCharTest(LogicTests):
         'shop_remove_slots': 1,
         'gold_sanity': 1,
         'potion_sanity': 1,
+        'key_sanity': 1,
     }

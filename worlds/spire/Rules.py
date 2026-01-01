@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, List, NamedTuple, Union
 
 from BaseClasses import CollectionState
 from ..AutoWorld import LogicMixin
-from ..generic.Rules import set_rule
+from ..generic.Rules import set_rule, add_rule
 
 if TYPE_CHECKING:
     from . import SpireWorld, CharacterConfig
@@ -17,6 +17,7 @@ class PowerLevel(NamedTuple):
     shop: int = 0
     shop_remove: int = 0
     gold: int = 0
+    keys: int = 0
 
 class SpireLogic(LogicMixin):
     def _spire_has_relics(self: CollectionState, player: int, prefix, amount: int) -> bool:
@@ -215,7 +216,6 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
         set_rule(multiworld.get_location(f"{prefix} Boss Gold 2", player),
                  lambda state: state.has(f"{prefix} Beat Act 2 Boss", player))
 
-
     # Act 3 Relics
     set_rule(multiworld.get_location(f"{prefix} Relic 7", player),
              lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=4)))
@@ -232,3 +232,12 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
 
     set_rule(multiworld.get_entrance(f"{prefix} Act 4", player),
              lambda state: state.has(f"{prefix} Beat Act 3 Boss", player))
+
+    if config.key_sanity:
+        add_rule(multiworld.get_location(f"{prefix} Sapphire Key", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=1)))
+
+        add_rule(multiworld.get_entrance(f"{prefix} Act 4", player),
+                 lambda state: state.has(f"{prefix} Sapphire Key", player) and
+                               state.has(f"{prefix} Ruby Key", player) and
+                               state.has(f"{prefix} Emerald Key", player))

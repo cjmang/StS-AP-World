@@ -28,6 +28,7 @@ class ItemType(Enum):
     POTION = auto()
     ASCENSION_DOWN = auto()
     TRAP = auto()
+    KEY = auto()
     CAW_CAW = auto()
     OTHER = auto()
 
@@ -64,6 +65,9 @@ base_item_table: Dict[str, ItemData] = {
     'Unlock': ItemData(14, ItemType.CHAR_UNLOCK),
     'Potion': ItemData(18, ItemType.POTION, ItemClassification.useful),
     'Ascension Down': ItemData(19, ItemType.ASCENSION_DOWN, ItemClassification.useful),
+    'Sapphire Key': ItemData(20, ItemType.KEY),
+    'Ruby Key': ItemData(21, ItemType.KEY),
+    'Emerald Key': ItemData(22, ItemType.KEY),
 
     # Event Items
     'Victory': ItemData(None, None, ItemClassification.progression, True, True),

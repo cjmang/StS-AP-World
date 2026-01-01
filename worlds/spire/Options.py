@@ -195,6 +195,12 @@ class PotionSanity(Toggle):
     display_name = "Potion Sanity"
     default = 0
 
+class KeySanity(Toggle):
+    """Whether the keys needed to enter the final act should be shuffled into the multiworld;
+    adds 3 locations per character"""
+    display_name = "Key Sanity"
+    default = 0
+
 class SeededRun(Toggle):
     """Whether each character should have a fixed seed to climb the spire with or not."""
     display_name = "Seeded Run"
@@ -276,6 +282,7 @@ class CharacterOptions(OptionDict):
             "final_act": 1,
             "downfall": 0,
             "ascension_down": 0,
+            "key_sanity": 0,
         }
     }
     schema = Schema({
@@ -283,7 +290,8 @@ class CharacterOptions(OptionDict):
             Optional("ascension", default=0): And(int,lambda n: 0 <= n <= 20),
             Optional("final_act", default=0): And(int, lambda n: 0 <= n <= 1),
             Optional("downfall", default=0): And(int, lambda n: 0 <= n <= 1),
-            Optional("ascension_down", default=0): And(int, lambda n: 0 <= n <= 20)
+            Optional("ascension_down", default=0): And(int, lambda n: 0 <= n <= 20),
+            Optional("key_sanity", default=0): And(int, lambda n: 0 <= n <= 1),
         }
     })
 
@@ -367,6 +375,7 @@ class SpireOptions(PerGameCommonOptions):
     campfire_sanity: CampfireSanity
     gold_sanity: GoldSanity
     potion_sanity: PotionSanity
+    key_sanity: KeySanity
     seeded: SeededRun
     chatty_mc: ChattyMC
     shop_sanity: ShopSanity
@@ -386,6 +395,7 @@ option_groups: List[OptionGroup] = [
         CampfireSanity,
         GoldSanity,
         PotionSanity,
+        KeySanity,
         ShopSanity,
         ShopCardSlots,
         ShopNeutralSlots,

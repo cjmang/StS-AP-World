@@ -152,7 +152,8 @@ class SpireWorld(World):
                                      ascension=self.options.ascension.value,
                                      final_act=self.options.final_act.value == 1,
                                      downfall=self.options.downfall.value == 1,
-                                     ascension_down=ascension_down)
+                                     ascension_down=ascension_down,
+                                     key_sanity=self.options.key_sanity == 1)
             self.characters.append(config)
 
     def _handle_advanced_chars(self) -> None:
@@ -227,24 +228,32 @@ class SpireWorld(World):
                     amount = 2
                 elif ItemType.RELIC == data.type:
                     amount = 10
-                elif ItemType.CAMPFIRE == data.type and self.options.campfire_sanity.value != 0:
-                    amount = 3
-                elif ItemType.CHAR_UNLOCK == data.type and self.options.lock_characters.value != 0:
-                    if config.locked:
+                elif ItemType.CAMPFIRE == data.type:
+                    if self.options.campfire_sanity.value != 0:
+                        amount = 3
+                elif ItemType.CHAR_UNLOCK == data.type:
+                    if self.options.lock_characters.value != 0:
+                        if config.locked:
+                            amount = 1
+                        else:
+                            self.push_precollected(SpireItem(name, self.player))
+                elif ItemType.KEY == data.type:
+                    if config.key_sanity != 0:
                         amount = 1
-                    else:
-                        self.push_precollected(SpireItem(name, self.player))
-                elif ItemType.GOLD == data.type and self.options.gold_sanity.value != 0:
-                    if '15 Gold' in name:
-                        amount = 18
-                    elif '30 Gold' in name:
-                        amount = 7
-                    elif 'Boss Gold' in name:
-                        amount = 2
-                elif ItemType.POTION == data.type and self.options.potion_sanity:
-                    amount = 9
-                elif ItemType.ASCENSION_DOWN == data.type and self.options.include_floor_checks.value != 0:
-                    amount = ascension_downs
+                elif ItemType.GOLD == data.type:
+                    if self.options.gold_sanity.value != 0:
+                        if '15 Gold' in name:
+                            amount = 18
+                        elif '30 Gold' in name:
+                            amount = 7
+                        elif 'Boss Gold' in name:
+                            amount = 2
+                elif ItemType.POTION == data.type:
+                    if self.options.potion_sanity.value != 0:
+                        amount = 9
+                elif ItemType.ASCENSION_DOWN == data.type:
+                    if self.options.include_floor_checks.value != 0:
+                        amount = ascension_downs
                 elif self.options.shop_sanity.value != 0:
                     if ItemType.SHOP_CARD == data.type:
                         amount = self.options.shop_card_slots.value
@@ -380,6 +389,8 @@ class SpireWorld(World):
             return False
         elif data.type == LocationType.Potion and self.options.potion_sanity.value == 0:
             return False
+        elif data.type == LocationType.Key and not config.key_sanity:
+            return False
         return True
 
     @staticmethod
@@ -403,6 +414,7 @@ class SpireWorld(World):
                 final_act=char_dict['final_act'],
                 downfall=char_dict['downfall'],
                 ascension_down=char_dict['ascension_down'],
+                key_sanity=char_dict['key_sanity'],
             )
             self.characters.append(config)
             if char_dict['mod_num'] > 0:
