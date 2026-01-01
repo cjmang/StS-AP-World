@@ -323,6 +323,29 @@ class TrapWeights(OptionCounter):
     default = {trap: 1 for trap in trap_item_table.keys()}
     valid_keys = sorted(trap_item_table.keys())
 
+class FillerWeights(OptionCounter):
+    """
+    The list of filler and corresponding weights that will be added to the item pool
+    1 Gold - One gold, character bound
+    5 Gold - Five gold, character bound
+    CAW CAW - CAW CAW
+    Combat Buff - Similar to traps in function, but beneficial instead of detrimental, not character bound
+    """
+    display_name = "Filler Weights"
+    min = 0
+    default = {
+        "1 Gold": 40,
+        "5 Gold": 60,
+        "CAW CAW": 0,
+        "Combat Buff": 0,
+    }
+    valid_keys = [
+        "5 Gold",
+        "1 Gold",
+        "CAW CAW",
+        "Combat Buff",
+    ]
+
 
 
 @dataclass
@@ -355,6 +378,7 @@ class SpireOptions(PerGameCommonOptions):
     shop_sanity_costs: ShopSanityCosts
     trap_chance: TrapChance
     trap_weights: TrapWeights
+    filler_weights: FillerWeights
 
 option_groups: List[OptionGroup] = [
     OptionGroup("Sanities", [
@@ -376,5 +400,6 @@ option_groups: List[OptionGroup] = [
     ]),
     OptionGroup("Misc", [
         ChattyMC,
+        FillerWeights,
     ]),
 ]

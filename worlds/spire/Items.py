@@ -29,6 +29,7 @@ class ItemType(Enum):
     ASCENSION_DOWN = auto()
     TRAP = auto()
     CAW_CAW = auto()
+    OTHER = auto()
 
 
 class ItemData(typing.NamedTuple):
@@ -91,6 +92,7 @@ trap_item_table = {
 
 other_items = {
     'CAW CAW': ItemData(100000, ItemType.CAW_CAW, ItemClassification.filler),
+    'Combat Buff': ItemData(100001, ItemType.OTHER, ItemClassification.filler)
 }
 
 def create_item_tables(vanilla_chars: typing.List[str], extras: int) -> typing.Tuple[dict[str, ItemData], dict[

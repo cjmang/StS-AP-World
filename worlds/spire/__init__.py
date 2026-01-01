@@ -273,8 +273,22 @@ class SpireWorld(World):
                 filler_num = len(traps) - trap_num
                 for name in self.random.choices(list(self.options.trap_weights.keys()), weights=list(self.options.trap_weights.values()),k=trap_num):
                     pool.append(SpireItem(name, self.player))
-                for name in self.random.choices([key for key, val in chars_to_items[char_lookup].items()
-                                                 if ItemType.GOLD == val.type and ItemClassification.filler == val.classification], weights=[40,60],k=filler_num):
+
+                # Char specific 1 Gold and 5 Gold, in that order
+                filler_pool = [key for key, val in chars_to_items[char_lookup].items()
+                                                 if ItemType.GOLD == val.type and ItemClassification.filler == val.classification]
+                filler_pool.append("CAW CAW")
+                filler_pool.append("Combat Buff")
+                filler_weights = [
+                    self.options.filler_weights.get("1 Gold", 0),
+                    self.options.filler_weights.get("5 Gold", 0),
+                    self.options.filler_weights.get("CAW CAW", 0),
+                    self.options.filler_weights.get("Combat Buff", 0),
+                ]
+                if sum(filler_weights) <= 0:
+                    filler_weights = [40,60,0,0]
+
+                for name in self.random.choices(filler_pool, weights=filler_weights, k=filler_num):
                     pool.append(SpireItem(name, self.player))
             # Pair up our event locations with our event items
             for base_event, base_item in base_event_item_pairs.items():
@@ -308,6 +322,7 @@ class SpireWorld(World):
                 "costs": self.options.shop_sanity_costs.value,
             },
             "mod_version": self.mod_version,
+            "item_window": Items.CHAR_OFFSET,
         }
         slot_data.update(self.options.as_dict(
             "ascension",
