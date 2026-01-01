@@ -9,7 +9,7 @@ from .Characters import character_list
 from .Constants import NUM_CUSTOM
 
 
-CHAR_OFFSET = 20
+CHAR_OFFSET = 100
 
 class ItemType(Enum):
     CARD_REWARD = auto()
