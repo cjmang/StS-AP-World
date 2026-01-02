@@ -193,8 +193,6 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
                      lambda state: state._spire_has_power(world, prefix, PowerLevel(gold=270)))
 
     if world.options.gold_sanity:
-        set_rule(multiworld.get_location(f"{prefix} Combat Gold 11", player),
-                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
         set_rule(multiworld.get_location(f"{prefix} Combat Gold 12", player),
                  lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6,relic=3)))
         set_rule(multiworld.get_location(f"{prefix} Combat Gold 13", player),
@@ -207,10 +205,15 @@ def _set_rules(world: 'SpireWorld', player: int, config: 'CharacterConfig'):
         set_rule(multiworld.get_location(f"{prefix} Combat Gold 16", player),
                  lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=6, relic=4)))
 
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 4", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1, rest=1)))
         set_rule(multiworld.get_location(f"{prefix} Combat Gold 5", player),
-                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=2, rest=1, shop=2)))
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1, rest=1)))
         set_rule(multiworld.get_location(f"{prefix} Combat Gold 6", player),
-                 lambda state: state._spire_has_power(world, prefix, PowerLevel(draw=2, rest=1, shop=2)))
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1, rest=1)))
+        set_rule(multiworld.get_location(f"{prefix} Combat Gold 7", player),
+                 lambda state: state._spire_has_power(world, prefix, PowerLevel(relic=1, rest=1)))
+
         set_rule(multiworld.get_location(f"{prefix} Boss Gold 1", player),
                  lambda state: state.has(f"{prefix} Beat Act 1 Boss", player))
         set_rule(multiworld.get_location(f"{prefix} Boss Gold 2", player),
