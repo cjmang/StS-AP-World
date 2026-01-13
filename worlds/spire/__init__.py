@@ -95,6 +95,10 @@ class SpireWorld(World):
                 break
         else:
             self.options.trap_chance.value = 0
+        if len(self.options.trap_weights.values()) == 0:
+            self.options.trap_weights.value['Debuff Trap'] = 0
+            self.options.trap_chance.value = 0
+
 
     def _get_unlocked_char(self, characters: List[str]) -> Optional[str]:
         if len(characters) <= 0:
@@ -280,8 +284,9 @@ class SpireWorld(World):
                 traps: list[bool] = [self.random.randint(0, 100) < self.options.trap_chance for _ in range(remaining_checks)]
                 trap_num = traps.count(True)
                 filler_num = len(traps) - trap_num
-                for name in self.random.choices(list(self.options.trap_weights.keys()), weights=list(self.options.trap_weights.values()),k=trap_num):
-                    pool.append(SpireItem(name, self.player))
+                if trap_num > 0:
+                    for name in self.random.choices(list(self.options.trap_weights.keys()), weights=list(self.options.trap_weights.values()),k=trap_num):
+                        pool.append(SpireItem(name, self.player))
 
                 # Char specific 1 Gold and 5 Gold, in that order
                 filler_pool = [key for key, val in chars_to_items[char_lookup].items()
