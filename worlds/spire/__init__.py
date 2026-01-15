@@ -6,6 +6,7 @@ from typing import Optional, List, Set, Any
 
 from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
 from Options import OptionError
+from . import Constants
 from .Characters import character_list, CharacterConfig, character_offset_map, NUM_CUSTOM
 from .Items import event_item_pairs, item_table, ItemType, chars_to_items, base_event_item_pairs, item_groups
 from .Locations import location_table, loc_ids_to_data, LocationData, LocationType, CARD_REWARD_COUNT, location_groups, \
@@ -333,7 +334,7 @@ class SpireWorld(World):
                 "costs": self.options.shop_sanity_costs.value,
             },
             "mod_version": self.mod_version,
-            "item_window": Items.CHAR_OFFSET,
+            "item_window": Constants.CHAR_ITEM_OFFSET,
         }
         slot_data.update(self.options.as_dict(
             "ascension",
