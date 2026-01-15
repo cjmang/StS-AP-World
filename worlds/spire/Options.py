@@ -4,32 +4,17 @@ from typing import List
 from schema import Schema, Optional, And
 
 from Options import TextChoice, Range, Toggle, PerGameCommonOptions, Visibility, OptionDict, Choice, OptionSet, \
-    OptionGroup, OptionCounter
+    OptionGroup, OptionCounter, Removed, OptionError
 from .Items import trap_item_table
 from .Constants import NUM_CUSTOM
 
 
-class Character(OptionSet):
-    """Deprecated, use the `characters` option"""
-    visibility = Visibility.none
-    display_name = "Character"
-    valid_keys = [
-        "Ironclad",
-        "Silent",
-        "Defect",
-        "Watcher",
-        "Hermit",
-        "SlimeBoss",
-        "Guardian",
-        "Hexaghost",
-        "Champ",
-        "Gremlins",
-        "Automaton",
-        "Snecko",
-        "Collector",
-    ]
-    default = []
-    valid_keys_casefold = False
+class Character(Removed):
+    """Please use the `characters` option"""
+    def __init__(self, value: str):
+        if value:
+            raise OptionError("The option 'character' has been updated to be 'characters', please update your options file.")
+        super().__init__(value)
 
 class Characters(OptionSet):
     """Enter the list of characters to play as.  Valid characters are:
@@ -45,7 +30,8 @@ class Characters(OptionSet):
         'Gremlins'
         'Automaton'
         'Snecko'
-        'Collector'"""
+        'Collector'
+        'AwakenedOne'"""
     # For those wondering why there's a CharacterOption, it's because
     # OptionDict doesn't show up on WebHost, which is what Advanced Character is
     display_name = "Character"
@@ -63,6 +49,7 @@ class Characters(OptionSet):
         "Automaton",
         "Snecko",
         "Collector",
+        "AwakenedOne",
     ]
     default = ["Ironclad", "Silent", "Defect", "Watcher"]
     valid_keys_casefold = False
@@ -71,7 +58,7 @@ class GoalNumChar(Range):
     """How many characters you need to complete a run with before you goal. 0 means all characters"""
     display_name = "Number of Characters to Goal"
     range_start = 0
-    range_end = 13 + NUM_CUSTOM
+    range_end = 14 + NUM_CUSTOM
     default = 0
 
 class Ascension(Range):
@@ -94,7 +81,7 @@ class PickNumberCharacters(Range):
     """
     display_name = "Pick Number of Characters"
     range_start = 0
-    range_end = 13 + NUM_CUSTOM - 1
+    range_end = 14 + NUM_CUSTOM - 1
     default = 2
 
 class FinalAct(Toggle):
@@ -250,6 +237,7 @@ class UnlockedCharacter(TextChoice):
     option_automaton = 10
     option_snecko = 11
     option_collector = 12
+    option_awakenedone = 13
 
 
 class CharacterOptions(OptionDict):

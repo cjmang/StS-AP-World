@@ -95,9 +95,6 @@ class SpireWorld(World):
                 break
         else:
             self.options.trap_chance.value = 0
-        if len(self.options.trap_weights.values()) == 0:
-            self.options.trap_weights.value['Debuff Trap'] = 0
-            self.options.trap_chance.value = 0
 
 
     def _get_unlocked_char(self, characters: List[str]) -> Optional[str]:
