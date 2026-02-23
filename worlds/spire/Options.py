@@ -91,7 +91,8 @@ class FinalAct(Toggle):
 
 
 class Downfall(Toggle):
-    """When Downfall is Installed this will switch the played mode to Downfall"""
+    """When Downfall is Installed this will switch the played mode to Downfall (aka evil mode aka villain mode;
+    you kill Neow in the run)"""
     display_name = "Downfall"
     default = 0
 
@@ -348,24 +349,25 @@ class FillerWeights(OptionCounter):
 class SpireOptions(PerGameCommonOptions):
     character: Character
     characters: Characters
+    pick_num_characters: PickNumberCharacters
     num_chars_goal: GoalNumChar
-    ascension: Ascension
-    ascension_down: AscensionDown
-    final_act: FinalAct
-    downfall: Downfall
-    death_link: DeathLink
-    include_floor_checks: IncludeFloorChecks
-    use_advanced_characters: AdvancedChar
     lock_characters: LockCharacters
     unlocked_character: UnlockedCharacter
+    use_advanced_characters: AdvancedChar
     advanced_characters: CharacterOptions
-    pick_num_characters: PickNumberCharacters
+    final_act: FinalAct
+    downfall: Downfall
+    ascension: Ascension
+    ascension_down: AscensionDown
+    include_floor_checks: IncludeFloorChecks
+    death_link: DeathLink
+    filler_weights: FillerWeights
+    trap_chance: TrapChance
+    trap_weights: TrapWeights
     campfire_sanity: CampfireSanity
     gold_sanity: GoldSanity
     potion_sanity: PotionSanity
     key_sanity: KeySanity
-    seeded: SeededRun
-    chatty_mc: ChattyMC
     shop_sanity: ShopSanity
     shop_card_slots: ShopCardSlots
     shop_neutral_card_slots: ShopNeutralSlots
@@ -373,9 +375,8 @@ class SpireOptions(PerGameCommonOptions):
     shop_potion_slots: ShopPotionSlots
     shop_remove_slots: ShopRemoveSlots
     shop_sanity_costs: ShopSanityCosts
-    trap_chance: TrapChance
-    trap_weights: TrapWeights
-    filler_weights: FillerWeights
+    seeded: SeededRun
+    chatty_mc: ChattyMC
 
 option_groups: List[OptionGroup] = [
     OptionGroup("Sanities", [
@@ -399,5 +400,6 @@ option_groups: List[OptionGroup] = [
     OptionGroup("Misc", [
         ChattyMC,
         FillerWeights,
+        SeededRun,
     ]),
 ]
