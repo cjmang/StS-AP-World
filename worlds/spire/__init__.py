@@ -401,6 +401,7 @@ class SpireWorld(World):
         return slot_data
 
     def _setup_ut(self, slot_data: dict[str, Any]) -> None:
+        self.options.shop_card_slots.value = slot_data["shop_sanity_options"]["card_slots"]
         self.options.shop_remove_slots.value = slot_data["shop_sanity_options"]["card_remove"]
         self.options.shop_neutral_card_slots.value = slot_data["shop_sanity_options"]["neutral_slots"]
         self.options.shop_relic_slots.value = slot_data["shop_sanity_options"]["relic_slots"]
