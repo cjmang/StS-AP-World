@@ -276,7 +276,7 @@ class SpireWorld(World):
 
                 if config.final_act:
                     remaining_checks += 4
-                if config.ascension >= 20:
+                if config.ascension >= 20 and config.ascension_down == 0:
                     remaining_checks += 1
 
                 traps: list[bool] = [self.random.randint(0, 100) < self.options.trap_chance for _ in range(remaining_checks)]
