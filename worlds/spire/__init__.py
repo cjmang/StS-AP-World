@@ -173,13 +173,17 @@ class SpireWorld(World):
             else:
                 selected_chars = self.random.sample(selected_chars, k=num_rand_chars)
             modded_num = 0
+            modded_chars = []
             for char in selected_chars:
                 if character_offset_map.get(char.lower(), None) is None:
                     modded_num += 1
+                    modded_chars.append(char)
             if modded_num > NUM_CUSTOM:
-                supported_chars = sorted({x for x in char_options if x.lower() in character_offset_map})
+                supported_chars = sorted({x for x in char_options if x.lower() in character_offset_map and x not in selected_chars})
                 replace_num = modded_num - NUM_CUSTOM
-                remove_me = self.random.sample(selected_chars, k=replace_num)
+                if unlocked_char in modded_chars:
+                    modded_chars.remove(unlocked_char)
+                remove_me = self.random.sample(modded_chars, k=replace_num)
                 for remove in remove_me:
                     selected_chars.remove(remove)
                 selected_chars += self.random.sample(supported_chars, k=min(replace_num, len(supported_chars)))
